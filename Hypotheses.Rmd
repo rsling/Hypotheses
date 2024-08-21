@@ -25,7 +25,7 @@ require(vioplot)
 require(LaplacesDemon)
 
 load("Subject.RData")
-load("Plural.RData")
+load("Agreement.RData")
 ```
 
 # How to find things out
@@ -51,9 +51,39 @@ Based on a plot overlaying texts as dots on a map of England (their Figure 1), i
 The parameters of a linear model with "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated, and with the South as the reference category (because it had the least amount of Scandinavian language contact), the authors find a *significant effect* for North and the East Midlands but not the West Midlands.
 
 We will turn to the linear model in the next section.
-However, the paper is quite blurry with respect to the nature of the dependent difference in agreement between adjectives and quantifiers.
-How is it obtained?
-It cannot be a direct observation because (i) it's a difference of some kind and (ii) it appears to be a text metric calculated for the document, probably as some kind of proportion.
+However, the paper is quite blurry with respect to the nature of the difference in agreement between adjectives and quantifiers as used as the dependent variable.
+It cannot be a direct observation because it is described as a difference of some kind and it appears to be a text metric calculated for the document, probably as some kind of proportion.
+Only the data package reveals what was actually computed.
+Per text, the authors calculated (i) the proportion of determiners with plural agreement, (ii) the proportion of adjectives with plural agreement, and (iii) subtracted the former from the latter.
+
+**TODO: The lower the bias line, the more underrepresented are adjectives versus determiners in the respective text.**
+
+```{r, echo=F}
+  plot(NULL, xlim=c(0,48), ylim=c(-0.6,1.3), bty="n", ylab="Difference score", xlab="Texts ordered by number of total data points", xaxt="n")
+  .agr <- AgreementAggregateData[order(AgreementAggregateData$Difference),]
+  .grandtotals <- .agr$AdjectiveCount+.agr$DeterminerCount
+  .cols <- as.integer(.agr$Dialect)
+  .max <- max(.grandtotals)
+  .countbias <- scale(.agr$AdjectiveCount/.agr$DeterminerCount)
+  
+  for (i in 1:nrow(.agr)) {
+    
+    # First, draw the total count bar.
+    if (abs(.countbias[i])>0.5) {
+      .yoffset <- ifelse(sign(.countbias[i])==-1, -0.08, 0.075)
+      lines(x=c(i,i), y=c(.agr[i, 8], .agr[i, 8]+.countbias[i]/5), col=.cols[i], lwd=1, lty=3)
+      text(x=i, y=.agr[i, 8]+.countbias[i]/5+.yoffset,
+           col=.cols[i], labels = round(.countbias[i],1), cex=0.7, srt=90)
+    }
+
+    # Then draw the point for the text
+    points(i, .agr[i, 8], pch=.cols[i]+14, cex=4*.grandtotals[i]/.max, col=.cols[i])
+  }
+
+  legend("topleft", col=1:4, legend = levels(.agr$Dialect), pch=15:18, bty="n", pt.cex=1.75)
+```
+
+BOAAA! Ist das ein abosluter SCHROTT!!!
 
 ### Alternative models
 
@@ -187,15 +217,15 @@ In other words, orality, time, and country (or macroregion) are irrelevant.
 Reaching the sigificance level is mostly just an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
 
-Finally, we plot the probabilities estimated by the Paper model against the null model.
+Finally, we plot the probabilities estimated under the Paper model against the null model.
 
 ```{r, echo=F}
 plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type="response"),
      pch=20, bty ="n",
      xlim = c(0,0.3), ylim = c(0,0.3),
      col = "black",
-     xlab = "Probabilities estimated by the Null model",
-     ylab = "Probabilities estimated by the Paper model"
+     xlab = "Probabilities estimated under the Null model",
+     ylab = "Probabilities estimated under the Paper model"
 )
 ```
 
