@@ -7,7 +7,7 @@ output:
     number_sections: true
   pdf_document: default
   word_document: default
-bibliography: walkden.bib
+bibliography: Hypotheses.bib
 editor_options: 
   markdown: 
     wrap: sentence
@@ -24,7 +24,8 @@ require(MuMIn)
 require(vioplot)
 require(LaplacesDemon)
 
-load("Walkden.RData")
+load("Subject.RData")
+load("Plural.RData")
 ```
 
 # How to find things out
@@ -46,7 +47,7 @@ The study looks at determiners (referred to as *quantifiers* throughout, althoug
 
 Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued some texts show stronger loss of inflecion on the determiner than on the adjectice.
 @WalkdenEa2023 [552] claim that "this difference does not depend on the date of composition of the manuscript, but rather on the dialectal region. The majority of texts which show a difference between quantifiers and adjectives come from areas where Scandinavian contact was intense."
-The parameters of a linear model with "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated, and with the South as the reference category (because it had the least amount of Scandinavian language contact), the authors find a "significant" effect for North and the East Midlands but not the West Midlands.
+The parameters of a linear model with "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated, and with the South as the reference category (because it had the least amount of Scandinavian language contact), the authors find a *significant effect* for North and the East Midlands but not the West Midlands.
 
 We will turn to the linear model in the next section.
 However, the paper is quite blurry with respect to the nature of the dependent difference in agreement between adjectives and quantifiers.
