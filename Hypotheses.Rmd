@@ -32,6 +32,7 @@ load("Plural.RData")
 ## "It's better to pursue your own projects!"
 ## Hypotheses, falsificationism and severe testing
 ## The difference between substantive, particular, and statistical hypotheses
+## Traditions of statistical inference
 
 # Data and inferences in @WalkdenEa2023
 
