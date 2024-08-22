@@ -3,9 +3,11 @@ title: "Substantive and statistical hypotheses in data-oriented philology and li
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024-08-20"
 output:
+  pdf_document: 
+    latex_engine: xelatex
+    number_sections: true
   html_document:
     number_sections: true
-  pdf_document: default
   word_document: default
 bibliography: Hypotheses.bib
 editor_options: 
@@ -26,6 +28,18 @@ require(LaplacesDemon)
 
 load("Subject.RData")
 load("Agreement.RData")
+
+# For pretty-printing and stuff.
+
+AgreementData$Dialect <- factor(AgreementData$Dialect, levels = c("Southern", "EM", "WM", "Northern"))
+levels(AgreementData$Dialect) <- c("South", "EastMidlands", "WestMidlands", "North")
+AgreementAggregateData$Dialect <- factor(AgreementAggregateData$Dialect, levels = c("Southern", "EM", "WM", "Northern"))
+levels(AgreementAggregateData$Dialect) <- c("South", "EastMidlands", "WestMidlands", "North")
+
+colnames(SubjectData)[3] <- "Subject"
+colnames(SubjectData)[7] <- "Text"
+colnames(SubjectData)[10] <- "Macroregion"
+
 ```
 
 # How to find things out
@@ -38,70 +52,212 @@ load("Agreement.RData")
 
 ## Main hypotheses and purpose
 
-## Study 1: Agreement
+## Study 1: Number agreement in English
 
 ### What was reported
 
-Study 1 deals with the loss of inflectional marking in Middle English.
-It is interpreted as a loss of redundancy that plural marking is lost on attributive adjectives and determiners partially to a different degree and under the influence of Scandianavian language contact from the eighth until the eleventh century.
+Study 1 deals with the loss of plural agreement marking in the NP during the Middle English period.
+It is interpreted as a reduction of redundancy when plural markings are lost on attributive adjectives and determiners.
+Per hypothesis, this is partially due to the influence of Scandianavian languages from the eighth until the eleventh century.
+Also, the different pace by which determiners and adjectives lose their agreement markings is analysed as possibly related to language contact.
 The study looks at determiners (referred to as *quantifiers* throughout, although not all determiners are quantificational) and monosyllabic adjectives in 47 texts totalling 4,366 data points (called *tokens* on p. 551).
 
-Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued some texts show stronger loss of inflecion on the determiner than on the adjectice.
+Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued that some texts show stronger loss of inflection on the determiner than on the adjectice.
 @WalkdenEa2023 [552] claim that "this difference does not depend on the date of composition of the manuscript, but rather on the dialectal region. The majority of texts which show a difference between quantifiers and adjectives come from areas where Scandinavian contact was intense."
-The parameters of a linear model with "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated, and with the South as the reference category (because it had the least amount of Scandinavian language contact), the authors find a *significant effect* for North and the East Midlands but not the West Midlands.
+The parameters of a linear model "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated.
+With the Southern dialects as the reference category (because they had the least amount contact with Scandinavian languages), the authors find a *significant effect* for North and the East Midlands but not the West Midlands [@WalkdenEa2023,552], where Footnote 8 was ommitted:
 
-We will turn to the linear model in the next section.
-However, the paper is quite blurry with respect to the nature of the difference in agreement between adjectives and quantifiers as used as the dependent variable.
-It cannot be a direct observation because it is described as a difference of some kind and it appears to be a text metric calculated for the document, probably as some kind of proportion.
-Only the data package reveals what was actually computed.
+> The results showed a significant effect of region for the North (β=0.39, SE=0.15, t=2.6, p=0.01) and the East Midlands (β=0.2, SE=0.10, t=2.09, p=0.04), but not the West (β=0.13, SE=0.13, t=1.0, p=0.3). This geographical distribution suggests that contact with Scandinavian speakers played a relevant role in the loss of inflectional morphology, but equally importantly, it shows that concord in quantifiers was more affected than concord with adjectives.
+
+We will return to these results in the next section.
+However, the paper is slightly blurry with respect to the measurement of the difference in agreement between adjectives and quantifiers as used as the dependent variable.
+It cannot be a direct observation because it is described as a difference of some kind, and it appears to be a score calculated for entire texts, probably as some kind of proportion.
+Luckily, the data package reveals what was actually computed.
 Per text, the authors calculated (i) the proportion of determiners with plural agreement, (ii) the proportion of adjectives with plural agreement, and (iii) subtracted the former from the latter.
-
-**TODO: The lower the bias line, the more underrepresented are adjectives versus determiners in the respective text.**
+The linear model uses this difference score as the dependent variable.
 
 ```{r, echo=F}
-  plot(NULL, xlim=c(0,48), ylim=c(-0.6,1.3), bty="n", ylab="Difference score", xlab="Texts ordered by number of total data points", xaxt="n")
   .agr <- AgreementAggregateData[order(AgreementAggregateData$Difference),]
   .grandtotals <- .agr$AdjectiveCount+.agr$DeterminerCount
   .cols <- as.integer(.agr$Dialect)
   .max <- max(.grandtotals)
-  .countbias <- scale(.agr$AdjectiveCount/.agr$DeterminerCount)
+  .min <- min(.grandtotals)
+  .maxi <- which(.grandtotals==.max)
+  .mini <- which(.grandtotals==.min)
+  .countbiasR <- .agr$AdjectiveCount/.agr$DeterminerCount
+  .cbmin <- order(.countbiasR)[1]
+  .cbmax <- order(.countbiasR)[length(.countbiasR)]
+```
+
+Instead of discussing problems with such an approach from a theoretical point of view, we plot the resulting data to expose them by example.
+The plot shows all `r nrow(.agr)` texts (x-axis), sorted by their difference score from lowest to highest, with the difference scores plottet on the y-axis.
+However, we added more information that is not revealed in the paper itself.
+The shape of the dots corresponds to the dialectal regions (see legend), and their size corresponds linearly to the total number of observations (summed counts of determiners and adjectives), a number that ranges from `r .grandtotals[.mini][1]` for *`r .agr[.mini,"Text"][1]`* to `r .grandtotals[.maxi]` for *`r .agr[.maxi,"Text"]`*.
+The vertical bar for each dot encodes one further remarkable numerical property of the texts and their scores:
+it shows how differently determiners are overrepresented in the texts.
+It is not absolutely clear wheter the counts provided by the authors are the total numbers of adjectives and determiners in the texts or whether the number represents how many were annotated.
+In any case, some texts contribute far less adjectives relative to the number of determiners than others:^[It is not surprising that a text contains more determiners than adjectives. The question is rather why the ratio differs so wildly between texts.]
+Note that the scale of the bars is not the same as the scale of the y-axis and that long lines have been shortened to fit into the plot.
+Consequently, the numbers should be inspected.
+*`r .agr[.cbmin,"Text"]`* contributes `r .agr[.cbmin,"AdjectiveCount"]` adjectives and `r .agr[.cbmin,"DeterminerCount"]` determiners, which means it has `r round(.agr[.cbmin,"DeterminerCount"]/.agr[.cbmin,"AdjectiveCount"],2)` times more determiners than adjectives.
+On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"AdjectiveCount"]` adjectives and `r .agr[.cbmax,"DeterminerCount"]` determiners, which means it has `r round(.agr[.cbmax,"DeterminerCount"]/.agr[.cbmax,"AdjectiveCount"],2)` times more adjectives than determiners.
+
+```{r, echo=F}
+  plot(NULL, xlim=c(0,48), ylim=c(-0.6,1.3), bty="n", ylab="Difference score", xlab="", xaxt="n")
+
+  # Plot visual helper lines.
+  for (i in 1:nrow(.agr)) {
+    lines(c(i,i), c(-0.65, 1.0), col="lightgray")
+  }
   
   for (i in 1:nrow(.agr)) {
+     # This scales the determiner bias so it fits within the plot.
+    .biascoord <- .agr[i, 8]+(1/.countbiasR[i])/10
+    .biascoord <- ifelse(.biascoord>1,1,.biascoord)
     
-    # First, draw the total count bar.
-    if (abs(.countbias[i])>0.5) {
-      .yoffset <- ifelse(sign(.countbias[i])==-1, -0.08, 0.075)
-      lines(x=c(i,i), y=c(.agr[i, 8], .agr[i, 8]+.countbias[i]/5), col=.cols[i], lwd=1, lty=3)
-      text(x=i, y=.agr[i, 8]+.countbias[i]/5+.yoffset,
-           col=.cols[i], labels = round(.countbias[i],1), cex=0.7, srt=90)
-    }
+    # Draw the total count bar.
+    lines(x=c(i,i), y=c(.agr[i, 8], .biascoord), col=.cols[i], lwd=1, lty=1)
+    text(x=i, y=.biascoord+0.1,
+         col=.cols[i], labels = round(1/.countbiasR[i],2), cex=0.7, srt=90)
 
     # Then draw the point for the text
     points(i, .agr[i, 8], pch=.cols[i]+14, cex=4*.grandtotals[i]/.max, col=.cols[i])
   }
-
-  legend("topleft", col=1:4, legend = levels(.agr$Dialect), pch=15:18, bty="n", pt.cex=1.75)
+  axis(1, 1:nrow(.agr), labels=.agr$Text, las=2, cex=0.5, tick = F, cex.axis=0.5, mgp=c(0,0,0))
+  legend("bottomright", col=1:4, legend = levels(.agr$Dialect), pch=15:18, box.col="white", box.lwd=0, pt.cex=1.5, bg="white")
 ```
 
-BOAAA! Ist das ein abosluter SCHROTT!!!
+Using such aggregated data to estimate the parameters of a linear model is unwise.
+The unweighted model treats each text as contributing the same information, and its main purpose in empirical sciences is to model the distribution of data points, not aggregations.^[There are models for proportion data and other aggregated data. However, they are much more difficult to handle and---above all---interpret (**REF**). Still, the authors report a plain linear model.]
+Thus, the model from the paper makes the assumption that a text with `r .grandtotals[.mini][1]` data points (the observed mininum) and a text with `r .grandtotals[.maxi]` data points (the observed maximum) can be treated as contributing the same amount of evidence.
+This is ill-advised for all types of models, even much simpler ones like the ungrouped average of a population, which is a standard example.
+Assume we had the task of calculating the average length of a rare kind of newts.
+Furthermore, assume their true population average length is 10 cm.
+Because our newts are so rare and difficult to find, instead of going out and measuring a random sample of those rare newts, we look for existing data, finding a report where field researchers measured two newts they found in a pond averaging 7 cm in length and another report from a larger lake where researchers measured the average length of a population of 40 newts to be 10.5 cm.
+Since the original raw data tables (individual measurements) are not included in the old reports, we average the averages, correctly finding that (7+10.5)/2 is `r (7+10.5)/2`.
+While correct, this is certainly not a good estimator of the average length of our newts.
+It is severly skewed because of the unequal sizes of the samples, and the two newts from the pond receive much too high a weight.
+Similarly, if *Innocendium* and *Horses* were just as long a text (or as large a sample from a text) as *Purvey* and *Ayenbyte*, all generalisations about the Southern dialect group would disappear.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view.]
+
+In other words, when we specify a model we assume that all kinds of sources influence the variance in the data points, which are assumed to be simple measurements.
+The model is specified to relate the systematic (explained) influences  (variance in the explanatory variables) to the variance in the response variable, leaving the unexplained variance as residuals.
+However, in this case the difference score is itself an estimate based on wildly varying sample sizes and varying balance between the numbers of adjectives and determiners, which means that it comes with a kind of variance---or rather: inaccuracy---that the simple linear model and its interpretation do not expect (in a technical sense).
+This also means that actual significance levels very likely do not correspond to nominal significance levels, and using a more rigid significance level than 0.05 would be recommended.
+The next section shows an alternative model and what remains of the results advertised in the paper after a more accurate modelling.
 
 ### Alternative models
 
-### Interpretation of the model
+The example given above about the biologists and the length of newts assumed that the original measurements (lengths of individual newts) were lost.
+This is not the case here, and the original data points are available in the data package.
+Even in the middle ages, the relevant event was the actual production of a single instance of a determiner or an adjective by a writer.
+Therefore, the best model for the case at hand is one that estimates the probability of them marking plural agreement or not.^[As a minor inconsistency, the authors follow such a strategy in Study 2, see below.]
+A model that comes close to the idea in the paper is the following one.
+It models the probability of the realisation of agreement on a word as a function of ist part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
 
-## Study 2: Null subjects
+```{r, echo=F}
+AgreementPaperModel <- glm(Agreement~POS*Dialect, data = AgreementData, family=binomial)
+summary(AgreementPaperModel)
+```
+
+The GLM estimates indicate that (assuming a cavalier significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p vaues).
+However, writers from the Northern dialect seem to have a relatively strong tendency to avoid agreement specifically on determiners (see the interaction between POSDeterminer and DialectNorth).
+The last point is in line with the claims in the paper.
+However, the West midlands even have the stronger tendency than the East Midlands to avoid agreement overall (including on determiners).
+This runs contrary to the claim in @WalkdenEa2023.
+
+If we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse.
+
+```{r, echo=F}
+AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)
+summary(AgreementNullModel)
+compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)]
+```
+
+With all this, we should keep in mind that the plot in the previous section shows that there simply are not that much data from the North.
+The fact that the level DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North.
+Also, the plot shows that individual texts and their dialect group are all over the place in terms of ther difference score, and most texts have a difference score very close to 0 anyway.
+At the negative end, for example, there are merely five texts from the East Midlands that account for all the negative values.
+It seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
+
+```{r, echo=F}
+AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData, family=binomial)
+summary(AgreementTextModel, corr=F)
+r2(AgreementTextModel)
+```
+
+We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, at least measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),2)`.
+The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
+It should be kept in mind that this generalisation is based on `r length(which(AgreementData$Dialect=="North"))` data points from `r length(which(AgreementAggregateData$Dialect=="North"))` texts spanning a period of `r max(AgreementData$Year)-min(AgreementData$Year)` years.
+Regardless of nominal significance, a careful interpretation seems wise.
+We proceed to a further inspection of the models presented in the next section.
+
+### Interpretation of the models
+
+```{r, echo=F}
+.confusionPaper <- table(ifelse(predict(AgreementPaperModel, type="response")<0.5,
+                                "No Agreement", "Agreement"),
+                         ifelse(AgreementData$Agreement==0, "No Agreement", "Agreement"))
+.confusionNull <- table(ifelse(predict(AgreementNullModel, type="response")<0.5,
+                                "No Agreement", "Agreement"),
+                         ifelse(AgreementData$Agreement==0, "No Agreement", "Agreement"))
+.confusionText <- table(ifelse(predict(AgreementTextModel, type="response")<0.5,
+                                "No Agreement", "Agreement"),
+                         ifelse(AgreementData$Agreement==0, "No Agreement", "Agreement"))
+```
+
+A (Generalised) Linear (Mixed) Model can be used to make predictions.
+In the case of Binomial models, it can estimate the probability with which the event (in this case overt realisation of a subject pronoun) occurs.
+If it estimates a probability greater than 0.5 for some combination of regressors, it is the most successful (and customary) strategy to predict the occurrence of the event.^[The strategy is successful only if the model is approximately correct.]
+If it estimates a probability lower than 0.5, one should bet against the event and predict its non-occurrence.
+Now, we first check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on.
+Note that it should perform particularly well on those data because we use the model to predict the values it was estimated on.
+New data would always be harder to predict correctly for any statistical or machine-learning model.
+The following table summarises the predictive accuracy of what we shall call the *Paper model* (which is the GLM that implements the idea from the paper in a mathematically more sound way).
+The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
+The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)` %.
+This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)` %.^[The base rate is relevant inasmuch as one can usually make above 50 % correct predictions simply by always guessing the modal---most frequent---outcom. In the long run, the correct guesses then equal the base rate.]
+
+```{r, echo=F}
+.confusionPaper
+```
+
+The *Null model* with only part-of-speech as a predictor is considerably weaker inasmuch as it always predicts overt agreement and hence does not differentiate at all.
+However, the *Text model*, which is the one that incorporates a random effect for text, does much better than what was suggested in the paper.
+Its predictions are correct in `r sum(diag(.confusionText))` cases and incorrect in `r sum(.confusionText)-sum(diag(.confusionText))` cases, i.e., `r round(sum(diag(.confusionText))/sum(.confusionText)*100,1)` %.
+
+```{r, echo=F}
+.confusionText
+```
+
+If we look at the numerical probabilities estimated by the Paper model and the Text model for the observed data, we see that the model that accounts for variance between texts (and thus, implicitly, authors), differentiates much better.
+In the violin plots, the left shape summarises the distribution of probabilities estimated by the model for cases where no overt agreement was observed in the data.
+The right shape summarises the distribution of probabilities for cases where agreement was overtly realised in the data.
+Obviously, the Paper model is not even a good model of the data used to estimate its parameters, which means that it is very likely that it does not generalise well to other data.
+Put differently, we see clear indication that the external validity of the model is low.
+The Text model fares much better in this respect, but only by acknowledging that the main influencing factor is the text (who wrote the text, under which circumstances, etc.).
+
+```{r, echo=F}
+  par(mfrow=c(1,2))
+  vioplot(predict(AgreementPaperModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability")
+  vioplot(predict(AgreementTextModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Model with text as random effect", ylab="")
+  par(mfrow=c(1,1))
+```
+
+
+## Study 2: Null subjects in Spanish
 
 ### What was reported
 
-The authors want to model the influence of orality, time, and region (Spain versus Latin American countries) on the tendency to use overt subjects in Spanish despite the overall very strong tendency towards subject drop in Spanish.
-Orality is measured as the ORSCORE, which appears to be the aggregate relative frequency of certain grammatical features in the respective texts.
+In Study 2, the authors set out to model the influence of orality, time, and region (Spain versus Latin American countries) on the tendency to use overt subjects in Spanish despite the overall very strong tendency towards subject drop in Spanish.
+Orality is measured as the ORScore, which appears to be an aggregate relative frequency of certain grammatical features in the respective texts.
 It is thus based on a derived construct and not on direct observations.
 Given the fact that it is composed of proportions (relative frequencies) the warnings raised in the previous section apply here as well.
-Here is the report of the model fit from the paper, where `sub_POS` is 1 for an observation with an overt subject, `ORScoreZ` is the z-transformed orality score, `YearZ` is the z-transformed year the respective document was dated at, and `Macro_Region` is Spain or Non-Spain.
-The random effect `docID` has 37 levels for 37 documents.
+Here is the report of the model fit from the paper, where `Subject` is 1 for an observation with an overt subject, `ORScoreZ` is the z-transformed orality score, `YearZ` is the z-transformed year the respective document was dated at, and `Macroregion` is Spain or Non-Spain.
+The random effect `Text` has 37 levels for 37 documents.
+Henceforth, we shall call this the *Paper model*.
 
 ```{r, echo=F}
-SubjectPaperModel <- glmer(sub_POS~ORScoreZ*YearZ+Macro_Region+(1|docID), data = SubjectData, family="binomial")
+SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
 summary(SubjectPaperModel, corr=F)
 ```
 
@@ -119,12 +275,11 @@ Highlights added by us.
 
 ### Alternative models
 
-We begin by comparing the *Paper* model (the one reported in the original paper) to a *Null* model that only has a fixed intercept and a random intercept for *document*.
+We begin by comparing the Paper model to the *Null model*, which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
-We use the `performance` package for a quick model comparison.
 
 ```{r, echo=F}
-SubjectNullModel <- glmer(sub_POS~1+(1|docID), data = SubjectData, family="binomial")
+SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
 summary(SubjectNullModel, corr=F)
 compare_performance(SubjectNullModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
@@ -133,27 +288,27 @@ The AIC of the Paper model is slighlty lower.
 The marginal R² of the Null model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper model is minimally higher than that of the Null model.
 All in all, it does not appear even from this simple evaluation as if the orality score, the macroregion, and the date of the document explain much of the variance in the data.
 
-A second alternative model we would like to entertain is given below as the Country-Genre model.
+A second alternative model we would like to entertain is given below as the *Country-Genre model*.
 It drops the alleged main explanatory regressor (orality), the secondary one (year), and it used the country and the genre as fixed effects instead.
 Contrary to the quote from the paper, the model converges, and the country regressor does not have too many levels.[^1]
 
 [^1]: Even if it had too many levels for reliable fixed-effect estimation, a random effect (nesting the document ID) could and should have been used, see **Gelman;Schäfer**.
 
 ```{r, warning=F, echo=F}
-SubjectCountryGenreModel <- glmer(sub_POS~Country+Genre+(1|docID), data = SubjectData, family="binomial")
+SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
 summary(SubjectCountryGenreModel, corr=F)
 compare_performance(SubjectCountryGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
 
 We see that the Country-Genre model is also slightly worse than the Paper model.
-It is unclear, however, why the paper claims that the country regressor was impossible to add for technical reasons.
+It is unclear, however, why the authors claim that the country regressor was impossible to add for technical reasons.
 The estimator has no trouble estimating the coefficients, they just don't reach the nominal significance level of 0.05.
 
 We proceed to estimating the parameters of a more complex model.
 This Full-Country model is the Paper model including orality and year as regressors but with country instead of macroregion and additionally genre as fixed effects.
 
 ```{r, warning=F, echo=F}
-SubjectFullCountryModel <- glmer(sub_POS~ORScoreZ*YearZ+Country+Genre+(1|docID), data = SubjectData, family="binomial")
+SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
 summary(SubjectFullCountryModel, corr=F)
 compare_performance(SubjectFullCountryModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
@@ -162,29 +317,24 @@ The Full-Country model performs slightly better than the Paper model in terms of
 It should, however, have become clear by now that the slightly varying conditional R² coefficients are merely an artefact due to the shifting marginal R² coefficients.
 Additionally, we observe that country has only one level (Bolivia) that is sufficiently distinct from the intercept value (Spain) to reach the nominal significance level.
 Concluding from the data presented in the paper that "overtness [is favoured] in every country but Spain" is thus not warranted, even under an NHST umbrella.
-If we drop genre, the picture changes again with the Full-No-Genre model.
+If we drop genre, the picture changes again with the *Full-No-Genre model*.
 
 ```{r, warning=F, echo=F}
-SubjectFullNoGenreModel <- glmer(sub_POS~ORScoreZ*YearZ+Country+(1|docID), data = SubjectData, family="binomial")
+SubjectFullNoGenreModel <- glmer(Subject~ORScoreZ*YearZ+Country+(1|Text), data = SubjectData, family="binomial")
 summary(SubjectFullNoGenreModel, corr=F)
 compare_performance(SubjectFullNoGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
 
 We see that model specification is not an exact art.
 Dropping genre as a regressor leads to Columbia also reaching the nominal significance level.
-Using NHST logic it is now Spain, Dominican Republic, and Panamá against Bolivia and Columbia.
-Regarding the R², the various model specifications don't really seem to change much.
+Based on NHST logic, it is now Spain, the Dominican Republic, and Panamá versus Bolivia and Columbia.
+Regarding the R², the various model specifications do not  seem to change by any considerable margin.
 In the next section, we show why.
 
 ### Interpretation of the models
 
-A (Generalised) Linear (Mixed) Model can be used to make predictions.
-In the case of Binomial models, it can estimate the probability with which the event (in this case overt realisation of a subject pronoun) occurs.
-If it estimates a probability greater than 0.5 for some combination of regressors, it is the most successful strategy to predict the occurrence of the event---if the model is correct.
-If it estimates a probability lower than 0.5, one should bet against the event and predict its non-occurrence.
-Now, we first check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on.
-Note that it should perform particularly well on those data because we use the model to predict the values it was estimated on.
-New data would always be harder to predict correctly for any statistical or machine-learning model.
+As explained in the discussion of Study 1, we check the probability estimates that the model makes on the data used to estimate its parameters.
+First, we examine the correct binary predictions using a 0.5 probability threshold.
 
 ```{r, echo=F}
 table(ifelse(predict(SubjectPaperModel, type="response")<0.5, "Pronoun", "Nullsubject"))
@@ -192,29 +342,29 @@ table(ifelse(predict(SubjectPaperModel, type="response")<0.5, "Pronoun", "Nullsu
 
 Oddly, the model predicts that there should never be an overt subject.
 This is due to the obviously uninformative regressors and the high base rate.
-The base rate is the most frequent outcome (in this case, no overt subject), which occurs in 88.55% of all cases.
+The base rate (no overt subject) is at 88.55 %.
 
 ```{r, echo=F}
 p.baseline <- as.numeric(predict(SubjectPaperModel, type="response")>0.5)
-mean(p.baseline==as.numeric(SubjectData$sub_POS)-1)
-table(SubjectData$sub_POS)
+mean(p.baseline==as.numeric(SubjectData$Subject)-1)
+table(SubjectData$Subject)
 ```
 
 However, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
-This can be the case with rare events regression (**King**), which is the case with even much higher base rates (around 99%).
+This can be the case with rare events regression (**King&Tseng**), which is the case with even much higher base rates (around 99%).
 To see whether the Paper model could make better binary predictions with a lower threshold, we plot the probability predictions of the Paper model and the Null model next to each other as violin plots.
 
 ```{r, echo=F}
 par(mfrow=c(1,2))
-vioplot(predict(SubjectPaperModel, type="response")~SubjectData$sub_POS, ylim=c(0,0.3), colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability")
-vioplot(predict(SubjectNullModel, type="response")~SubjectData$sub_POS, ylim=c(0,0.3), colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="")
+vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, ylim=c(0,0.3), colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability")
+vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, ylim=c(0,0.3), colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="")
 par(mfrow=c(1,1))
 ```
 
 Even for the cases with overt subjects in the observed data, the model estimates a maximum probability of under 0.25.
 Most strikingly, the Paper model appears to estimate almost exactly the same probabilities as the null model.
 In other words, orality, time, and country (or macroregion) are irrelevant.
-Reaching the sigificance level is mostly just an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
+Reaching the sigificance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
 
 Finally, we plot the probabilities estimated under the Paper model against the null model.
@@ -232,18 +382,13 @@ plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type
 The plot show which probability the two models estimate for each of the 3,773 observed data points, each data point being plotted as a dot.
 If the two models made exactly the same estimates, there should be a straight line.
 We see dots virtually along a straight line with negligeable deviations.
-The models contain virtually the same information, and the mean absolute difference between the predictions by the two models is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximal difference for a data point is `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
+The models contain virtually the same information, and the mean absolute difference between the predictions by the two models is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximal difference is `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
 
 Furthermore and most crucially, we see only 37 dots, not 3,773.
-This is because for each data point from one of the 37 documents, the model makes exactly the same prediction, and the dots are printed on top of each other.
+This is because within one text, the model makes exactly the same predictions for each data point, and the dots are printed on top of each other.
 The model shows that documents are different, nothing more.
 It does not at all "confirm any relationships across countries and centuries" (see above).
-These problems are not at all hard to pinpoint with full access to the data, and is peculiar that the analysis went on to subsmission in a paper.^[We are all for publishing negative findings, so the data themselves deserve publishing. However, negative findings should be clearly marked as such.]
-From the reviewers' point of view, the paper actually does not contain enough information to notice any irregularities like this.
-Hence, reviewers should always be put in a position to detect problems like these via strict requirements regarding the reporting of statistical results.
-While it is standard for journals in other fields to have very specific guidelines on the reporting of statistics, linguistics journals accept virtually any empirical work that involves statistical analysis deemed as sufficient by the reviewers.
-In this case, the base rate, information on the probability estimates, even R² coefficients (despite all the problems with them, **REF**), and many other existing metrics would have been helpful.
-P-values---as we have shown---mean virtually nothing, and a DHARMa residuals check [@WalkdenEa2023,552] only detects for a very specific type of anomaly, not for a substantively good model.
+These problems are not at all hard to pinpoint with full access to the data, and is peculiar that the analysis went on to submission in a paper.^[We are all for publishing negative findings, so the data themselves deserve publishing. However, negative findings should be clearly marked as such.]
 In the remainder of the paper, we discuss what all this means for substantive hypotheses put forward in @WalkdenEa2023 and the field in general.
 
 ## What was actually found out
@@ -253,5 +398,14 @@ Study 3 is highly preliminary, and we therefore focus on the first two.
 
 # Putting data to good use
 
+…
+
+From a reviewers' point of view, the paper actually does not contain enough information to notice any irregularities.
+Hence, reviewers should always be put in a position to detect problems like these via strict requirements regarding the reporting of statistical results.
+While it is standard for journals in other fields to have very specific guidelines on the reporting of statistics, linguistics journals accept virtually any empirical work that involves statistical analysis deemed as sufficient by the reviewers.
+In this case, the base rate, information on the probability estimates, even R² coefficients (despite all the problems with them, **REF**), and many other existing metrics would have been helpful.
+P-values---as we have shown---mean virtually nothing, and a DHARMa residuals check [@WalkdenEa2023,552] only detects for a very specific type of anomaly, not for a substantively good model.
+
+…
 
 # References
