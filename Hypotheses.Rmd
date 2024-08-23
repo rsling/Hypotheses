@@ -40,6 +40,26 @@ colnames(SubjectData)[3] <- "Subject"
 colnames(SubjectData)[7] <- "Text"
 colnames(SubjectData)[10] <- "Macroregion"
 
+
+# Calculate precision and recall at a certain threshold t.
+PrecisionRecall <- function(predictions, data, threshold) {
+  .pt <- ifelse(predictions <= threshold, 0, 1)
+  .m <- table(factor(.pt, levels=c(0,1)), factor(data, levels=c(0,1)))
+  .gt <- sum(.m)
+  .prec <- .m["1","1"]/sum(.m["1",])
+  .prec <- ifelse(is.na(.prec), 0, .prec)
+  .rec <- .m["1","1"]/sum(.m[,"1"])
+  .rec <- ifelse(is.na(.rec), 0, .rec)
+  list(Precision = .prec, Recall = .rec)
+}
+
+# Calculate the proportion of correct predictions at threshold t.
+Correct <- function(predictions, data, threshold) {
+  .pt <- ifelse(predictions <= threshold, 0, 1)
+  .m <- table(.pt==data)
+  .m[2]/sum(.m)
+}
+
 ```
 
 # How to find things out
@@ -209,13 +229,13 @@ A (Generalised) Linear (Mixed) Model can be used to make predictions.
 In the case of Binomial models, it can estimate the probability with which the event (in this case overt realisation of a subject pronoun) occurs.
 If it estimates a probability greater than 0.5 for some combination of regressors, it is the most successful (and customary) strategy to predict the occurrence of the event.^[The strategy is successful only if the model is approximately correct.]
 If it estimates a probability lower than 0.5, one should bet against the event and predict its non-occurrence.
-Now, we first check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on.
+We now check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on.
 Note that it should perform particularly well on those data because we use the model to predict the values it was estimated on.
 New data would always be harder to predict correctly for any statistical or machine-learning model.
 The following table summarises the predictive accuracy of what we shall call the *Paper model* (which is the GLM that implements the idea from the paper in a mathematically more sound way).
 The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
-The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)` %.
-This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)` %.^[The base rate is relevant inasmuch as one can usually make above 50 % correct predictions simply by always guessing the modal---most frequent---outcom. In the long run, the correct guesses then equal the base rate.]
+The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)` %.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
+This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)` %.^[The base rate is relevant inasmuch as one can usually make above 50 % correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
 
 ```{r, echo=F}
 .confusionPaper
@@ -242,6 +262,92 @@ The Text model fares much better in this respect, but only by acknowledging that
   vioplot(predict(AgreementTextModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Model with text as random effect", ylab="")
   par(mfrow=c(1,1))
 ```
+
+
+```{r, echo=F}
+.p <- predict(AgreementPaperModel, type="response")
+.d <- AgreementData$Agreement
+.ts <- seq(0, 1, 0.01)
+.correct <- function(t) Correct(.p, .d, t)
+.AgreementPaperModelCorrects <- unlist(lapply(.ts, .correct))
+
+.p <- predict(AgreementTextModel, type="response")
+.d <- AgreementData$Agreement
+.ts <- seq(0, 1, 0.01)
+.correct <- function(t) Correct(.p, .d, t)
+.AgreementTextModelCorrects <- unlist(lapply(.ts, .correct))
+
+par(mfrow=c(1,2))
+plot(.AgreementPaperModelCorrects, type="l", lwd=2, bty="n",
+     main="Paper model",
+     xlab="Probability threshold for prediction",
+     ylab="Percent of correct predictions"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     )
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+plot(.AgreementTextModelCorrects, type="l", lwd=2, bty="n",
+     main="Text model",
+     xlab="Probability threshold for prediction",
+     ylab="Percent of correct predictions"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     )
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+par(mfrow=c(1,1))
+```
+
+Finally, we can approach the accuracy of the model from two other perspectives.
+The *Precision* is the proportion of correct predictions of the event occurring (here, the subject being overtly realised) among all predictions of this event.
+In other words, it is the number of true positives divided by all positives (true or false).
+The *Recall*, on the other hand, is the proportion of correct predictions of the event occurring among all the cases in which the event actually occurred.
+Put differently, it is the number of true positives divided by the number of events that have occurred.
+These two scores, evaluated at different thresholds, can be used to assess the quality of the model and adjust the threshold.
+
+
+```{r, echo=F}
+.p <- predict(AgreementPaperModel, type="response")
+.precrec <- function(t) PrecisionRecall(.p, .d, t)
+.AgreementPaperModelPR <- lapply(.ts, .precrec)
+.PrecisionPaper <- unlist(.AgreementPaperModelPR)[seq(1,201,2)]
+.RecallPaper <- unlist(.AgreementPaperModelPR)[seq(2,202,2)]
+
+.p <- predict(AgreementTextModel, type="response")
+.precrec <- function(t) PrecisionRecall(.p, .d, t)
+.AgreementTextModelPR <- lapply(.ts, .precrec)
+.PrecisionText <- unlist(.AgreementTextModelPR)[seq(1,201,2)]
+.RecallText <- unlist(.AgreementTextModelPR)[seq(2,202,2)]
+
+par(mfrow=c(1,2))
+plot(.PrecisionPaper, type="l", lwd=2, bty="n",
+     main="Paper model",
+     xlab="Probability threshold for prediction",
+     ylab="Precision and Recall"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     ,col=2
+     )
+lines(.RecallPaper, col=3, lwd=2)
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+legend("bottomleft", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
+plot(.PrecisionText, type="l", lwd=2, bty="n",
+     main="Text model",
+     xlab="Probability threshold for prediction",
+     ylab="Precision and Recall"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     ,col=2
+     )
+lines(.RecallText, col=3, lwd=2)
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+legend("bottomleft", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
+par(mfrow=c(1,1))
+```
+
 
 
 ## Study 2: Null subjects in Spanish
@@ -366,8 +472,55 @@ Most strikingly, the Paper model appears to estimate almost exactly the same pro
 In other words, orality, time, and country (or macroregion) are irrelevant.
 Reaching the sigificance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
+The following plot shows the percentage of correct binary predictions based on the model at different tresholds.
+The percentage rises quickly until the point where 100 % minus the base rate has been reached, which is indicative of a model that does nothing but predict the base rate. 
 
-Finally, we plot the probabilities estimated under the Paper model against the null model.
+```{r, echo=F}
+.p <- predict(SubjectPaperModel, type="response")
+.d <- ifelse(SubjectData$Subject=="OVERT",1,0)
+.ts <- seq(0, 1, 0.01)
+
+# Contect capture.
+.correct <- function(t) Correct(.p, .d, t)
+
+.SubjectPaperModelCorrects <- unlist(lapply(.ts, .correct))
+
+plot(.SubjectPaperModelCorrects, type="l", lwd=2, bty="n",
+     xlab="Probability threshold for prediction",
+     ylab="Percent of correct predictions"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     )
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+```
+
+To conclude, here are the Precision and Recall curves for the Paper model.
+Since the model does not predict any probabilities above `r round(max(.p), 2)`, both precision and recall cannot be higher than 0 past this threshold.
+
+```{r, echo=F}
+
+# Contect capture.
+.precrec <- function(t) PrecisionRecall(.p, .d, t)
+  
+.SubjectPaperModelPR <- lapply(.ts, .precrec)
+.Precision <- unlist(.SubjectPaperModelPR)[seq(1,201,2)]
+.Recall <- unlist(.SubjectPaperModelPR)[seq(2,202,2)]
+
+plot(.Precision, type="l", lwd=2, bty="n",
+     xlab="Probability threshold for prediction",
+     ylab="Precision and Recall"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     ,col=2
+     )
+lines(.Recall, col=3, lwd=2)
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+legend("topright", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
+```
+
+Finally, and most revealing perhaps, we plot the probabilities estimated under the Paper model against the null model.
 
 ```{r, echo=F}
 plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type="response"),
