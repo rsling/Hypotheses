@@ -1,0 +1,12 @@
+
+# Putting data to good use
+
+…
+
+From a reviewers' point of view, the paper actually does not contain enough information to notice any irregularities.
+Hence, reviewers should always be put in a position to detect problems like these via strict requirements regarding the reporting of statistical results.
+While it is standard for journals in other fields to have very specific guidelines on the reporting of statistics, linguistics journals accept virtually any empirical work that involves statistical analysis deemed as sufficient by the reviewers.
+In this case, the base rate, information on the probability estimates, even R² coefficients (despite all the problems with them, **REF**), and many other existing metrics would have been helpful.
+P-values---as we have shown---mean virtually nothing, and a DHARMa residuals check [@WalkdenEa2023,552] only detects for a very specific type of anomaly, not for a substantively good model.
+
+…
