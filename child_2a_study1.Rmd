@@ -14,7 +14,7 @@ Based on a plot overlaying texts as dots on a map of England (their Figure 1), i
 The parameters of a linear model "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated.
 With the Southern dialects as the reference category (because they had the least amount contact with Scandinavian languages), the authors find a *significant effect* for North and the East Midlands but not the West Midlands [@WalkdenEa2023,552], where Footnote 8 was ommitted:
 
-> The results showed a significant effect of region for the North (β=0.39, SE=0.15, t=2.6, p=0.01) and the East Midlands (β=0.2, SE=0.10, t=2.09, p=0.04), but not the West (β=0.13, SE=0.13, t=1.0, p=0.3). This geographical distribution suggests that contact with Scandinavian speakers played a relevant role in the loss of inflectional morphology, but equally importantly, it shows that concord in quantifiers was more affected than concord with adjectives.
+> The results showed a significant effect of region for the North ($\beta$=0.39, SE=0.15, t=2.6, p=0.01) and the East Midlands ($\beta$=0.2, SE=0.10, t=2.09, p=0.04), but not the West ($\beta$=0.13, SE=0.13, t=1.0, p=0.3). This geographical distribution suggests that contact with Scandinavian speakers played a relevant role in the loss of inflectional morphology, but equally importantly, it shows that concord in quantifiers was more affected than concord with adjectives.
 
 We will return to these results in the next section.
 However, the paper is slightly blurry with respect to the measurement of the difference in agreement between adjectives and quantifiers as used as the dependent variable.

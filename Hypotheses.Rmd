@@ -3,10 +3,10 @@ title: "Substantive and statistical hypotheses in data-oriented linguistics"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024"
 output:
+  html_document:
+    number_sections: true
   pdf_document: 
     latex_engine: xelatex
-    number_sections: true
-  html_document:
     number_sections: true
   word_document: default
 bibliography: Hypotheses.bib
@@ -180,8 +180,12 @@ ReportGLM <- function(model, data = NULL,
 
 ```
 
+<!--
+
 ```{r, child=c('child_1_findout.Rmd')}
 ```
+
+-->
 
 # Data and inferences in @WalkdenEa2023
 
@@ -194,7 +198,11 @@ ReportGLM <- function(model, data = NULL,
 ```{r, child=c('child_2c_foundout.Rmd')}
 ```
 
+<!--
+
 ```{r, child=c('child_3_gooduse.Rmd')}
 ```
+
+-->
 
 # References
