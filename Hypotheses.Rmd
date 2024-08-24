@@ -29,12 +29,13 @@ require(LaplacesDemon)
 load("Subject.RData")
 load("Agreement.RData")
 
-# For pretty-printing and stuff.
+# For prettier printing.
 
 AgreementData$Dialect <- factor(AgreementData$Dialect, levels = c("Southern", "EM", "WM", "Northern"))
-levels(AgreementData$Dialect) <- c("South", "EastMidlands", "WestMidlands", "North")
+levels(AgreementData$Dialect) <- c("South", "WestMidlands", "EastMidlands", "North")
 AgreementAggregateData$Dialect <- factor(AgreementAggregateData$Dialect, levels = c("Southern", "EM", "WM", "Northern"))
 levels(AgreementAggregateData$Dialect) <- c("South", "EastMidlands", "WestMidlands", "North")
+AgreementData$POS <- as.factor(AgreementData$POS)
 
 colnames(SubjectData)[3] <- "Subject"
 colnames(SubjectData)[7] <- "Text"
@@ -60,8 +61,121 @@ Correct <- function(predictions, data, threshold) {
   .m[2]/sum(.m)
 }
 
-ReportGLM <- function(model) {
+ReportGLM <- function(model, data = NULL,
+                      name = NULL,
+                      intercept.descriptor = NULL,
+                      lom.descriptors = NULL,
+                      coeff.round = 2, sigma.round = 2, p.round = 4) {
   
+  # Analyse model as passed.
+  .sum <- summary(model)
+  .r2 <- r2(model)
+  .coeffs <- .sum$coefficients
+  
+  # Models with no fixed effects don't get a table.
+  if (nrow(.coeffs)>1) {
+    .coeffs <- .coeffs[,c(1,3,4)]
+    colnames(.coeffs) <- c("Coefficient", "Sigma", "P")
+    .coeffs[,1] <- round(.coeffs[,1], coeff.round)
+    .coeffs[,2] <- round(abs(.coeffs[,2]), sigma.round)
+    .coeffs[,3] <- round(abs(.coeffs[,3]), p.round)
+    .facs <- colnames(attr(terms(model), "factors"))
+  
+    # Change intercept label if passed.
+    if (!is.null(intercept.descriptor)) rownames(.coeffs)[1] <- intercept.descriptor
+  
+    # Find table for term headers.
+    # Create regexes with regexes. Ah-haha!
+    .regex <- unlist(lapply(.facs, function(s) {
+      s <- gsub(':([^:]+)', ':\\1([^:]\\+|)', s)
+      s <- gsub('^([^:]+)', '\\1([^:]\\+|)', s)
+      s
+    }))
+    
+    # Same for the replacement patterns.
+    .subs <- unlist(lapply(.facs, function(s) {
+      s <- gsub(':([^:]+)', ':\\\\0', s)
+      s <- gsub('^([^:]+)', '\\\\0', s)
+      # Unfortunately, regexes cannot count. Hence, some hacking.
+      .s <- unlist(strsplit(s, '\\0', fixed=T))
+      s <- ""
+      for (k in 1:length(.s)) s <- paste0(s, .s[k], "\\", k)
+      s
+    }))
+  
+    # Find positions where term label changes.
+    .splits <- c(1, unlist(lapply(.regex, function(reg) {
+      grep(reg, rownames(.coeffs))[1]
+    })))
+  
+    # Annotate regressors with LOMs if passed and correct length.
+    if ((!is.null(lom.descriptors)) & (length(lom.descriptors)==length(.facs)))
+      .facs <- paste0(.facs, " (", lom.descriptors, ")")
+  
+    .levels <- unname(unlist(rownames(.coeffs)))
+    for (h in length(.regex):1) {
+      .levels <- sub(.regex[h], .subs[h], .levels)
+    }
+    
+    # For interactions of numerical terms, remove redundant colons.
+    .levels <- gsub(":+", ":", .levels)
+    .levels <- gsub("^:", "", .levels)
+    .levels <- gsub(":$", "", .levels)
+    
+    .coeffs <- cbind(
+      data.frame(
+        Term = rep("", nrow(.coeffs)),
+        Level <- .levels
+      ),
+      .coeffs
+    )
+  
+    colnames(.coeffs)[2] <- "Level"
+    .facs <- c("Intercept", .facs)
+    .coeffs[.splits, "Term"] <- .facs
+    rownames(.coeffs) <- 1:nrow(.coeffs)
+  } 
+  else {.coeffs <- NULL}
+
+  # For mixed models, get random effects.
+  if (is(model, "merMod")) {
+    .levels <- unlist(lapply(ranef(model), function(re) nrow(re)))
+    .randomr <- paste0(" There are random effects: ", 
+                       paste(names(.levels), " with ", unname(.levels), " levels", sep = "", collapse =", "), ".")
+  } else {
+    .levels <- NULL
+    .randomr <- ""
+  }
+  
+  # If we have data, get accuracy.
+  if (!is.null(data)) {
+    .accuracy <- Correct(predict(model, type="response"), data, 0.5)
+    .baserate <- max(table(data))/sum(table(data))
+    .accuracyr <- paste0(" The prediction accuracy on the training data at a probability threshold of 0.5 is ", round(.accuracy,3), " given a base rate of ", round(.baserate, 3), ".")
+  }
+  else {
+    .accuracy <- NULL
+    .baserate <- NULL
+    .accuracyr <- ""
+  }
+  
+  # Process R2 for report.
+  .r2r <- unlist(lapply(.r2, function(r) {paste0(names(r), "=", round(unname(r),2))}))
+  .r2r <- gsub('R2', 'R²', paste(unlist(.r2r), collapse=", "))
+  
+  .name <- ifelse(!is.null(name), paste0("The ", name, " "), 'This ')
+  
+  list(
+    "Table"    = .coeffs,
+    "Random"   = .levels,
+    "R2"       = .r2,
+    "AIC"      = .sum$aic,
+    "Accuracy" = .accuracy,
+    "Baserate" = .baserate,
+    "Report"= paste0(.name, "is a ", family(model)$family, " model with a ",
+                     family(model)$link, " link. AIC=", round(AIC(model),2),
+                     ", ", .r2r, ".", .accuracyr, .randomr)
+    )
 }
 
 ```

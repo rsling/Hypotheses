@@ -13,8 +13,13 @@ Henceforth, we shall call this the *Paper model*.
 
 ```{r, echo=F}
 SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
-summary(SubjectPaperModel, corr=F)
+SubjectPaperReport <- ReportGLM(SubjectPaperModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Paper model", intercept.descriptor = "(0, 0, Spain)")
+SubjectPaperReport$Table
+
+#summary(SubjectPaperModel)
 ```
+
+`r SubjectPaperReport$Report`
 
 We confirm this by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 ommitted) and verifying that the numbers provided match.
 Highlights added by us.
@@ -35,9 +40,11 @@ In other words, we allow the intercept to vary between groups of data points def
 
 ```{r, echo=F}
 SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
-summary(SubjectNullModel, corr=F)
+SubjectNullReport <- ReportGLM(SubjectNullModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Null model", intercept.descriptor = "(1)")
 compare_performance(SubjectNullModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
+
+`r SubjectNullReport$Report`
 
 The AIC of the Paper model is slighlty lower.
 The marginal R² of the Null model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper model is minimally higher than that of the Null model.
@@ -51,22 +58,30 @@ Contrary to the quote from the paper, the model converges, and the country regre
 
 ```{r, warning=F, echo=F}
 SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
-summary(SubjectCountryGenreModel, corr=F)
+SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Country-Genre model", intercept.descriptor = "(Spain, DOC)")
+SubjectCountryGenreReport$Table
+
 compare_performance(SubjectCountryGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
+
+`r SubjectCountryGenreReport$Report`
 
 We see that the Country-Genre model is also slightly worse than the Paper model.
 It is unclear, however, why the authors claim that the country regressor was impossible to add for technical reasons.
 The estimator has no trouble estimating the coefficients, they just don't reach the nominal significance level of 0.05.
 
 We proceed to estimating the parameters of a more complex model.
-This Full-Country model is the Paper model including orality and year as regressors but with country instead of macroregion and additionally genre as fixed effects.
+The *Full-Country model* is the Paper model including orality and year as regressors but with country instead of macroregion and additionally genre as fixed effects.
 
 ```{r, warning=F, echo=F}
 SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
-summary(SubjectFullCountryModel, corr=F)
+SubjectFullCountryReport <- ReportGLM(SubjectFullCountryModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Full-Country model", intercept.descriptor = "(0, 0, Spain, DOC)")
+SubjectFullCountryReport$Table
+
 compare_performance(SubjectFullCountryModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
+
+`r SubjectFullCountryReport$Report`
 
 The Full-Country model performs slightly better than the Paper model in terms of the R².
 It should, however, have become clear by now that the slightly varying conditional R² coefficients are merely an artefact due to the shifting marginal R² coefficients.
@@ -76,9 +91,13 @@ If we drop genre, the picture changes again with the *Full-No-Genre model*.
 
 ```{r, warning=F, echo=F}
 SubjectFullNoGenreModel <- glmer(Subject~ORScoreZ*YearZ+Country+(1|Text), data = SubjectData, family="binomial")
-summary(SubjectFullNoGenreModel, corr=F)
+SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Full-No-Genre model", intercept.descriptor = "(0, 0, Spain)")
+SubjectFullNoGenreReport$Table
+
 compare_performance(SubjectFullNoGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
+
+`r SubjectFullNoGenreReport$Report`
 
 We see that model specification is not an exact art.
 Dropping genre as a regressor leads to Columbia also reaching the nominal significance level.

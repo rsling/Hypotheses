@@ -103,8 +103,11 @@ It models the probability of the realisation of agreement on a word as a functio
 
 ```{r, echo=F}
 AgreementPaperModel <- glm(Agreement~POS*Dialect, data = AgreementData, family=binomial)
-summary(AgreementPaperModel)
+AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Paper model", intercept.descriptor = "(Adjective, South, 0)")
+AgreementPaperReport$Table
 ```
+
+`r AgreementPaperReport$Report`
 
 The GLM estimates indicate that (assuming a cavalier significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p vaues).
 However, writers from the Northern dialect seem to have a relatively strong tendency to avoid agreement specifically on determiners (see the interaction between POSDeterminer and DialectNorth).
@@ -116,9 +119,13 @@ If we drop the influence of dialect from the model specification, we arrive at a
 
 ```{r, echo=F}
 AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)
-summary(AgreementNullModel)
+AgreementNullReport <- ReportGLM(AgreementNullModel, AgreementData$Agreement, name="Null model", intercept.descriptor = "(Adjective)")
+AgreementNullReport$Table
+
 compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)]
 ```
+
+`r AgreementNullReport$Report`
 
 With all this, we should keep in mind that the plot in the previous section shows that there simply are not that much data from the North.
 The fact that the level DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North.
@@ -128,9 +135,11 @@ It seems appropriate to model the variance at the document level as a random eff
 
 ```{r, echo=F}
 AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData, family=binomial)
-summary(AgreementTextModel, corr=F)
-r2(AgreementTextModel)
+AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text model", intercept.descriptor = "(Adjective, South, 0)")
+AgreementTextReport$Table
 ```
+
+`r AgreementTextReport$Report`
 
 We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, at least measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),2)`.
 The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
