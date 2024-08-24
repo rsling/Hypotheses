@@ -117,7 +117,7 @@ ReportGLM <- function(model, data = NULL,
   # For mixed models, get random effects.
   if (is(model, "merMod")) {
     .levels <- unlist(lapply(ranef(model), function(re) nrow(re)))
-    .randomr <- paste0(" It includes the following random effects: ", 
+    .randomr <- paste0(ifelse(length(.levels)==1, " The only random effect is ", " The random effects are: "), 
                        paste(names(.levels), " with ", unname(.levels), " levels", sep = "", collapse =", "), ".")
   } else {
     .levels <- NULL
@@ -128,7 +128,7 @@ ReportGLM <- function(model, data = NULL,
   if (!is.null(data)) {
     .accuracy <- Correct(predict(model, type="response"), data, 0.5)
     .baserate <- max(table(data))/sum(table(data))
-    .accuracyr <- paste0(" The prediction accuracy on the training data at a probability threshold of 0.5 is ", round(.accuracy, acc.round), " given a base rate of ", round(.baserate, acc.round), ".")
+    .accuracyr <- paste0(" The prediction accuracy on the training data (at a probability threshold of 0.5) is ", round(.accuracy, acc.round), " given a base rate of ", round(.baserate, acc.round), ".")
   }
   else {
     .accuracy <- NULL
@@ -140,7 +140,9 @@ ReportGLM <- function(model, data = NULL,
   .r2r <- unlist(lapply(.r2, function(r) {paste0(names(r), "=", round(unname(r), r2.round))}))
   .r2r <- gsub('R2', 'R²', paste(unlist(.r2r), collapse=", "))
   
+  # Miscellaneous fragments for the report.
   .name <- ifelse(!is.null(name), paste0("The ", name, " "), 'This ')
+  .type <- ifelse(is(model, "merMod"), "multilevel ", "")
   
   list(
     "Table"    = .coeffs,
@@ -149,7 +151,7 @@ ReportGLM <- function(model, data = NULL,
     "AIC"      = round(AIC(model), aic.round),
     "Accuracy" = round(.accuracy, acc.round),
     "Baserate" = round(.baserate, acc.round),
-    "Report"   = paste0(.name, "is a ", family(model)$family, " model with a ",
+    "Report"   = paste0(.name, "is a ", .type, family(model)$family, " model with a ",
                         family(model)$link, " link. AIC=", round(AIC(model), aic.round),
                         ", ", .r2r, ".", .accuracyr, .randomr)
     )
