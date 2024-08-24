@@ -17,7 +17,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+knitr::opts_chunk$set(comment = "")
 set.seed(911)
 
 require(lme4)
@@ -41,6 +41,8 @@ colnames(SubjectData)[3] <- "Subject"
 colnames(SubjectData)[7] <- "Text"
 colnames(SubjectData)[10] <- "Macroregion"
 
+SubjectData$Subject <- ifelse(SubjectData$Subject == "NULL", 0, 1)
+levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 
 # Calculate precision and recall at a certain threshold t.
 PrecisionRecall <- function(predictions, data, threshold) {

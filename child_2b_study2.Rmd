@@ -13,7 +13,7 @@ Henceforth, we shall call this the *Paper model*.
 
 ```{r, echo=F}
 SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
-SubjectPaperReport <- ReportGLM(SubjectPaperModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Paper model", intercept.descriptor = "(0, 0, Spain)")
+SubjectPaperReport <- ReportGLM(SubjectPaperModel, SubjectData$Subject, name="Paper model", intercept.descriptor = "(0, 0, Spain)")
 SubjectPaperReport$Table
 ```
 
@@ -38,7 +38,7 @@ In other words, we allow the intercept to vary between groups of data points def
 
 ```{r, echo=F}
 SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
-SubjectNullReport <- ReportGLM(SubjectNullModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Null model", intercept.descriptor = "(1)")
+SubjectNullReport <- ReportGLM(SubjectNullModel, SubjectData$Subject, name="Null model", intercept.descriptor = "(1)")
 compare_performance(SubjectNullModel, SubjectPaperModel)[,c(1,3,9,10)]
 ```
 
@@ -56,7 +56,7 @@ Contrary to the quote from the paper, the model converges, and the country regre
 
 ```{r, warning=F, echo=F}
 SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
-SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Country-Genre model", intercept.descriptor = "(Spain, DOC)")
+SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, SubjectData$Subject, name="Country-Genre model", intercept.descriptor = "(Spain, Nonliterary)")
 SubjectCountryGenreReport$Table
 
 compare_performance(SubjectCountryGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
@@ -73,7 +73,7 @@ The *Full-Country model* is the Paper model including orality and year as regres
 
 ```{r, warning=F, echo=F}
 SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
-SubjectFullCountryReport <- ReportGLM(SubjectFullCountryModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Full-Country model", intercept.descriptor = "(0, 0, Spain, DOC)")
+SubjectFullCountryReport <- ReportGLM(SubjectFullCountryModel, SubjectData$Subject, name="Full-Country model", intercept.descriptor = "(0, 0, Spain, DOC)")
 SubjectFullCountryReport$Table
 
 compare_performance(SubjectFullCountryModel, SubjectPaperModel)[,c(1,3,9,10)]
@@ -89,7 +89,7 @@ If we drop genre, the picture changes again with the *Full-No-Genre model*.
 
 ```{r, warning=F, echo=F}
 SubjectFullNoGenreModel <- glmer(Subject~ORScoreZ*YearZ+Country+(1|Text), data = SubjectData, family="binomial")
-SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Full-No-Genre model", intercept.descriptor = "(0, 0, Spain)")
+SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, SubjectData$Subject, name="Full-No-Genre model", intercept.descriptor = "(0, 0, Spain)")
 SubjectFullNoGenreReport$Table
 
 compare_performance(SubjectFullNoGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
@@ -109,19 +109,13 @@ As explained in the discussion of Study 1, we check the probability estimates th
 First, we examine the correct binary predictions using a 0.5 probability threshold.
 
 ```{r, echo=F}
-table(ifelse(predict(SubjectPaperModel, type="response")<0.5, "Pronoun", "Nullsubject"))
-```
-
-Oddly, the model predicts that there should never be an overt subject.
-This is due to the obviously uninformative regressors and the high base rate.
-The base rate (no overt subject) is at 88.55 %.
-
-```{r, echo=F}
+table(factor(ifelse(predict(SubjectPaperModel, type="response")<0.5, "Null subject", "Pronoun"), levels=c("Null subject", "Pronoun")))
 p.baseline <- as.numeric(predict(SubjectPaperModel, type="response")>0.5)
-mean(p.baseline==as.numeric(SubjectData$Subject)-1)
-table(SubjectData$Subject)
 ```
 
+The model never predicts that there should be an overt subject.
+This is due to the obviously uninformative regressors and the high base rate.
+The base rate (no overt subject) is at `r round(mean(p.baseline==as.numeric(SubjectData$Subject)-1)*100,2)` %.
 To see whether the Paper model could make better binary predictions with a lower probability threshold for binary decisions, we plot the predictions of the Paper model and the Null model next to each other as violin plots.
 
 ```{r, echo=F}
@@ -141,7 +135,7 @@ The percentage rises quickly until the point where 100 % minus the base rate has
 
 ```{r, echo=F}
 .p <- predict(SubjectPaperModel, type="response")
-.d <- ifelse(SubjectData$Subject=="OVERT",1,0)
+.d <- SubjectData$Subject
 .ts <- seq(0, 1, 0.01)
 
 # Contect capture.
