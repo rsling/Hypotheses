@@ -15,8 +15,6 @@ Henceforth, we shall call this the *Paper model*.
 SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
 SubjectPaperReport <- ReportGLM(SubjectPaperModel, ifelse(SubjectData$Subject=="OVERT", 1, 0), name="Paper model", intercept.descriptor = "(0, 0, Spain)")
 SubjectPaperReport$Table
-
-#summary(SubjectPaperModel)
 ```
 
 `r SubjectPaperReport$Report`

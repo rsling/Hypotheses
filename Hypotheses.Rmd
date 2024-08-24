@@ -65,7 +65,16 @@ ReportGLM <- function(model, data = NULL,
                       name = NULL,
                       intercept.descriptor = NULL,
                       lom.descriptors = NULL,
-                      coeff.round = 2, sigma.round = 2, p.round = 4) {
+                      stars = c(0.05, 0.01, 0.001),
+                      coeff.round = 2,
+                      sigma.round = 2,
+                      p.round = 4,
+                      aic.round = 2,
+                      r2.round = 4,
+                      acc.round = 2) {
+  
+  require(lme4)
+  require(performance)
   
   # Analyse model as passed.
   .sum <- summary(model)
@@ -76,6 +85,13 @@ ReportGLM <- function(model, data = NULL,
   if (nrow(.coeffs)>1) {
     .coeffs <- .coeffs[,c(1,3,4)]
     colnames(.coeffs) <- c("Coefficient", "Sigma", "P")
+    
+    # Calculate stars with unrounded P.
+    if (!is.null(stars)) {
+      .stars <- rep("", nrow(.coeffs))
+      for (star in stars) .stars <- ifelse(.coeffs[,"P"] < star, paste0(.stars, "*"), .stars)
+    }
+
     .coeffs[,1] <- round(.coeffs[,1], coeff.round)
     .coeffs[,2] <- round(abs(.coeffs[,2]), sigma.round)
     .coeffs[,3] <- round(abs(.coeffs[,3]), p.round)
@@ -134,13 +150,16 @@ ReportGLM <- function(model, data = NULL,
     .facs <- c("Intercept", .facs)
     .coeffs[.splits, "Term"] <- .facs
     rownames(.coeffs) <- 1:nrow(.coeffs)
+    
+    # Attach stars if desired.
+    if (!is.null(stars)) .coeffs <- data.frame(.coeffs, "Sig." = .stars)
   } 
   else {.coeffs <- NULL}
 
   # For mixed models, get random effects.
   if (is(model, "merMod")) {
     .levels <- unlist(lapply(ranef(model), function(re) nrow(re)))
-    .randomr <- paste0(" There are random effects: ", 
+    .randomr <- paste0(" It includes the following random effects: ", 
                        paste(names(.levels), " with ", unname(.levels), " levels", sep = "", collapse =", "), ".")
   } else {
     .levels <- NULL
@@ -151,7 +170,7 @@ ReportGLM <- function(model, data = NULL,
   if (!is.null(data)) {
     .accuracy <- Correct(predict(model, type="response"), data, 0.5)
     .baserate <- max(table(data))/sum(table(data))
-    .accuracyr <- paste0(" The prediction accuracy on the training data at a probability threshold of 0.5 is ", round(.accuracy,3), " given a base rate of ", round(.baserate, 3), ".")
+    .accuracyr <- paste0(" The prediction accuracy on the training data at a probability threshold of 0.5 is ", round(.accuracy, acc.round), " given a base rate of ", round(.baserate, acc.round), ".")
   }
   else {
     .accuracy <- NULL
@@ -160,7 +179,7 @@ ReportGLM <- function(model, data = NULL,
   }
   
   # Process R2 for report.
-  .r2r <- unlist(lapply(.r2, function(r) {paste0(names(r), "=", round(unname(r),2))}))
+  .r2r <- unlist(lapply(.r2, function(r) {paste0(names(r), "=", round(unname(r), r2.round))}))
   .r2r <- gsub('R2', 'R²', paste(unlist(.r2r), collapse=", "))
   
   .name <- ifelse(!is.null(name), paste0("The ", name, " "), 'This ')
@@ -169,12 +188,12 @@ ReportGLM <- function(model, data = NULL,
     "Table"    = .coeffs,
     "Random"   = .levels,
     "R2"       = .r2,
-    "AIC"      = .sum$aic,
-    "Accuracy" = .accuracy,
-    "Baserate" = .baserate,
-    "Report"= paste0(.name, "is a ", family(model)$family, " model with a ",
-                     family(model)$link, " link. AIC=", round(AIC(model),2),
-                     ", ", .r2r, ".", .accuracyr, .randomr)
+    "AIC"      = round(AIC(model), aic.round),
+    "Accuracy" = round(.accuracy, acc.round),
+    "Baserate" = round(.baserate, acc.round),
+    "Report"   = paste0(.name, "is a ", family(model)$family, " model with a ",
+                        family(model)$link, " link. AIC=", round(AIC(model), aic.round),
+                        ", ", .r2r, ".", .accuracyr, .randomr)
     )
 }
 
