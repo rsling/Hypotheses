@@ -1,5 +1,4 @@
-
-# Putting data to good use
+# Putting data to good use {#gooduse}
 
 …
 

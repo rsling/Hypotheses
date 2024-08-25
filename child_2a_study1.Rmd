@@ -1,4 +1,4 @@
-## Study 1: Number agreement in English
+## Study 1: Number agreement in English {#study1}
 
 ```{r agreementpreparemodels, echo=FALSE, message=FALSE, warnings=FALSE}
 AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)

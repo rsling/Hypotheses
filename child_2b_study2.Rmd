@@ -1,10 +1,4 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
-## Study 2: Null subjects in Spanish
+## Study 2: Null subjects in Spanish {#study2}
 
 ```{r subjectpreparemodels, echo=FALSE, message=FALSE, warnings=FALSE}
 SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
@@ -33,16 +27,16 @@ Henceforth, we shall call this the *Paper model*.
 kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report, align="llrrrc")
 ```
 
-We confirm this by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 ommitted) and verifying that the numbers provided match.
+We confirm the correctness of this reconstruction of the model reported in the paper by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 ommitted) and verifying that the numbers provided match.
 Highlights added by us.
 
 > However, this trend also holds for Spain, which contradicts our sociolinguistic predictions.
-> Since the orality effect discussed in section 4.3 may be at play in the bar charts, **it is necessary to run a mixed-effects model to confirm any relationships across countries and centuries**.
+> Since the orality effect discussed in section 4.3 may be at play in the bar charts, it is necessary to run a mixed-effects model to confirm any relationships across countries and centuries.
 > A mixed model using glmer from the lme4 package (Bates et al. 2015) in R (R Core Team 2021) was run to find any such underlying patterns.
-> The model had pronoun realisation (3,773 total tokens) as the binary-dependent variable; macroregion (Spain vs. Non-Spain), orality and year (both z-scored) as fixed effects; and document ID as a random effect.
-> **Country was originally included as a fixed effect but had too many levels and was replaced with macroregion.** The interaction between year and orality was significant (β=-0.44, SE=0,21, p\<0.03), where the negative coefficient means that for every year that passes, the effect of orality on overtness is lessened.
+> The model had pronoun realisation (**3,773 total tokens**) as the binary-dependent variable; macroregion (Spain vs. Non-Spain), orality and year (both z-scored) as fixed effects; and document ID as a random effect.
+> Country was originally included as a fixed effect but had too many levels and was replaced with macroregion. The interaction between year and orality was significant (**β=-0.44**, SE=0,21, **p\<0.03**), where the negative coefficient means that for every year that passes, the effect of orality on overtness is lessened.
 > Thus, there is an underlying diachronic effect, but as we can see from Figure 3, it is a small effect.
-> **Macro-region was also found to be just significant (β=0.63, SE=0,32, p\<0.05), favouring overtness in every country but Spain**.
+> Macro-region was also found to be just significant (**β=0.63**, SE=0,32, **p\<0.05**), favouring overtness in every country but Spain.
 > This result explains the apparent rise we saw for Spain in Figure 3 as just a product of orality: the later Spanish texts score higher in ORSCORE.
 
 ### Alternative models

@@ -3,17 +3,19 @@ title: "Substantive and statistical hypotheses in data-oriented linguistics"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024"
 output:
+  bookdown::html_document2: 
+    number_sections: true
   bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
     keep_tex: yes
     toc: false
     extra_dependencies: ["float"]
-  bookdown::html_document2: 
-    number_sections: true
   bookdown::word_document2:
     number_sections: true
-bibliography: Hypotheses.bib
+bibliography: 
+  - Hypotheses.bib
+  - rs.bib
 editor_options: 
   markdown: 
     wrap: sentence
@@ -60,7 +62,7 @@ levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 ```{r, child=c('child_1_findout.Rmd')}
 ```
 
-# Data and inferences in @WalkdenEa2023
+# Data and inferences in @WalkdenEa2023 {#walkden}
 
 ```{r, child=c('child_2a_study1.Rmd')}
 ```
