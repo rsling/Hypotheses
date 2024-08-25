@@ -8,7 +8,8 @@ output:
   bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
-  word_document2: default
+  bookdown::word_document2:
+    number_sections: true
 bibliography: Hypotheses.bib
 editor_options: 
   markdown: 
