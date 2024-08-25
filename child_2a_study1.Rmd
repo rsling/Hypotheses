@@ -110,7 +110,7 @@ A model that comes close to the idea in the paper is the following one.
 It models the probability of the realisation of agreement on a word as a function of ist part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
 
 ```{r agreementpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(AgreementPaperReport$Table, caption=AgreementPaperReport$Report)
+kable(AgreementPaperReport$Table, caption=AgreementPaperReport$Report, align="llrrrc")
 ```
 
 The GLM estimates indicate that (assuming a cavalier significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p vaues).
@@ -122,7 +122,7 @@ This runs contrary to the claim in @WalkdenEa2023.
 If we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse.
 
 ```{r agreementnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(AgreementNullReport$Table, caption=AgreementNullReport$Report)
+kable(AgreementNullReport$Table, caption=AgreementNullReport$Report, align="llrrrc")
 ```
 
 ```{r agreementnullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
@@ -136,7 +136,7 @@ At the negative end, for example, there are merely five texts from the East Midl
 It seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
 
 ```{r agreementtexttable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(AgreementTextReport$Table, caption=AgreementTextReport$Report)
+kable(AgreementTextReport$Table, caption=AgreementTextReport$Report, align="llrrrc")
 ```
 
 We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, at least measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),2)`.

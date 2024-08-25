@@ -30,7 +30,7 @@ The random effect `Text` has 37 levels for 37 documents.
 Henceforth, we shall call this the *Paper model*.
 
 ```{r subjectpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report)
+kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report, align="llrrrc")
 ```
 
 We confirm this by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 ommitted) and verifying that the numbers provided match.
@@ -61,7 +61,7 @@ Contrary to the quote from the paper, the model converges, and the country regre
 [^1]: Even if it had too many levels for reliable fixed-effect estimation, a random effect (nesting the document ID) could and should have been used, see **Gelman;Schäfer**.
 
 ```{r subjectcountrygenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(SubjectCountryGenreReport$Table, caption=SubjectCountryGenreReport$Report)
+kable(SubjectCountryGenreReport$Table, caption=SubjectCountryGenreReport$Report, align="llrrrc")
 ```
 
 ```{r subjectcountrygenrecompare, warning=F, echo=F}
@@ -76,7 +76,7 @@ We proceed to estimating the parameters of a more complex model.
 The *Full-Country model* is the Paper model including orality and year as regressors but with country instead of macroregion and additionally genre as fixed effects.
 
 ```{r subjectfullcountrytable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(SubjectFullCountryReport$Table, caption=SubjectFullCountryReport$Report)
+kable(SubjectFullCountryReport$Table, caption=SubjectFullCountryReport$Report, align="llrrrc")
 ```
 
 ```{r subjectfullcountrycompare, warning=F, echo=F}
@@ -90,7 +90,7 @@ Concluding from the data presented in the paper that "overtness [is favoured] in
 If we drop genre, the picture changes again with the *Full-No-Genre model*.
 
 ```{r subjectfullnogenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(SubjectFullNoGenreReport$Table, caption=SubjectFullNoGenreReport$Report)
+kable(SubjectFullNoGenreReport$Table, caption=SubjectFullNoGenreReport$Report, align="llrrrc")
 ```
 
 ```{r subjectfullnogenrecompare, warning=F, echo=F}

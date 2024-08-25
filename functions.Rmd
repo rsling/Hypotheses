@@ -144,8 +144,13 @@ ReportGLM <- function(model, data = NULL,
   .name <- ifelse(!is.null(name), paste0("The ", name, " "), 'This ')
   .type <- ifelse(is(model, "merMod"), "multilevel ", "")
   
+  .ps <- .coeffs$P
+  .coeffs$P <- sprintf(paste0("%0.", p.round, "f"), .coeffs$P)
+  .coeffs$P[grep('^[0.]+$', .coeffs$P)] <- paste0(">", sprintf(paste0("%0.", p.round, "f"), 1/10^p.round))
+  
   list(
     "Table"    = .coeffs,
+    "P-values" = .ps,
     "Random"   = .levels,
     "R2"       = .r2,
     "AIC"      = round(AIC(model), aic.round),
@@ -156,4 +161,6 @@ ReportGLM <- function(model, data = NULL,
                         ", ", .r2r, ".", .accuracyr, .randomr)
     )
 }
+
+
 ```

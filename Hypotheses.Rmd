@@ -3,14 +3,14 @@ title: "Substantive and statistical hypotheses in data-oriented linguistics"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024"
 output:
-  bookdown::html_document2: 
-    number_sections: true
   bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
     keep_tex: yes
     toc: false
     extra_dependencies: ["float"]
+  bookdown::html_document2: 
+    number_sections: true
   bookdown::word_document2:
     number_sections: true
 bibliography: Hypotheses.bib
@@ -35,7 +35,7 @@ library(kableExtra)
 load("Subject.RData")
 load("Agreement.RData")
 
-# For prettier printing.
+# Data reorganisation/renaming or prettier printing.
 # Study 1
 AgreementData$Dialect <- factor(AgreementData$Dialect, levels = c("Southern", "EM", "WM", "Northern"))
 levels(AgreementData$Dialect) <- c("South", "WestMidlands", "EastMidlands", "North")
