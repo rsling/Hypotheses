@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 
 ## Study 2: Null subjects in Spanish
 
@@ -44,11 +49,7 @@ Highlights added by us.
 
 We begin by comparing the Paper model to the *Null model*, which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
-
-```{r subjectnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(SubjectNullReport$Table, caption=SubjectNullReport$Report)
-```
-
+SubjectNullReport$Report
 The AIC of the Paper model is slighlty lower.
 The marginal R² of the Null model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper model is minimally higher than that of the Null model.
 All in all, it does not appear even from this simple evaluation as if the orality score, the macroregion, and the date of the document explain much of the variance in the data.
