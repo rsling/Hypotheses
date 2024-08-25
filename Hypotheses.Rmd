@@ -3,12 +3,12 @@ title: "Substantive and statistical hypotheses in data-oriented linguistics"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024"
 output:
-  html_document:
+  bookdown::html_document2: 
     number_sections: true
-  pdf_document: 
+  bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
-  word_document: default
+  word_document2: default
 bibliography: Hypotheses.bib
 editor_options: 
   markdown: 
@@ -25,6 +25,8 @@ library(performance)
 library(MuMIn)
 library(vioplot)
 library(LaplacesDemon)
+library(knitr)
+library(kableExtra)
 
 load("Subject.RData")
 load("Agreement.RData")

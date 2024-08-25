@@ -1,5 +1,13 @@
-
 ## Study 1: Number agreement in English
+
+```{r agreementpreparemodels, echo=FALSE, message=FALSE, warnings=FALSE}
+AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)
+AgreementNullReport <- ReportGLM(AgreementNullModel, AgreementData$Agreement, name="Null model", intercept.descriptor = "(Adjective)")
+AgreementPaperModel <- glm(Agreement~POS*Dialect, data = AgreementData, family=binomial)
+AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Paper model", intercept.descriptor = "(Adjective, South, 0)")
+AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData, family=binomial)
+AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text model", intercept.descriptor = "(Adjective, South, 0)")
+```
 
 ### What was reported
 
@@ -9,7 +17,7 @@ Per hypothesis, this is partially due to the influence of Scandianavian language
 Also, the different pace by which determiners and adjectives lose their agreement markings is analysed as possibly related to language contact.
 The study looks at determiners (referred to as *quantifiers* throughout, although not all determiners are quantificational) and monosyllabic adjectives in 47 texts totalling 4,366 data points (called *tokens* on p. 551).
 
-Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued that some texts show stronger loss of inflection on the determiner than on the adjective.^[We would like to point out that it would have helped to also include the borders of the Danlaw in the plot. Also, the visual pattern does not appear to be very obvious.]
+Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued that some texts show stronger loss of inflection on the determiner than on the adjective.^[We would like to point out that it would have helped to also include the borders of the Danelaw in the plot. Also, the visual pattern does not appear to be very obvious.]
 @WalkdenEa2023 [552] claim that "this difference does not depend on the date of composition of the manuscript, but rather on the dialectal region. The majority of texts which show a difference between quantifiers and adjectives come from areas where Scandinavian contact was intense."
 The parameters of a linear model "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated.
 With the Southern dialects as the reference category (because they had the least amount contact with Scandinavian languages), the authors find a *significant effect* for North and the East Midlands but not the West Midlands [@WalkdenEa2023,552], where Footnote 8 was ommitted:
@@ -23,7 +31,7 @@ Luckily, the data package reveals what was actually computed.
 Per text, the authors calculated (i) the proportion of determiners with plural agreement, (ii) the proportion of adjectives with plural agreement, and (iii) subtracted the former from the latter.
 The linear model uses this difference score as the dependent variable.
 
-```{r, echo=F}
+```{r agreementpreparedifferencescores, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
   .agr <- AgreementAggregateData[order(AgreementAggregateData$Difference),]
   .grandtotals <- .agr$AdjectiveCount+.agr$DeterminerCount
   .cols <- as.integer(.agr$Dialect)
@@ -49,7 +57,7 @@ Consequently, the numbers should be inspected.
 *`r .agr[.cbmin,"Text"]`* contributes `r .agr[.cbmin,"AdjectiveCount"]` adjectives and `r .agr[.cbmin,"DeterminerCount"]` determiners, which means it has `r round(.agr[.cbmin,"DeterminerCount"]/.agr[.cbmin,"AdjectiveCount"],2)` times more determiners than adjectives.
 On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"AdjectiveCount"]` adjectives and `r .agr[.cbmax,"DeterminerCount"]` determiners, which means it has `r round(.agr[.cbmax,"DeterminerCount"]/.agr[.cbmax,"AdjectiveCount"],2)` times more adjectives than determiners.
 
-```{r, echo=F}
+```{r agreementdifferencescores, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="100%", fig.cap="Difference score for the texts in the sample; sizes of the dots correspond to the number of observations contributed by the text; vertical bars indicate the overrepresentation of determiners"}
   plot(NULL, xlim=c(0,48), ylim=c(-0.6,1.3), bty="n", ylab="Difference score", xlab="", xaxt="n")
 
   # Plot visual helper lines.
@@ -101,13 +109,9 @@ Therefore, the best model for the case at hand is one that estimates the probabi
 A model that comes close to the idea in the paper is the following one.
 It models the probability of the realisation of agreement on a word as a function of ist part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
 
-```{r, echo=F}
-AgreementPaperModel <- glm(Agreement~POS*Dialect, data = AgreementData, family=binomial)
-AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Paper model", intercept.descriptor = "(Adjective, South, 0)")
-AgreementPaperReport$Table
+```{r agreementpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(AgreementPaperReport$Table, caption=AgreementPaperReport$Report)
 ```
-
-`r AgreementPaperReport$Report`
 
 The GLM estimates indicate that (assuming a cavalier significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p vaues).
 However, writers from the Northern dialect seem to have a relatively strong tendency to avoid agreement specifically on determiners (see the interaction between POSDeterminer and DialectNorth).
@@ -117,15 +121,13 @@ This runs contrary to the claim in @WalkdenEa2023.
 
 If we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse.
 
-```{r, echo=F}
-AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)
-AgreementNullReport <- ReportGLM(AgreementNullModel, AgreementData$Agreement, name="Null model", intercept.descriptor = "(Adjective)")
-AgreementNullReport$Table
-
-compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)]
+```{r agreementnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(AgreementNullReport$Table, caption=AgreementNullReport$Report)
 ```
 
-`r AgreementNullReport$Report`
+```{r agreementnullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)], caption="Model comparison for the Null model")
+```
 
 With all this, we should keep in mind that the plot in the previous section shows that there simply are not that much data from the North.
 The fact that the level DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North.
@@ -133,13 +135,9 @@ Also, the plot shows that individual texts and their dialect group are all over 
 At the negative end, for example, there are merely five texts from the East Midlands that account for all the negative values.
 It seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
 
-```{r, echo=F}
-AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData, family=binomial)
-AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text model", intercept.descriptor = "(Adjective, South, 0)")
-AgreementTextReport$Table
+```{r agreementtexttable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(AgreementTextReport$Table, caption=AgreementTextReport$Report)
 ```
-
-`r AgreementTextReport$Report`
 
 We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, at least measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),2)`.
 The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
@@ -149,7 +147,7 @@ We proceed to a further inspection of the models presented in the next section.
 
 ### Interpretation of the models
 
-```{r, echo=F}
+```{r agreementprepareconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 .confusionPaper <- table(ifelse(predict(AgreementPaperModel, type="response")<0.5,
                                 "No Agreement", "Agreement"),
                          ifelse(AgreementData$Agreement==0, "No Agreement", "Agreement"))
@@ -173,16 +171,16 @@ The columns correspond to the actual cases of overt an non-overt agreement in th
 The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)` %.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
 This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)` %.^[The base rate is relevant inasmuch as one can usually make above 50 % correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
 
-```{r, echo=F}
-.confusionPaper
+```{r agreementpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(.confusionPaper, caption="Correct and incorrect predictions of the Paper model")
 ```
 
 The *Null model* with only part-of-speech as a predictor is considerably weaker inasmuch as it always predicts overt agreement and hence does not differentiate at all.
 However, the *Text model*, which is the one that incorporates a random effect for text, does much better than what was suggested in the paper.
 Its predictions are correct in `r sum(diag(.confusionText))` cases and incorrect in `r sum(.confusionText)-sum(diag(.confusionText))` cases, i.e., `r round(sum(diag(.confusionText))/sum(.confusionText)*100,1)` %.
 
-```{r, echo=F}
-.confusionText
+```{r agreementtextvonfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(.confusionText, caption="Correct and incorrect predictions of the Text model")
 ```
 
 If we look at the numerical probabilities estimated by the Paper model and the Text model for the observed data, we see that the model that accounts for variance between texts (and thus, implicitly, authors), differentiates much better.
@@ -192,7 +190,7 @@ Obviously, the Paper model is not even a good model of the data used to estimate
 Put differently, we see clear indication that the external validity of the model is low.
 The Text model fares much better in this respect, but only by acknowledging that the main influencing factor is the text (who wrote the text, under which circumstances, etc.).
 
-```{r, echo=F}
+```{r agreementpapertextviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Text model; only for data used to estimate the model parameters and grouped by their actual outcome"}
   par(mfrow=c(1,2))
   vioplot(predict(AgreementPaperModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability")
   vioplot(predict(AgreementTextModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Model with text as random effect", ylab="")
@@ -205,7 +203,7 @@ Adjusting the threshold at which we make the binary decision incrementally from 
 While it is not a model that differentiates very well, we see that the Text model is at least able to differentiate beyond a prediction of the base rate.
 The peak is close to 0.5, as expected for normal binomial models.
 
-```{r, echo=F}
+```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model and the Text model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
 .d <- AgreementData$Agreement
 .ts <- seq(0, 1, 0.01)
@@ -248,7 +246,7 @@ Put differently, it is the number of true positives divided by the number of eve
 These two scores, evaluated at different thresholds, can be used to assess the quality of the model and adjust the threshold.
 The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80 % for the Paper model and around 90 % for the Text model, which is another indicator that the Text model differentiates much better.
 
-```{r, echo=F}
+```{r agreementpapertextprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Precision and Recall for the Paper model and the Text model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
 .precrec <- function(t) PrecisionRecall(.p, .d, t)
 .AgreementPaperModelPR <- lapply(.ts, .precrec)

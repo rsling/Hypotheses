@@ -1,6 +1,19 @@
 
 ## Study 2: Null subjects in Spanish
 
+```{r subjectpreparemodels, echo=FALSE, message=FALSE, warnings=FALSE}
+SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
+SubjectPaperReport <- ReportGLM(SubjectPaperModel, SubjectData$Subject, name="Paper model", intercept.descriptor = "(0, 0, Spain)")
+SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
+SubjectNullReport <- ReportGLM(SubjectNullModel, SubjectData$Subject, name="Null model", intercept.descriptor = "(1)")
+SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
+SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, SubjectData$Subject, name="Country-Genre model", intercept.descriptor = "(Spain, Nonliterary)")
+SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
+SubjectFullCountryReport <- ReportGLM(SubjectFullCountryModel, SubjectData$Subject, name="Full-Country model", intercept.descriptor = "(0, 0, Spain, DOC)")
+SubjectFullNoGenreModel <- glmer(Subject~ORScoreZ*YearZ+Country+(1|Text), data = SubjectData, family="binomial")
+SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, SubjectData$Subject, name="Full-No-Genre model", intercept.descriptor = "(0, 0, Spain)")
+```
+
 ### What was reported
 
 In Study 2, the authors set out to model the influence of orality, time, and region (Spain versus Latin American countries) on the tendency to use overt subjects in Spanish despite the overall very strong tendency towards subject drop in Spanish.
@@ -11,13 +24,9 @@ Here is the report of the model fit from the paper, where `Subject` is 1 for an 
 The random effect `Text` has 37 levels for 37 documents.
 Henceforth, we shall call this the *Paper model*.
 
-```{r, echo=F}
-SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
-SubjectPaperReport <- ReportGLM(SubjectPaperModel, SubjectData$Subject, name="Paper model", intercept.descriptor = "(0, 0, Spain)")
-SubjectPaperReport$Table
+```{r subjectpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report)
 ```
-
-`r SubjectPaperReport$Report`
 
 We confirm this by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 ommitted) and verifying that the numbers provided match.
 Highlights added by us.
@@ -36,13 +45,9 @@ Highlights added by us.
 We begin by comparing the Paper model to the *Null model*, which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
 
-```{r, echo=F}
-SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
-SubjectNullReport <- ReportGLM(SubjectNullModel, SubjectData$Subject, name="Null model", intercept.descriptor = "(1)")
-compare_performance(SubjectNullModel, SubjectPaperModel)[,c(1,3,9,10)]
+```{r subjectnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectNullReport$Table, caption=SubjectNullReport$Report)
 ```
-
-`r SubjectNullReport$Report`
 
 The AIC of the Paper model is slighlty lower.
 The marginal R² of the Null model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper model is minimally higher than that of the Null model.
@@ -54,15 +59,13 @@ Contrary to the quote from the paper, the model converges, and the country regre
 
 [^1]: Even if it had too many levels for reliable fixed-effect estimation, a random effect (nesting the document ID) could and should have been used, see **Gelman;Schäfer**.
 
-```{r, warning=F, echo=F}
-SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
-SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, SubjectData$Subject, name="Country-Genre model", intercept.descriptor = "(Spain, Nonliterary)")
-SubjectCountryGenreReport$Table
-
-compare_performance(SubjectCountryGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
+```{r subjectcountrygenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectCountryGenreReport$Table, caption=SubjectCountryGenreReport$Report)
 ```
 
-`r SubjectCountryGenreReport$Report`
+```{r subjectcountrygenrecompare, warning=F, echo=F}
+kable(compare_performance(SubjectCountryGenreModel, SubjectPaperModel)[,c(1,3,9,10)], caption="Model comparison for the Country-Genre model")
+```
 
 We see that the Country-Genre model is also slightly worse than the Paper model.
 It is unclear, however, why the authors claim that the country regressor was impossible to add for technical reasons.
@@ -71,15 +74,13 @@ The estimator has no trouble estimating the coefficients, they just don't reach 
 We proceed to estimating the parameters of a more complex model.
 The *Full-Country model* is the Paper model including orality and year as regressors but with country instead of macroregion and additionally genre as fixed effects.
 
-```{r, warning=F, echo=F}
-SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
-SubjectFullCountryReport <- ReportGLM(SubjectFullCountryModel, SubjectData$Subject, name="Full-Country model", intercept.descriptor = "(0, 0, Spain, DOC)")
-SubjectFullCountryReport$Table
-
-compare_performance(SubjectFullCountryModel, SubjectPaperModel)[,c(1,3,9,10)]
+```{r subjectfullcountrytable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectFullCountryReport$Table, caption=SubjectFullCountryReport$Report)
 ```
 
-`r SubjectFullCountryReport$Report`
+```{r subjectfullcountrycompare, warning=F, echo=F}
+kable(compare_performance(SubjectFullCountryModel, SubjectPaperModel)[,c(1,3,9,10)], caption="Model comparison for the Full-Country model")
+```
 
 The Full-Country model performs slightly better than the Paper model in terms of the R².
 It should, however, have become clear by now that the slightly varying conditional R² coefficients are merely an artefact due to the shifting marginal R² coefficients.
@@ -87,15 +88,13 @@ Additionally, we observe that country has only one level (Bolivia) that is suffi
 Concluding from the data presented in the paper that "overtness [is favoured] in every country but Spain" is thus not warranted, even under an NHST umbrella.
 If we drop genre, the picture changes again with the *Full-No-Genre model*.
 
-```{r, warning=F, echo=F}
-SubjectFullNoGenreModel <- glmer(Subject~ORScoreZ*YearZ+Country+(1|Text), data = SubjectData, family="binomial")
-SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, SubjectData$Subject, name="Full-No-Genre model", intercept.descriptor = "(0, 0, Spain)")
-SubjectFullNoGenreReport$Table
-
-compare_performance(SubjectFullNoGenreModel, SubjectPaperModel)[,c(1,3,9,10)]
+```{r subjectfullnogenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectFullNoGenreReport$Table, caption=SubjectFullNoGenreReport$Report)
 ```
 
-`r SubjectFullNoGenreReport$Report`
+```{r subjectfullnogenrecompare, warning=F, echo=F}
+kable(compare_performance(SubjectFullNoGenreModel, SubjectPaperModel)[,c(1,3,9,10)], caption="Model comparison for the Full-No-Genre model")
+```
 
 We see that model specification is not an exact art.
 Dropping genre as a regressor leads to Columbia also reaching the nominal significance level.
@@ -105,20 +104,21 @@ In the next section, we show why.
 
 ### Interpretation of the models
 
-As explained in the discussion of Study 1, we check the probability estimates that the model makes on the data used to estimate its parameters.
-First, we examine the correct binary predictions using a 0.5 probability threshold.
-
-```{r, echo=F}
-table(factor(ifelse(predict(SubjectPaperModel, type="response")<0.5, "Null subject", "Pronoun"), levels=c("Null subject", "Pronoun")))
-p.baseline <- as.numeric(predict(SubjectPaperModel, type="response")>0.5)
+```{r subjectpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+SubjectPaperPredictNull <- length(which(predict(SubjectPaperModel, type="response")<=0.5))
+SubjectPaperPredictOne <- length(which(predict(SubjectPaperModel, type="response")>=0.5))
+SubjectPaperBaseline <- as.numeric(predict(SubjectPaperModel, type="response")>0.5)
 ```
 
-The model never predicts that there should be an overt subject.
+As explained in the discussion of Study 1, we check the probability estimates that the model makes on the data used to estimate its parameters.
+First, we examine the correct binary predictions using a 0.5 probability threshold.
+The model predicts a null subject in `r SubjectPaperPredictNull` cases and a pronominal subject in `r SubjectPaperPredictOne` cases.
+In other words, it predicts that there should never be an overt subject.
 This is due to the obviously uninformative regressors and the high base rate.
-The base rate (no overt subject) is at `r round(mean(p.baseline==as.numeric(SubjectData$Subject)-1)*100,2)` %.
+The base rate (no overt subject) is at `r round(mean(SubjectPaperBaseline==SubjectData$Subject)*100,2)` %.
 To see whether the Paper model could make better binary predictions with a lower probability threshold for binary decisions, we plot the predictions of the Paper model and the Null model next to each other as violin plots.
 
-```{r, echo=F}
+```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Null model; only for data used to estimate the model parameters and grouped by their actual outcome"}
 par(mfrow=c(1,2))
 vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, ylim=c(0,0.3), colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability")
 vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, ylim=c(0,0.3), colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="")
@@ -133,7 +133,8 @@ Alls points of criticism against NHST apply.
 The following plot shows the percentage of correct binary predictions based on the model at different tresholds.
 The percentage rises quickly until the point where 100 % minus the base rate has been reached, which is indicative of a model that does nothing but predict the base rate. 
 
-```{r, echo=F}
+```{r subjectpapercorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
+
 .p <- predict(SubjectPaperModel, type="response")
 .d <- SubjectData$Subject
 .ts <- seq(0, 1, 0.01)
@@ -156,7 +157,7 @@ axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 To conclude, here are the Precision and Recall curves for the Paper model.
 Since the model does not predict any probabilities above `r round(max(.p), 2)`, both precision and recall cannot be higher than 0 past this threshold.
 
-```{r, echo=F}
+```{r subjectpaperprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Precision and Recall for the Paper model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 
 # Contect capture.
 .precrec <- function(t) PrecisionRecall(.p, .d, t)
@@ -180,7 +181,7 @@ legend("topright", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
 
 Finally, and most revealing perhaps, we plot the probabilities estimated under the Paper model against the null model.
 
-```{r, echo=F}
+```{r subjectpapernullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Comparing the predictions of the Paper model and the Null model"}
 plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type="response"),
      pch=20, bty ="n",
      xlim = c(0,0.3), ylim = c(0,0.3),
