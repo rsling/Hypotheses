@@ -85,7 +85,7 @@ On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"Adjecti
 Using such aggregated data to estimate the parameters of a linear model is unwise.
 The unweighted model treats each text as contributing the same information, and its main purpose in empirical sciences is to model the distribution of data points, not aggregations.^[There are models for proportion data and other aggregated data. However, they are much more difficult to handle and---above all---interpret (**REF**). Still, the authors report a plain linear model.]
 Thus, the model from the paper makes the assumption that a text with `r .grandtotals[.mini][1]` data points (the observed mininum) and a text with `r .grandtotals[.maxi]` data points (the observed maximum) can be treated as contributing the same amount of evidence.
-This is ill-advised for all types of models, even much simpler ones like the ungrouped average of a population, which is a standard example.
+This is ill-advised for all types of models, even much simpler ones like the ungrouped average of a population, which is a standard example:
 Assume we had the task of calculating the average length of a rare kind of newts.
 Furthermore, assume their true population average length is 10 cm.
 Because our newts are so rare and difficult to find, instead of going out and measuring a random sample of those rare newts, we look for existing data, finding a report where field researchers measured two newts they found in a pond averaging 7 cm in length and another report from a larger lake where researchers measured the average length of a population of 40 newts to be 10.5 cm.

@@ -1,46 +1,20 @@
-# How to find things out in historical sociolinguistics and agriculture {#findingout}
+# How to find things out in historical sociolinguistics (and agriculture) {#findingout}
 ## The background: main hypotheses and purpose in @WalkdenEa2023 {#background}
 
-The *Transactions of the Philological Society* recently published @WalkdenEa2023, a paper that aims to support certain hypotheses regarding the [...]
+The *Transactions of the Philological Society* recently published @WalkdenEa2023, a paper that aims to support an established theory from the area of sociolinguistic typology.
+Based on @Trudgill2011 and other works by Peter Trudgill, @WalkdenEa2023[546--547] assume that there is a fundamental distinction between long-term language contact where change is introduced primarily through child bilingualism and short-term language contact characterised by adult L2 speakers.
+Details aside, there is an assumed tendency that the former leads to complexifications in the affected language and the latter to simplifications.
+Then, @WalkdenEa2023[548--550] contrast existing approaches to support this type of theory:
+the *typological* approach utilises linguistic databases to examine grammatical systems in situations of language contact at the population level;
+the *experimental* approach uses artificial language learning situations to simulate on an individual speaker level.
+While both are valid and important, the *historical corpus* approach complements them by allowing researchers to examine *when* certain linguistic changes occurred in a historical situation of language contact, and the progression of changes through the areal of the affected language should provide evidence that the change occurs predominantly and early in areas where language contact is most intense.
+The paper presents among other things three corpus studies of potentially contact-driven simplification [@WalkdenEa2023,551--561].
+We will argue that Study 1 and Study 2 do not---as they are---provide strong evidence or evidence at all for this hypothesis if the data are analysed with some rigour.
+This is due to a series of commonplace but nonetheless insufficient ways of analysing corpus data that we have encountered over and over in contemporary corpus linguistics.
+As we will hopefully make absolutely clear, our critique is directed towards such methods per se and not at the authors of the paper under discussion or the theory they advocate.
+On the contrary, the authors have to be praised for making their data available freely and sustainably for reanalyses like ours, a practice that is not at all common even today.
 
-Maybe no other advanced statistical method has been popularised farther than generalised linear models (GLMs).
-A highly influential paper in the popularisation of GLMs was @BresnanEa2007, quickly followed by @Baayen2008, which provided an accessible introduction to GLMs for linguists, @Gries2013 being another text book that included GLMs.
-A few years later, @Gries2015 still called generalised linear *mixed* models (GLMMs)---an extension of GLMs to be discussed presently---underused, but it is fair to say that diverse variants of GLMs now belong to the repertoire of statistics for linguists.
-GLMs and their variants are related to regression, and they have a very simple purpose:
-they estimate how the variance in a set of variables (the *regressors*, *predictors*, *explanatory variables*, or *independent variables*) is mathematically related to the variance in another variable (the *response*, *outcome*, or *dependent variable*).
-Regressors might, for example, be the animacy of a dative object in an English sentence (a binary variable with potential values *animate* and *inanimate*) and the length of the object NP, the response being whether the dative shift occurs or not.
-The regressor *vary* (not all instances have the same value for *animacy* and *length*), and depending on the values they have in a given sentence, some of the variance in the response *dative shift* can potentially be explained.
-One would not expect to be able to predict all cases of dative shift correctly, but by estimating the influence of the two regressors, one would certainly hope to make better predictions than by guessing.
-As researchers, GLMs allow us to specify which regressors we expect to play a role, and then the *estimator*---a piece of maths usually implemented in software often much more complicated than the simple concept of such a model might sound---uses existing data such as thousands of sentences with dative objects for which we have annotated all actual values of the regressors to provide the best possible numerical estimates of their influence on the response.^[A very thorough introduction to the applied art of modelling is @GelmanHill2006. The maths of the estimators is explained very well and accessibly in @FahrmeirEa2013, although the adverb "accessibly" has to be evaluated relative to the complexity of the task to the effect that many people might find it highly inaccessible.]
-Often, the mere quantification of the influence exerted by the various regressors on the response is more valuable to researchers than the ability to make actual predictions of what some speaker of English might say or write in the next utterance.^[Also, there are much better ways of making such predictions based on information theory today, such as large language models.]
-In order to understand how language works, we desire to know what influences the choices that speakers make, and how strongly they do so, expressed in numbers.
-Estimators for GLMs provide such numbers.
-
-We would like to point out some relevant points in this very brief introduction to statistical modelling.
-The model itself is (or ought to be) a causal model of what controls the variance in the response.
-A model is thus *specified* by researchers based on theoretical assumptions or previous knowledge acquired through measurement.
-The estimator *estimates the parameters of the model*, above all the numbers which encode the strength of the regressors' influence on the response.
-Hence, we do not *run a model* in a piece of software.
-Several questions immediately emerge:
-(i) How do the specification of the model and the estimation of its parameters ensure that the regressors encode *causal* influences.
-The answer is chillingly simple inasmuch as they absolutely do not in any way ensure this.
-One could also (with partial success and a certain precision) model the length of an NP based on whether it has undergone dative shift or not, completely reversing the causality.
-(ii) How do we decide whether the estimates of the regressors' influences are actually relevant?
-Our data set fed into the estimator might be simply too small to reach the required representativity, or it might be biased (in corpus linguistics usually because of opportunistic sampling or because too few data are supposed to cover to large a population across time or space), or there might be sampling-related quirks in the data set (such as data from even just one text that is odd compared to all other texts in the sample), or some effect might be really small and just relevant for a tiny subset of the data, etc.
-However, the estimator might come up with a number (like $\beta$=0.03, see below) that actually and correctly quantifies the influence of a regressor on the response given the data fed into the estimator.
-Still, that influence might be utterly irrelevant or spurious.
-Routinely, this question is tackled using Null-Hypothesis Significance Testing (NHST), a failed system [see among numerous others @Ioannidis2000;@Gigerenzer2004;@Perezgonzalez2015;@GreenlandEa2016;@MunafoEa2017;@Mayo2018] to decide which measured statistical generalisations are *significant* and which are not.
-NHST is usually understood as a distorted hybrid of the philosophies of inference by Ronald Aylmer Fisher [@Fisher1935;@Fisher1959] on the one hand and Jerzy Neyman and Egon Sharpe Pearson [@NeymanPearson1933;@Neyman1937;@Neyman1957] on the other hand.^[An erudite comparison of the two including biographical details is @Lehmann2011.]
-We see the deficiencies in @WalkdenEa2023 as stemming from an adherance to NHST.
-While proposed solutions to the NHST crisis have been anything from radical to technically demanding, we suggest in Sections \@ref(walkden) and \@ref(gooduse) that some very straightforward principles might avoid fallacies of NHST.
-They are simply:
-(i) Researchers must examine their data and their models carefully without confirmation bias.
-(ii) Editors and reviewers must receive as much relevant information as possible in order to spot problems with statistical models.
-(iii) The burden of reporting only positive findings in the most optimistic tone possible must be lifted from researchers, above all through pre-registration.
-Otherwise, we consider the whole field of linguistics and philology to be prone to the detrimental effects of data mining and data dredging.
-While we do not accuse the authors under discussion of data dredging, any kind of ill intent, or even negligence (see immediately below), the whole field might be at risk, and this is why we wrote this paper.
-
-Finally, we feel a disclaimer is in order.
+We feel a disclaimer is in order.
 While the general advice is often *not* to write papers like the present one because they might be perceived as destructive, overly critical, and the sign of a cantankerous character, we decided to write this paper nonetheless.
 In fact, the situation is ideal for a critique of methods and general practices precisely because we do not work in any of the relevant fields (sociolinguistics, historical linguistics, dialectology) and we have never had any academic or personal contact with any of the authors or their co-workers.^[We do work in the vast field of corpus linguistics but this is what qualifies us to write this paper in the first place.]
 Also, the authors form a large team with a well-established tenured person having an impeccable third-party funding record as the first-name author.
@@ -48,11 +22,51 @@ Therefore, we can credibly say that the purpose of this exercise is not to damag
 We do not believe that any of the hypotheses put forward in @WalkdenEa2023 is wrong or implausible, and we sincerely wish that further work provides reliable evidence supporting them.
 However, the paper under discussion most likely does not.
 
-Asking the reader to keep this in mind, we proceed as follows.
-In the remainder of this section, we very briefly discuss the nature of hypothesis testing (Section \@ref(testing)), echelons of hypotheses (Section \@ref(hypotheses)), and traditions of statistical inference (Section \@ref(inference)).
-This is not intended as an authoritative and exhaustive summary of the history of the philosophy of science or modern statistics.
+An important aspect of this is the use of statistical models in the paper, and we now turn briefly to statistical models in Section \@ref(models).
+Subsequently, we very briefly discuss the nature of hypothesis testing (Section \@ref(testing)), echelons of hypotheses (Section \@ref(hypotheses)), and traditions of statistical inference (Section \@ref(inference)).
+This is not intended as an authoritative or exhaustive summary of the history of the philosophy of science or modern statistics.
 Rather, we included it in order to position ourselves at a certain coordinate in the epistemological landscape.
 In Section \@ref(walkden), we re-analyse the data sets of Study 1 and Study 2 from @WalkdenEa2023 before summarising our critique and proposing elements of a culture of sound data analysis in linguistics and philology in Section \@ref(gooduse).
+Hence, readers only interested in the reanalysis of the data from @WalkdenEa2023 might skip to Section \@ref(walkden).
+
+## Statistical models in corpus linguistics {#models}
+
+Maybe no other advanced statistical method has been popularised farther than generalised linear models (GLMs).
+A highly influential paper in the popularisation of GLMs was @BresnanEa2007, quickly followed by @Baayen2008, which provided an accessible introduction to GLMs for linguists, @Gries2013 being another text book that included GLMs.
+A few years later, @Gries2015 still called generalised linear *mixed* models (GLMMs)---an extension of GLMs to be discussed presently---underused, but it is fair to say that diverse variants of GLMs now firmly belong to the repertoire of statistics for corpus linguists.
+GLMs and their variants are related to regression, and they have a very simple purpose:
+they estimate how the variance in a set of variables (the *regressors*, *predictors*, *explanatory variables*, or *independent variables*) is mathematically related to the variance in another variable (the *response*, *outcome*, or *dependent variable*).
+Regressors might, for example, be the animacy of a dative object in an English sentence (a binary variable with potential values *animate* and *inanimate*) and the length of the object NP, a possible response being whether the dative shift occured in the sentence or not.
+The regressors *vary* (not all instances have the same value for *animacy* and *length*), and depending on their concrete values they have in a given sentence, some of the variance in the response *dative shift* can potentially be explained.
+One would not expect to be able to predict all cases of dative shift correctly, but by estimating the influence of the two regressors, one would certainly hope to make better predictions than by guessing.
+Statistical models allow us researchers to specify which regressors we expect to play a role, and then the *estimator*---a piece of maths usually implemented in software often much more complicated than the simple concept of such a model might sound---uses existing data such as thousands of sentences with dative objects for which we have annotated all actual values of the regressors to provide the best possible numerical estimates of their influence on the response.^[A very thorough introduction to the applied art of modelling is @GelmanHill2006. The maths of the estimators is explained very well and accessibly in @FahrmeirEa2013, although the adverb "accessibly" has to be evaluated relative to the complexity of the task to the effect that many people might find it highly inaccessible.]
+Often, the mere quantification of the influence exerted by the various regressors on the response is more valuable to researchers than the ability to make actual predictions of what some speaker of English might say or write in the next utterance.^[Also, there are much better ways of making such predictions based on information theory today, such as large language models.]
+In order to understand how language works, we desire to know what influences the choices that speakers make, and how strongly they do so, expressed in numbers.
+Estimators for GLMs, GLMMs, etc. provide such numbers.
+
+We would like to highlight out some relevant points just made.
+The model itself is (or ought to be) a causal model of what controls the variance in the response.
+A model is thus *specified* by researchers based on theoretical assumptions or previous knowledge acquired through measurement.
+The estimator *estimates the parameters of the model*, above all the numbers which encode the strength of the regressors' influence on the response.
+Hence, we do not "run a model" in a piece of software [see @WalkdenEa2023,558].
+Several questions immediately emerge:
+(i) How do the specification of the model and the estimation of its parameters ensure that the regressors encode *causal* influences.
+The answer is chillingly simple inasmuch as they absolutely do not in any way ensure this.
+One could also (with partial success and a certain precision) model the length of an NP based on whether it has undergone dative shift or not, completely reversing the causality.
+(ii) How do we decide whether the estimates of the regressors' influences are actually relevant?
+The data fed into the estimator might be too little to reach the required representativity, or it might be biased (in corpus linguistics usually because of opportunistic sampling or because too few data are supposed to cover to large a population across time or space), or there might be sampling-related quirks in the data set (such as data from even just one text that is highly idiosyncratic compared to all other texts in the sample), or some effect might be really small and just relevant for a tiny subset of the data, etc.
+However, the estimator might come up with a number (like $\beta$=0.03, see below) that actually and correctly quantifies the influence of a regressor on the response given the available data.
+Still, that influence might be utterly irrelevant or spurious.
+Routinely, this question is tackled using Null-Hypothesis Significance Testing (NHST), a failed system [see among numerous others @Ioannidis2000;@Gigerenzer2004;@Perezgonzalez2015;@GreenlandEa2016;@MunafoEa2017;@Mayo2018] to decide which measured statistical generalisations are *significant* and which are not.
+NHST is usually understood as a distorted hybrid of the philosophies of inference by Ronald Aylmer Fisher [@Fisher1935;@Fisher1959] on the one hand and Jerzy Neyman and Egon Sharpe Pearson [@NeymanPearson1933;@Neyman1937;@Neyman1957] on the other hand.^[An erudite comparison of the two including biographical details is @Lehmann2011.]
+We see the deficiencies in @WalkdenEa2023 as stemming from an adherance to NHST.
+While proposed solutions to the NHST crisis have been everything from radical to technically demanding, we suggest in Sections \@ref(walkden) and \@ref(gooduse) that some very straightforward principles might avoid fallacies of NHST.
+They are simply:
+(i) Researchers must examine their data and their models carefully without confirmation bias.
+(ii) Editors and reviewers must receive as much relevant information as possible in order to spot problems with statistical models.
+(iii) The burden of reporting only positive findings in the most optimistic tone possible must be lifted from researchers, above all through pre-registration.
+Otherwise, we consider the whole field of corpus-oriented linguistics and philology to be prone to the detrimental effects of data mining and data dredging.
+While we do not accuse the authors under discussion of data dredging, any kind of ill intent, or even negligence (see immediately below), the whole field might be at risk, and this is why we wrote this paper.
 
 ## Hypotheses, falsificationism, and severe testing {#testing}
 ## The difference between substantive, particular, and statistical hypotheses {#hypotheses}

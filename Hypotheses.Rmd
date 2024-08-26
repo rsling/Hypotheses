@@ -1,5 +1,5 @@
 ---
-title: "Substantive and statistical hypotheses in corpus linguistics"
+title: "Substantive, particular, and statistical hypotheses in corpus linguistics"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024"
 output:
