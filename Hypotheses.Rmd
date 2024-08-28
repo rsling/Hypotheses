@@ -1,9 +1,11 @@
 ---
-title: "Substantive, particular, and statistical hypotheses in corpus linguistics"
+title: "Hypotheses in corpus linguistics"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
 date: "2024"
 output:
   bookdown::html_document2: 
+    number_sections: true
+  bookdown::word_document2:
     number_sections: true
   bookdown::pdf_document2: 
     latex_engine: xelatex
@@ -11,8 +13,6 @@ output:
     keep_tex: yes
     toc: false
     extra_dependencies: ["float"]
-  bookdown::word_document2:
-    number_sections: true
 bibliography: 
   - Hypotheses.bib
   - rs.bib

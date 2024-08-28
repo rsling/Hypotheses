@@ -117,8 +117,10 @@ ReportGLM <- function(model, data = NULL,
   # For mixed models, get random effects.
   if (is(model, "merMod")) {
     .levels <- unlist(lapply(ranef(model), function(re) nrow(re)))
+    .randomvar <- round(unlist(VarCorr(model)), coeff.round)
     .randomr <- paste0(ifelse(length(.levels)==1, " The only random effect is ", " The random effects are: "), 
-                       paste(names(.levels), " with ", unname(.levels), " levels", sep = "", collapse =", "), ".")
+                       paste(names(.levels), " with ", unname(.levels), " levels (s=",
+                             unname(.randomvar), ")", sep = "", collapse =", "), ".")
   } else {
     .levels <- NULL
     .randomr <- ""
