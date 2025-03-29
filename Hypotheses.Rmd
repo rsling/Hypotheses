@@ -12,7 +12,7 @@ output:
   bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
-    keep_tex: yes
+    keep_tex: no
     toc: false
     extra_dependencies: ["float"]
   bookdown::word_document2:
