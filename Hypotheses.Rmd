@@ -1,7 +1,13 @@
 ---
-title: "Hypotheses in corpus linguistics"
+title: "Hypotheses, underdetermination, and wrong models"
 author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
-date: "2024"
+date: ""
+mainfont: Libertinus Serif
+sansfont: Libertinus Sans 
+monofont: Inconsolata
+mathfont: Libertinus Math
+fontsize: 12pt
+geometry: "left=3.5cm,right=3.5cm,top=3.5cm,bottom=3.5cm"
 output:
   bookdown::pdf_document2: 
     latex_engine: xelatex
@@ -58,6 +64,7 @@ levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 ```{r, child=c('functions.Rmd')}
 ```
 
+> *Ah, but a man's grasp should exceed his reach. Or what's science for?*
 
 ```{r, child=c('child_1_findout.Rmd')}
 ```
@@ -68,9 +75,6 @@ levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 ```
 
 ```{r, child=c('child_2b_study2.Rmd')}
-```
-
-```{r, child=c('child_2c_foundout.Rmd')}
 ```
 
 ```{r, child=c('child_3_gooduse.Rmd')}
