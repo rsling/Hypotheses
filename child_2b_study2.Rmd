@@ -40,6 +40,12 @@ Obviously, we have managed to set up our model exactly as the authors did for th
 > Macro-region was also found to be just significant (**β=0.63**, SE=0,32, **p\<0.05**), favouring overtness in every country but Spain.
 > This result explains the apparent rise we saw for Spain in Figure 3 as just a product of orality: the later Spanish texts score higher in ORSCORE.
 
+A very overt problem that *any* reviewer should have spotted is that in this section of the paper, p-values are given as *less than* (\<), wheras in the report of Study 1, they were given as *equal to* (=), see our Section \@ref(study1reported).
+Clearly, the values are rounded to two decimal points, but why this discrepancy?
+Also, brute-force NHST inference is used once again:
+less than 0.05 good, greater than 0.05 bad.
+In Study 2, the model is even less informative than in Study 1, as we will show presently.
+
 ### Alternative models
 
 We begin our reanalysis by comparing the Paper model to a *Null model* (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
@@ -112,7 +118,7 @@ First, we examine the correct binary predictions using a 0.5 probability thresho
 The model predicts a null subject in `r SubjectPaperPredictNull` cases and a pronominal subject in `r SubjectPaperPredictOne` cases.
 In other words, it predicts that there should never be an overt subject.
 This is due to the obviously uninformative regressors and the high base rate.
-The base rate (no overt subject) is at `r round(mean(SubjectPaperBaseline==SubjectData$Subject)*100,2)` %.
+The base rate (no overt subject) is at `r round(mean(SubjectPaperBaseline==SubjectData$Subject)*100,2)`%.
 To see whether the Paper model could make better binary predictions with a lower probability threshold for binary decisions, we plot the predictions of the Paper model and the Null model next to each other as violin plots in Figure \@ref(fig:subjectpaperviolins).
 
 ```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Null model; only for data used to estimate the model parameters and grouped by their actual outcome"}
@@ -128,7 +134,7 @@ In other words, orality, time, and country (or macroregion) are irrelevant.
 Reaching the significance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
 Figure \@ref(fig:subjectpapercorrects) shows the percentage of correct binary predictions based on the model at different thresholds.
-The percentage rises quickly until the point where 100\% minus the base rate has been reached, which is indicative of a model that does nothing but predict the base rate. 
+The percentage rises quickly until the point where 100% minus the base rate percentage has been reached, which is indicative of a model that does nothing but predict the base rate. 
 
 ```{r subjectpapercorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 

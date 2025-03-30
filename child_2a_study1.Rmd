@@ -9,7 +9,7 @@ AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData
 AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text model", intercept.descriptor = "(Adjective, South, 0)")
 ```
 
-### What was reported
+### What was reported {#study1reported}
 
 Study 1 deals with the loss of plural agreement marking in the NP during the Middle English period.
 It is interpreted as a reduction of redundancy when plural markings are lost on attributive adjectives and determiners.
@@ -20,12 +20,15 @@ The study looks at determiners (referred to as *quantifiers* throughout, althoug
 Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued that some texts show stronger loss of inflection on the determiner than on the adjective.^[We would like to point out that it would have helped to also include the borders of the Danelaw in the plot. Also, the visual pattern does not appear to be very obvious to us.]
 @WalkdenEa2023 [552] claim that "this difference does not depend on the date of composition of the manuscript, but rather on the dialectal region. The majority of texts which show a difference between quantifiers and adjectives come from areas where Scandinavian contact was intense."
 The parameters of a linear model "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated.
-With the Southern dialects as the reference category (because they had the least amount contact with Scandinavian languages), the authors find a *significant effect* for North and the East Midlands but not the West Midlands [@WalkdenEa2023,552], where Footnote 8 was ommitted:
+With the Southern dialects as the reference category (because they had the least amount contact with Scandinavian languages), the authors find a *significant effect* for North and the East Midlands but not the West Midlands [@WalkdenEa2023,552], where Footnote 8 was omitted:
 
 > The results showed a significant effect of region for the North ($\beta$=0.39, SE=0.15, t=2.6, p=0.01) and the East Midlands ($\beta$=0.2, SE=0.10, t=2.09, p=0.04), but not the West ($\beta$=0.13, SE=0.13, t=1.0, p=0.3). This geographical distribution suggests that contact with Scandinavian speakers played a relevant role in the loss of inflectional morphology, but equally importantly, it shows that concord in quantifiers was more affected than concord with adjectives.
 
-We will return to these results in the next section.
-However, the paper is slightly blurry with respect to the measurement of the difference in agreement between adjectives and quantifiers as used as the dependent variable.
+Apparently, the inferential logic is pure NHST.
+Any result with p<0.05 is called *significant*.
+We will return to these results in the next section and show why *significant* does not mean *meaningful* or *substantive*.
+However, there is a more fundamental problem to be discussed first.
+The paper is very unclear with respect to the measurement of the difference in agreement between adjectives and quantifiers as used as the dependent variable.
 It cannot be a direct observation because it is described as a *difference* of some kind, and it appears to be a score calculated for entire texts, probably as some kind of proportion.
 Luckily, the data package reveals what was actually computed.
 Per text, the authors calculated (i) the proportion of determiners with plural agreement, (ii) the proportion of adjectives with plural agreement, and (iii) subtracted the former from the latter.
@@ -175,8 +178,8 @@ New data would always be harder to predict correctly for any statistical or mach
 
 Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of the *Paper model* (which is the GLM that implements the idea from the paper in a mathematically more sound way).
 The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
-The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)` %.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
-This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)` %.^[The base rate is relevant inasmuch as one can usually make above 50 % correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
+The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)`%.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
+This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)`%.^[The base rate is relevant inasmuch as one can usually make above 50% correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
 
 ```{r agreementpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(.confusionPaper, caption="Correct and incorrect predictions of the Paper model")
@@ -184,7 +187,7 @@ kable(.confusionPaper, caption="Correct and incorrect predictions of the Paper m
 
 The *Null model* (not shown in tabular form) with only part-of-speech as a predictor is considerably weaker inasmuch as it always predicts overt agreement and hence does not differentiate at all.
 However, the *Text model* (Table \@ref(tab:agreementtextvonfusion)), which is the one that incorporates a random effect for text, does much better than what was suggested in the paper.
-Its predictions are correct in `r sum(diag(.confusionText))` cases and incorrect in `r sum(.confusionText)-sum(diag(.confusionText))` cases, i.e., `r round(sum(diag(.confusionText))/sum(.confusionText)*100,1)` %.
+Its predictions are correct in `r sum(diag(.confusionText))` cases and incorrect in `r sum(.confusionText)-sum(diag(.confusionText))` cases, i.e., `r round(sum(diag(.confusionText))/sum(.confusionText)*100,1)`%.
 
 ```{r agreementtextvonfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(.confusionText, caption="Correct and incorrect predictions of the Text model")
@@ -254,7 +257,7 @@ In other words, it is the number of true positives divided by all positives (tru
 The *Recall*, on the other hand, is the proportion of correct predictions of the event occurring among all the cases in which the event actually occurred.
 Put differently, it is the number of true positives divided by the number of events that have occurred.
 These two scores, evaluated at different thresholds, can be used to assess the quality of the model and adjust the threshold.
-The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80 % for the Paper model and around 90 % for the Text model, which is another indicator that the Text model differentiates much better.
+The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80% for the Paper model and around 90% for the Text model, which is another indicator that the Text model differentiates much better.
 
 ```{r agreementpapertextprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Precision and Recall for the Paper model and the Text model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")

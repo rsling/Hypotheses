@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # How to find things out {#findingout}
 
 ## The background: corpus-based diachronic sociolinguistic typology {#background}
@@ -167,7 +172,7 @@ Under the *Severity* approach from @Mayo1996; @MayoSpanos2004; @Mayo2018, NHST d
 The *Severity Principle* is defined as (in its weak form and adapted for readability):
 *Some data do not provide good evidence for a hypothesis if they result from a test procedure with a very low probability or capacity of having uncovered the falsity of the hypothesis, even if it is incorrect.* [@MayoSpanos2004,162].
 If a test is interpreted as straightforward corroboration of a complex network of hypotheses (see Section \@ref(hypotheses)) simply because some minor divergences from a single derived Null hypothesis were detected in a (possibly quite large) sample, it should be considered a blatant violation of the Severity Principle.
-Such tests have an amazingly weak capability of detecting any error in our substantive or even our particular hypotheses.
+Such tests have an amazingly weak capability of detecting any error in substantive or even in particular hypotheses.
 
 The most important point of critique for our purposes is indeed that even minor divergences (even if they're actually there) make the Null false, which is easily detected in NHST in the form of a low p-value.
 Think about it:
@@ -205,14 +210,34 @@ Often, the mere quantification of the influence exerted by the various regressor
 In order to understand how language works, we desire to know what influences the choices that speakers make, and how strongly they do so, expressed in numbers.
 Estimators for GLMs, GLMMs, etc. provide such numbers.
 
-**!!! Paragraph on tests and quality metric in GLMMs here !!!**
+While LMs (*Linear Models*) are used if the response variable is measured on a numerical scale, and it depends linearly on the regressors, a Generalised Linear Model (GLM) uses more indirect maths to model any relationship.
+In linguistics, it often quantifies the influence of the regressors on a binary choice, in which case it predicts the *probability* of one variant being chosen over the other.
+GLMMs (*Generalised Linear Mixed Models*) add so-called random effects.
+They capture variation in the response variable at the group level, for example if there are multiple measurements of the same speaker, from the same text, containing the same verbs, etc. [see @Schaefer2020a for an overview].
+The estimator uses different maths for random effects, but it is often possible to include an effect either as a fixed effect or a random effect [@GelmanHill2006,245–247].
 
-We would like to highlight a relevant point which is only superficially terminological.
+There is a huge number of possible evaluations of the quality of the model fit.
+In @WalkdenEa2023, the dominant one are NHST tests of the coefficients (the numbers quantifying the strengths of influence of the regressors on the response).
+The Null is always that the coefficient is 0, and the per-coefficient p-values are only correct if the rest of the model is at least approximately correct.
+This is a big assumption, and one should not rely on a significance threshold of 0.05 under such uncertain conditions, at least not if a severe test of any substantive hypothesis is desired.
+Among the many further evaluation metrics are R² measures.
+These are attempts to quantify (in some cases merely approximate) the proportion of the variance in the response that is explained by the totality of the model.
+In mixed models, the *conditional* R² includes the random effects, and the *marginal* R² does not include the random effects.
+The *prediction accuracy* is strongly related to R², and it is the proportion of correct predictions that the fitted model makes, either on the original data or on new data.
+The prediction accuracy is related to the *base rate*, which is the accuracy achievable by always guessing the most frequent outcome.
+If a language has subject drop in 90\% of all cases, a very uninformative model might always predict subject drop and still reach 90\% (a proportion of 0.9) base rate accuracy.
+A model that reaches 90\% accuracy but differentiates between the two outcomes (instead of always predicting the most frequent outcome) is still better than a completely uninformative model.
+We'll see completely uninformative models below, however.
+The *Akaike Information Criterion* (AIC) is a measure based on information theory.
+It has no meaningful absolute numerical interpretation, but it can be used to compare models.
+A model with a lower AIC tends to *be better* than one with a higher AIC.
+There are many more evaluations and quality checks, but these basic ones suffice to show that the models reported in @WalkdenEa2023 are bad models.
+
+We would like to highlight one further point which is to some extent merely terminological.
 The model itself is (or ought to be) a causal model of what controls the variance in the response.
 A model is thus *specified* by researchers based on theoretical assumptions or previous knowledge acquired through measurement.
 The estimator *estimates the parameters of the model*, above all the numbers which encode the strength of the regressors' influence on the response (the so-called *coefficients*).
 Hence, we do not "run a model" in a piece of software [@WalkdenEa2023,558].
-
 Several questions immediately emerge:
 (i) How do the specification of the model and the estimation of its parameters ensure that the regressors encode *causal* influences.
 The answer is chillingly simple inasmuch as they absolutely do not in any way ensure this.

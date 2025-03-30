@@ -9,14 +9,14 @@ mathfont: Libertinus Math
 fontsize: 12pt
 geometry: "left=3.5cm,right=3.5cm,top=3.5cm,bottom=3.5cm"
 output:
-  bookdown::word_document2:
-    number_sections: true
   bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
     keep_tex: no
     toc: false
     extra_dependencies: ["float"]
+  bookdown::word_document2:
+    number_sections: true
   bookdown::html_document2: 
     number_sections: true
 bibliography: 
