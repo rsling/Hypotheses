@@ -17,7 +17,7 @@ Per hypothesis, this is partially due to the influence of Scandianavian language
 Also, the different pace by which determiners and adjectives lose their agreement markings is analysed as possibly related to language contact.
 The study looks at determiners (referred to as *quantifiers* throughout, although not all determiners are quantificational) and monosyllabic adjectives in 47 texts totalling 4,366 data points (called *tokens* on p. 551).
 
-Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued that some texts show stronger loss of inflection on the determiner than on the adjective.^[We would like to point out that it would have helped to also include the borders of the Danelaw in the plot. Also, the visual pattern does not appear to be very obvious.]
+Based on a plot overlaying texts as dots on a map of England (their Figure 1), it is argued that some texts show stronger loss of inflection on the determiner than on the adjective.^[We would like to point out that it would have helped to also include the borders of the Danelaw in the plot. Also, the visual pattern does not appear to be very obvious to us.]
 @WalkdenEa2023 [552] claim that "this difference does not depend on the date of composition of the manuscript, but rather on the dialectal region. The majority of texts which show a difference between quantifiers and adjectives come from areas where Scandinavian contact was intense."
 The parameters of a linear model "with the difference in agreement between adjectives and quantifiers as our dependent variable and region as independent variable" are estimated.
 With the Southern dialects as the reference category (because they had the least amount contact with Scandinavian languages), the authors find a *significant effect* for North and the East Midlands but not the West Midlands [@WalkdenEa2023,552], where Footnote 8 was ommitted:
@@ -26,7 +26,7 @@ With the Southern dialects as the reference category (because they had the least
 
 We will return to these results in the next section.
 However, the paper is slightly blurry with respect to the measurement of the difference in agreement between adjectives and quantifiers as used as the dependent variable.
-It cannot be a direct observation because it is described as a difference of some kind, and it appears to be a score calculated for entire texts, probably as some kind of proportion.
+It cannot be a direct observation because it is described as a *difference* of some kind, and it appears to be a score calculated for entire texts, probably as some kind of proportion.
 Luckily, the data package reveals what was actually computed.
 Per text, the authors calculated (i) the proportion of determiners with plural agreement, (ii) the proportion of adjectives with plural agreement, and (iii) subtracted the former from the latter.
 The linear model uses this difference score as the dependent variable (or response variable).
@@ -45,7 +45,7 @@ The linear model uses this difference score as the dependent variable (or respon
 ```
 
 Instead of discussing problems with such an approach from a theoretical point of view, we plot the resulting data to expose them by example.
-The plot shows all `r nrow(.agr)` texts (x-axis), sorted by their difference score from lowest to highest, with the difference scores plottet on the y-axis.
+Figure \@ref(fig:agreementdifferencescores) shows all `r nrow(.agr)` texts (x-axis), sorted by their difference score from lowest to highest, with the difference scores on the y-axis.
 However, we added more information that is not revealed in the paper itself.
 The shape of the dots corresponds to the dialectal regions (see legend), and their size corresponds linearly to the total number of observations (summed counts of determiners and adjectives), a number that ranges from `r .grandtotals[.mini][1]` for *`r .agr[.mini,"Text"][1]`* to `r .grandtotals[.maxi]` for *`r .agr[.maxi,"Text"]`*.
 The vertical bar for each dot encodes one further remarkable numerical property of the texts and their scores:
@@ -62,7 +62,7 @@ On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"Adjecti
 
   # Plot visual helper lines.
   for (i in 1:nrow(.agr)) {
-    lines(c(i,i), c(-0.65, 1.0), col="lightgray")
+    lines(c(i,i), c(-0.65, 1.0), col="lightgray", lty = 2)
   }
   
   for (i in 1:nrow(.agr)) {
@@ -84,47 +84,47 @@ On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"Adjecti
 
 Using such aggregated data to estimate the parameters of a linear model is detrimental.
 The unweighted model treats each text as contributing the same amount of information, which simply and obviously is not the case.
-The established purpose of such models in empirical sciences is to model the distribution of data points, not their aggregations [see @GelmanHill2006 if in doubt].^[There are models for proportion data and other aggregated data. However, they are much more difficult to handle and---above all---interpret (**REF**). Still, the authors report a plain linear model.]
+The established purpose of such models in empirical sciences is to model the distribution of data points, not their aggregations [see @GelmanHill2006 if in doubt].^[There are models for proportion data and other aggregated data. However, they are much more difficult to handle and---above all---interpret [@ZuurEa2009]. Still, the authors report a plain linear model.]
 Thus, the model from the paper makes the assumption that a text with `r .grandtotals[.mini][1]` data points (the observed mininum) and a text with `r .grandtotals[.maxi]` data points (the observed maximum) can be treated as contributing the same amount of evidence.
 This is ill-advised for all types of models, even much simpler ones like the ungrouped mean of a population, which is a standard example:
 Assume we had the task of calculating the average length of a rare kind of newts.
 Furthermore, assume their true population average length is 10 cm.
 Because our newts are so rare and difficult to find, instead of going out and measuring a random sample of those rare newts, we look for existing data, finding a report where field researchers measured two newts they found in a pond averaging 7 cm in length and another report from a larger lake where researchers measured the average length of a population of 40 newts to be 10.5 cm.
 Since the original raw data tables (individual measurements) are not included in the old reports, we take the mean of the two means, correctly finding that (7+10.5)/2 is `r (7+10.5)/2`.
-While mathematically correct, this is certainly not a good estimator of the average length of our newts.
+While mathematically correct, this is certainly not a good estimator of the average length of the newts.
 It is severly skewed because of the unequal sizes of the samples, and the two newts from the pond receive much too high a weight.
 Similarly, if *Innocendium* and *Horses* were texts as long as (or sample from texts as large as) *Purvey* and *Ayenbyte*, all generalisations about the Southern dialect group would disappear.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view. It has been downloaded 1,440 times as of 29 March 2025.]
 
 When we specify a model we assume that all kinds of sources influence the variance in the data points, which are assumed to be atomic measurements.
 The model is specified to relate the systematic (explained) influences (variance in the explanatory variables) to the variance in the response variable, leaving the unexplained variance as residuals.
-However, in this case the difference score is itself an estimate based on wildly varying sample sizes and varying balance between the numbers of adjectives and determiners, which means that it comes with a kind of variance---or plainly: inaccuracy---that the simple linear model and its interpretation are not made for (in the mathematical sense).
-This also means that actual significance levels very likely do not correspond to nominal significance levels, and using a more rigid significance level than 0.05 would be recommended.
+However, in this case the difference score is itself an estimate based on wildly varying sample sizes and wildly varying balance between the numbers of adjectives and determiners, which means that it comes with a kind of variance---or plainly: inaccuracy---that the simple linear model and its interpretation are not made for (in the mathematical sense).
+This also means that actual significance levels very likely do not correspond to nominal significance levels, and at least using a more conservative significance level than 0.05 would be recommended.
 The next section shows an alternative model and what remains of the results advertised in the paper under more accurate modelling.
 
 ### Alternative models
 
 The example given above about the length of newts assumed that the original measurements (lengths of individual newts) were lost.
 This is not the case here, and the original data points are available in the data package.
-Even in the middle ages, the relevant event was the actual production of a single instance of a determiner or an adjective by a writer.
-Therefore, the best model for the case at hand is one that estimates the probability of speakers marking plural agreement in a concrete sentence or not.^[As a minor inconsistency, the authors follow such a strategy in Study 2, see below.]
+Even in the middle ages, the relevant linguistic event was the actual production of a single instance of a determiner or an adjective by a writer.
+Therefore, the best model for the case at hand is one that estimates the probability of speakers overtly marking plural agreement in a concrete sentence or not.^[As a minor inconsistency, the authors follow such a strategy in Study 2, see below.]
 
 A model that comes close to the idea in the paper, but which avoids the problems with the unbalanced difference scores is the following one.
 It models the probability of the realisation of agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
-We call it the *Paper Model* even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
+We call it the *Paper model* even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
 See Table \@ref(tab:agreementpapertable) for a report of the coefficients and the associated p-values.
 
 ```{r agreementpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(AgreementPaperReport$Table, caption=AgreementPaperReport$Report, align="llrrrc")
 ```
 
-The GLM estimates indicate that (assuming a cavalier NHST significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p vaues).
+The GLM estimates indicate that (assuming a cavalier NHST significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p-values).
 However, writers from the Northern dialect seem to have a relatively strong tendency to avoid agreement specifically on determiners (see the interaction between POSDeterminer and DialectNorth).
 The last point is in line with the claims in the paper.
 However, the West midlands even have the stronger tendency than the East Midlands to avoid agreement overall (including on determiners).
 This runs contrary to the claim in @WalkdenEa2023.
 
-If we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse.
-We call it the *Null Model*.
+However, if we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse.
+We call it the *Null Model*, see Table \@ref(tab:agreementnulltable).
 
 ```{r agreementnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(AgreementNullReport$Table, caption=AgreementNullReport$Report, align="llrrrc")
@@ -134,18 +134,18 @@ kable(AgreementNullReport$Table, caption=AgreementNullReport$Report, align="llrr
 kable(compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)], caption="Model comparison for the Null model")
 ```
 
-With all this, we should keep in mind that the plot in the previous section shows that there simply are not that much data from the North.
-The fact that the level DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North.
+With all this, we should keep in mind that the plot in the previous section shows that there simply are not that many data from the North.
+The fact that DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North.
 Also, the plot shows that individual texts and their dialect group are all over the place in terms of ther difference score, and most texts have a difference score very close to 0 anyway.
 At the negative end, for example, there are merely five texts from the East Midlands that account for all the negative values.
-It seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
+Hence, it seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
 The resulting model is reported in Table \@ref(tab:agreementtexttable).
 
 ```{r agreementtexttable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(AgreementTextReport$Table, caption=AgreementTextReport$Report, align="llrrrc")
 ```
 
-We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, at least measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),2)`.
+We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, at least measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Paper model.
 The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
 It should be kept in mind that this generalisation is based on `r length(which(AgreementData$Dialect=="North"))` data points from `r length(which(AgreementAggregateData$Dialect=="North"))` texts spanning a period of `r max(AgreementData$Year)-min(AgreementData$Year)` years.
 Regardless of nominal significance, a careful interpretation seems wise.
@@ -165,15 +165,15 @@ We proceed to a further inspection of the models.
                          ifelse(AgreementData$Agreement==0, "No Agreement", "Agreement"))
 ```
 
-A (Generalised) Linear (Mixed) Model can be used to make predictions and go beyond any testing framework, be it NHST or any more correct framework.
+A (Generalised) Linear (Mixed) Model can be used to make predictions and thus go beyond any testing framework, be it NHST or any more correct framework.
 In the case of Binomial models, it can estimate the probability with which the event (in this case overt realisation of a subject pronoun) occurs.
 If it estimates a probability greater than 0.5 for some combination of regressors, it is the most successful (and customary) strategy to predict the occurrence of the event.^[The strategy is successful only if the model is approximately correct.]
 If it estimates a probability lower than 0.5, one should bet against the event and predict its non-occurrence.
 We now check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on.
-Note that it should perform particularly well on those data because we use the model to predict the values it was estimated on.
+Note that it should perform particularly well on those data.
 New data would always be harder to predict correctly for any statistical or machine-learning model.
 
-Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of what we called the *Paper model* (which is the GLM that implements the idea from the paper in a mathematically more sound way).
+Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of the *Paper model* (which is the GLM that implements the idea from the paper in a mathematically more sound way).
 The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
 The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)` %.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
 This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)` %.^[The base rate is relevant inasmuch as one can usually make above 50 % correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
@@ -183,7 +183,7 @@ kable(.confusionPaper, caption="Correct and incorrect predictions of the Paper m
 ```
 
 The *Null model* (not shown in tabular form) with only part-of-speech as a predictor is considerably weaker inasmuch as it always predicts overt agreement and hence does not differentiate at all.
-However, the *Text model* (Table @ref(tab:agreementtextvonfusion)), which is the one that incorporates a random effect for text, does much better than what was suggested in the paper.
+However, the *Text model* (Table \@ref(tab:agreementtextvonfusion)), which is the one that incorporates a random effect for text, does much better than what was suggested in the paper.
 Its predictions are correct in `r sum(diag(.confusionText))` cases and incorrect in `r sum(.confusionText)-sum(diag(.confusionText))` cases, i.e., `r round(sum(diag(.confusionText))/sum(.confusionText)*100,1)` %.
 
 ```{r agreementtextvonfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
@@ -199,14 +199,14 @@ The Text model fares much better in this respect, but only by acknowledging that
 
 ```{r agreementpapertextviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Text model; only for data used to estimate the model parameters and grouped by their actual outcome"}
   par(mfrow=c(1,2))
-  vioplot(predict(AgreementPaperModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, yaxt = "n")
-  vioplot(predict(AgreementTextModel, type="response")~AgreementData$Agreement, colMed = "white", colMed2 = "grey 75", xlab = "Model with text as random effect", ylab="", frame.plot = F, yaxt = "n")
+  vioplot(predict(AgreementPaperModel, type="response")~AgreementData$Agreement, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, yaxt = "n")
+  vioplot(predict(AgreementTextModel, type="response")~AgreementData$Agreement, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Text model", ylab="", frame.plot = F, yaxt = "n")
   par(mfrow=c(1,1))
 ```
 
 However, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
 This can be the case with rare events regression [@KingZeng2001], which usually applies with even much higher base rates (around 99%).
-Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at the following plot for the Paper and the Text model.
+Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper and the Text model.
 While it is not a model that differentiates very well, we see that the Text model is at least able to differentiate beyond a prediction of the base rate.
 The peak is close to 0.5, as expected for normal binomial models.
 The Paper model essentially predicts the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically.
@@ -232,6 +232,7 @@ plot(.AgreementPaperModelCorrects, type="l", lwd=2, bty="n",
      ,ylim=c(0,1)
      ,xaxt="n", yaxt="n"
      )
+abline(h=0.71, col="darkgray", lty = 3, lwd = 2)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 plot(.AgreementTextModelCorrects, type="l", lwd=2, bty="n",
@@ -241,6 +242,7 @@ plot(.AgreementTextModelCorrects, type="l", lwd=2, bty="n",
      ,ylim=c(0,1)
      ,xaxt="n", yaxt="n"
      )
+abline(h=0.71, col="darkgray", lty = 3, lwd = 2)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 par(mfrow=c(1,1))
@@ -276,7 +278,7 @@ plot(.PrecisionPaper, type="l", lwd=2, bty="n",
      ,xaxt="n", yaxt="n"
      ,col=2
      )
-lines(.RecallPaper, col=3, lwd=2)
+lines(.RecallPaper, col=3, lwd=2, lty = 2)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 legend("bottomleft", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
@@ -288,7 +290,7 @@ plot(.PrecisionText, type="l", lwd=2, bty="n",
      ,xaxt="n", yaxt="n"
      ,col=2
      )
-lines(.RecallText, col=3, lwd=2)
+lines(.RecallText, col=3, lwd=2, lty = 2)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 legend("bottomleft", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
@@ -297,7 +299,7 @@ par(mfrow=c(1,1))
 
 What does all this mean?
 It means that the inferences in the paper are wrong, and that the data in Study 1 do not provide evidence in favour of the network of hypotheses explicitly or implicitly introduced (see Section \@ref(hypotheses)), even if the model is reformulated without the inadmissible aggregation in the difference scores.
-The influences of the regressors on the choice between overtly marked and unmarked pre-nominal elements are so minor that only typical NHST misinterprtation could wrongly detect them as having a relevant influence.
+The influences of the regressors on the choice between overtly marked and unmarked pre-nominal elements are so minor that only typical NHST misinterpertation of p-values could wrongly detect them as having a relevant influence.
 What is more, the dialectal region has minor but contradictory influences inasmuch as there is no clear North-East to South-West continuum.
-If the individual text is added as a random effect, we see that the influence with high explanatory power is the individual text (and thus likely a combination of style and register), not the dialectal region.
+If the individual text is added as a random effect, we see that the influence with at least moderate explanatory power is the individual text (and thus likely a combination of style and register), not the dialectal region.
 It should be noticed that including the text as a random effect is not even an optional decision as *not* including it violates assumptions underlying the statistical model, in this case predominantly the *independence of events*.

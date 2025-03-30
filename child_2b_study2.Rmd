@@ -27,7 +27,7 @@ Henceforth, we shall call this the *Paper model*.
 kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report, align="llrrrc")
 ```
 
-We confirm the correctness of our reconstruction of the model reported in the paper by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 omitted) and verifying that the numbers provided match.
+We confirm the correctness of our reconstruction of the model reported in the paper by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 omitted) and verifying that the provided numbers match those from our reconstruction of the model.
 Highlights added by us.
 Obviously, we have managed to set up our model exactly as the authors did for their paper.
 
@@ -42,7 +42,7 @@ Obviously, we have managed to set up our model exactly as the authors did for th
 
 ### Alternative models
 
-We begin by comparing the Paper model to a *Null model* (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
+We begin our reanalysis by comparing the Paper model to a *Null model* (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
 `r SubjectNullReport$Report`
 The AIC of the Paper model is slightly lower.
@@ -82,7 +82,7 @@ The Full-Country model performs slightly better than the Paper model in terms of
 It should, however, have become clear by now that the slightly varying conditional R² coefficients are merely an artefact due to the shifting marginal R² coefficients.
 Additionally, we observe that country has only one level (Bolivia) that is sufficiently distinct from the intercept value (Spain) to reach the nominal significance level.
 Concluding from the data presented in the paper that "overtness [is favoured] in every country but Spain" is thus not warranted, even under an NHST umbrella.
-If we drop genre, the picture changes again with the *Full-No-Genre model*, see Table \@ref(tab:subjectfullnogenretable) and \@ref{tab:subjectfullnogenrecompare}.
+If we drop genre, the picture changes again with the *Full-No-Genre model*, see Tables \@ref(tab:subjectfullnogenretable) and \@ref(tab:subjectfullnogenrecompare).
 
 ```{r subjectfullnogenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(SubjectFullNoGenreReport$Table, caption=SubjectFullNoGenreReport$Report, align="llrrrc")
@@ -117,8 +117,8 @@ To see whether the Paper model could make better binary predictions with a lower
 
 ```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Null model; only for data used to estimate the model parameters and grouped by their actual outcome"}
 par(mfrow=c(1,2))
-vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, yaxt = "n")
-vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="", frame.plot = F, yaxt = "n")
+vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, yaxt = "n")
+vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="", frame.plot = F, yaxt = "n")
 par(mfrow=c(1,1))
 ```
 
@@ -127,7 +127,7 @@ Most strikingly, the Paper model appears to estimate almost exactly the same pro
 In other words, orality, time, and country (or macroregion) are irrelevant.
 Reaching the significance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
-Figure \@eref(fig:subjectpapercorrects) shows the percentage of correct binary predictions based on the model at different thresholds.
+Figure \@ref(fig:subjectpapercorrects) shows the percentage of correct binary predictions based on the model at different thresholds.
 The percentage rises quickly until the point where 100\% minus the base rate has been reached, which is indicative of a model that does nothing but predict the base rate. 
 
 ```{r subjectpapercorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
@@ -147,6 +147,7 @@ plot(.SubjectPaperModelCorrects, type="l", lwd=2, bty="n",
      ,ylim=c(0,1)
      ,xaxt="n", yaxt="n"
      )
+abline(h = 0.89, lwd = 2, lty = 3, col = "darkgray")
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 ```
@@ -170,7 +171,7 @@ plot(.Precision, type="l", lwd=2, bty="n",
      ,xaxt="n", yaxt="n"
      ,col=2
      )
-lines(.Recall, col=3, lwd=2)
+lines(.Recall, col=3, lwd=2, lty = 2)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 legend("topright", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
@@ -188,12 +189,12 @@ plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type
 
 Finally, and most revealing perhaps, we plot the probabilities estimated under the Paper model against the null model in Figure \@ref(fig:subjectpapernullcompare).
 The plot show which probability the two models estimate for each of the 3,773 observed data points, each data point being plotted as a dot.
-If the two models made exactly the same estimates, there should be a straight line.
-We see dots virtually along a straight line with negligeable deviations.
+If the two models made exactly the same estimates, the dots should be aligned along a straight line.
+Indeed, we see dots mostly aligned along a straight line with negligible deviations.
 The models contain virtually the same information, and the mean absolute difference between the predictions by the two models is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximal difference is `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
 
 Furthermore and most crucially, we see only 37 dots, not 3,773.
-This is because within one text, the model makes exactly the same predictions for each data point, and the dots are printed on top of each other.
+This is because within each text, the model makes exactly the same predictions for each data point, and the dots are therefore printed on top of each other.
 The model shows that documents are different, nothing more.
 It does not at all "confirm any relationships across countries and centuries" (see above).
 These problems are not at all hard to pinpoint with full access to the data, and it is astonishing that the analysis went on to be submitted in paper form.

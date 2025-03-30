@@ -60,7 +60,6 @@ levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 
 ```
 
-
 ```{r, child=c('functions.Rmd')}
 ```
 
