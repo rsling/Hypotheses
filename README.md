@@ -1,4 +1,4 @@
-# Substantive, particular, and statistical hypotheses in corpus linguistics
+# Hypotheses, underdetermination, and wrong models
 ## Roland Schäfer, Friedrich-Schiller-Universität Jena
 
 A paper re-analysing the data: from Walkden, George, Gemma Hunter McCarley, Raquel Montero, Molly Rolf, Sarah Einhaus, and Henri Kauhanen. 2023. “Sociolinguistic Typology Meets Historical Corpus Linguistics.” Transactions of the Philological Society 121 (3): 546–67. https://doi.org/10.1111/1467-968X.12275.
