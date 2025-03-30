@@ -40,6 +40,8 @@ library(LaplacesDemon)
 library(knitr)
 library(kableExtra)
 
+the.lwd <- 3
+
 load("Subject.RData")
 load("Agreement.RData")
 

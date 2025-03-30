@@ -17,7 +17,7 @@ SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, SubjectData$Subje
 
 In Study 2, the authors set out to model the influence of orality, time, and region (Spain versus Latin American countries) on the tendency to use overt subjects in Spanish despite the overall very strong tendency towards subject drop in Spanish.
 Orality is measured as the ORScore, which appears to be an aggregate relative frequency of certain grammatical features in the respective texts.
-It is thus based on a derived construct and not on direct observations.
+It is thus a derived construct and not a direct observation.
 Given the fact that it is composed of proportions (relative frequencies) the warnings raised in the previous section regarding aggregate scores apply here as well.
 Table \@ref(tab:subjectpapertable) shows the report of the model fit from the paper, where *Subject* is 1 for an observation with an overt subject, *ORScoreZ* is the z-transformed orality score, *YearZ* is the z-transformed year the respective document was dated at, and *Macroregion* is Spain or Non-Spain.
 The random effect *Text* has 37 levels for 37 documents.
@@ -28,8 +28,8 @@ kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report, align="llrrrc
 ```
 
 We confirm the correctness of our reconstruction of the model reported in the paper by looking at the quote from @WalkdenEa2023 [558] (Footnote 14 omitted) and verifying that the provided numbers match those from our reconstruction of the model.
-Highlights added by us.
-Obviously, we have managed to set up our model exactly as the authors did for their paper.
+Highlighting was added by us.
+Obviously, we have managed to set up our model exactly as the authors did for their paper.^[After double and triple checking, we conclude that $p<0.03$ for ORScoreZ:YearZ as reported in the paper is a minor lapse.]
 
 > However, this trend also holds for Spain, which contradicts our sociolinguistic predictions.
 > Since the orality effect discussed in section 4.3 may be at play in the bar charts, it is necessary to run a mixed-effects model to confirm any relationships across countries and centuries.
@@ -41,25 +41,23 @@ Obviously, we have managed to set up our model exactly as the authors did for th
 > This result explains the apparent rise we saw for Spain in Figure 3 as just a product of orality: the later Spanish texts score higher in ORSCORE.
 
 A very overt problem that *any* reviewer should have spotted is that in this section of the paper, p-values are given as *less than* (\<), wheras in the report of Study 1, they were given as *equal to* (=), see our Section \@ref(study1reported).
-Clearly, the values are rounded to two decimal points, but why this discrepancy?
+Clearly, the values for both studies are rounded to two decimal points, but why this discrepancy?
 Also, brute-force NHST inference is used once again:
 less than 0.05 good, greater than 0.05 bad.
 In Study 2, the model is even less informative than in Study 1, as we will show presently.
 
 ### Alternative models
 
-We begin our reanalysis by comparing the Paper model to a *Null model* (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
+Again, we begin our reanalysis by comparing the Paper model to a *Null model* (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
 `r SubjectNullReport$Report`
 The AIC of the Paper model is slightly lower.
 The marginal R² of the Null model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper model is minimally higher than that of the Null model.
-All in all, it does not appear even from this simple evaluation as if the orality score, the macroregion, and the date of the document explain much of the variance in the data, as the $R^2$ measures and the prediction accuracy clearly indicate.
+All in all, it does not appear even from this simple evaluation as if the orality score, the macroregion, and the date of the document explain much of the variance in the data, as clearly indicated by the R² measures and the prediction accuracy.
 
-A second alternative model we would like to entertain is given below as the *Country-Genre model*, see Table \@ref(tab:subjectcountrygenretable).
-It drops the alleged main explanatory regressor (orality), the secondary one (year), and it used the country and the genre as fixed effects instead.
-Contrary to the claim in the paper, the model converges, and the country regressor does not have too many levels.[^1]
-
-[^1]: Even if it had too many levels for reliable fixed-effect estimation, a random effect (nesting the document ID) could and should have been used, see @GelmanHill2006; @Schaefer2020a.
+A second alternative model we would like to entertain is the *Country-Genre model*, see Table \@ref(tab:subjectcountrygenretable).
+It drops the alleged main explanatory regressor (orality), the secondary one (year), and it specifies the country and the genre as fixed effects instead.
+Contrary to the claim in the paper, the standard maximum likelihood estimator converges without any additional tweaks, and the Country regressor does not have too many levels at all.^[Even if it did indeed have too many levels for reliable fixed-effect estimation, a random effect (nesting the document ID) could and should have been used, see @GelmanHill2006; @Schaefer2020a.]
 
 ```{r subjectcountrygenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(SubjectCountryGenreReport$Table, caption=SubjectCountryGenreReport$Report, align="llrrrc")
@@ -85,7 +83,7 @@ kable(compare_performance(SubjectFullCountryModel, SubjectPaperModel)[,c(1,3,9,1
 ```
 
 The Full-Country model performs slightly better than the Paper model in terms of the R², as shown in Table \@ref(tab:subjectfullcountrycompare).
-It should, however, have become clear by now that the slightly varying conditional R² coefficients are merely an artefact due to the shifting marginal R² coefficients.
+It should, however, have become clear by now that the slightly varying conditional R² coefficients are merely artefacts due to the shifting marginal R² coefficients.
 Additionally, we observe that country has only one level (Bolivia) that is sufficiently distinct from the intercept value (Spain) to reach the nominal significance level.
 Concluding from the data presented in the paper that "overtness [is favoured] in every country but Spain" is thus not warranted, even under an NHST umbrella.
 If we drop genre, the picture changes again with the *Full-No-Genre model*, see Tables \@ref(tab:subjectfullnogenretable) and \@ref(tab:subjectfullnogenrecompare).
@@ -103,7 +101,7 @@ Dropping genre as a regressor leads to Columbia also reaching the nominal signif
 Based on NHST logic, it is now Spain, the Dominican Republic, and Panamá versus Bolivia and Columbia.
 Regarding the R², the various model specifications do not  seem to change by any considerable margin.
 In other words, it does not seem to matter which regressors we include, the results are always middling at an almost exactly identical level.
-In the next section, we show why.
+In the next section, we show why, focussing on the Paper model as one example of the many meaningless models one can specify for the data.
 
 ### Interpretation of the models
 
@@ -123,8 +121,8 @@ To see whether the Paper model could make better binary predictions with a lower
 
 ```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Null model; only for data used to estimate the model parameters and grouped by their actual outcome"}
 par(mfrow=c(1,2))
-vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, yaxt = "n")
-vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="", frame.plot = F, yaxt = "n")
+vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, ylim = c(0, 0.275))
+vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Null model", ylab="", frame.plot = F, ylim = c(0, 0.275))
 par(mfrow=c(1,1))
 ```
 
@@ -133,7 +131,7 @@ Most strikingly, the Paper model appears to estimate almost exactly the same pro
 In other words, orality, time, and country (or macroregion) are irrelevant.
 Reaching the significance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
-Figure \@ref(fig:subjectpapercorrects) shows the percentage of correct binary predictions based on the model at different thresholds.
+Figure \@ref(fig:subjectpapercorrects) shows the percentage of correct binary predictions of the model at different thresholds.
 The percentage rises quickly until the point where 100% minus the base rate percentage has been reached, which is indicative of a model that does nothing but predict the base rate. 
 
 ```{r subjectpapercorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
@@ -147,13 +145,13 @@ The percentage rises quickly until the point where 100% minus the base rate perc
 
 .SubjectPaperModelCorrects <- unlist(lapply(.ts, .correct))
 
-plot(.SubjectPaperModelCorrects, type="l", lwd=2, bty="n",
+plot(.SubjectPaperModelCorrects, type="l", lwd = the.lwd, bty="n",
      xlab="Probability threshold for prediction",
      ylab="Percent of correct predictions"
      ,ylim=c(0,1)
      ,xaxt="n", yaxt="n"
      )
-abline(h = 0.89, lwd = 2, lty = 3, col = "darkgray")
+abline(h = 0.89, lwd = the.lwd, lty = 3, col = "darkgray")
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 ```
@@ -170,17 +168,17 @@ Since the model does not predict any probabilities above `r round(max(.p), 2)`, 
 .Precision <- unlist(.SubjectPaperModelPR)[seq(1,201,2)]
 .Recall <- unlist(.SubjectPaperModelPR)[seq(2,202,2)]
 
-plot(.Precision, type="l", lwd=2, bty="n",
+plot(.Precision, type="l", lwd = the.lwd, bty="n",
      xlab="Probability threshold for prediction",
      ylab="Precision and Recall"
      ,ylim=c(0,1)
      ,xaxt="n", yaxt="n"
-     ,col=2
+     ,col="darkred"
      )
-lines(.Recall, col=3, lwd=2, lty = 2)
+lines(.Recall, col="darkgreen", lwd = the.lwd, lty = 2)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
-legend("topright", legend=c("Precision", "Recall"), col=c(2,3), lwd=2, bty="n")
+legend("topright", legend=c("Precision", "Recall"), col=c("darkred", "darkgreen"), lty = c(1, 2), lwd = the.lwd, bty="n")
 ```
 
 ```{r subjectpapernullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Comparing the predictions of the Paper model and the Null model"}
@@ -193,15 +191,15 @@ plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type
 )
 ```
 
-Finally, and most revealing perhaps, we plot the probabilities estimated under the Paper model against the null model in Figure \@ref(fig:subjectpapernullcompare).
+Finally, and most revealing perhaps, we plot the probabilities predicted by the Paper model against those predicted by the Null model in Figure \@ref(fig:subjectpapernullcompare).
 The plot show which probability the two models estimate for each of the 3,773 observed data points, each data point being plotted as a dot.
-If the two models made exactly the same estimates, the dots should be aligned along a straight line.
+If the two models predicted exactly the same probabilities, the dots should be aligned along a straight line.
 Indeed, we see dots mostly aligned along a straight line with negligible deviations.
 The models contain virtually the same information, and the mean absolute difference between the predictions by the two models is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximal difference is `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
 
 Furthermore and most crucially, we see only 37 dots, not 3,773.
-This is because within each text, the model makes exactly the same predictions for each data point, and the dots are therefore printed on top of each other.
-The model shows that documents are different, nothing more.
+This is because for all datapoints from the individual text, the model makes exactly the same predictions for each data point, and the dots are therefore printed on top of each other.
+The model shows that individual medieval English texts differ from each other, and nothing more.
 It does not at all "confirm any relationships across countries and centuries" (see above).
 These problems are not at all hard to pinpoint with full access to the data, and it is astonishing that the analysis went on to be submitted in paper form.
 We whole-heartedly support publishing negative findings, so the data themselves deserve publishing.
