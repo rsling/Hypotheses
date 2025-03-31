@@ -18,7 +18,7 @@ SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, SubjectData$Subje
 In Study 2, the authors set out to model the influence of orality, time, and region (Spain versus Latin American countries) on the tendency to use overt subjects in Spanish despite the overall very strong tendency towards subject drop in Spanish.
 Orality is measured as the ORScore, which appears to be an aggregate relative frequency of certain grammatical features in the respective texts.
 It is thus a derived construct and not a direct observation.
-Given the fact that it is composed of proportions (relative frequencies) the warnings raised in the previous section regarding aggregate scores apply here as well.
+Given the fact that it is composed of proportions (relative frequencies) the warnings raised in the previous section regarding aggregate scores apply here as well (albeit to a regressor and not to the response).
 Table \@ref(tab:subjectpapertable) shows the report of the model fit from the paper, where *Subject* is 1 for an observation with an overt subject, *ORScoreZ* is the z-transformed orality score, *YearZ* is the z-transformed year the respective document was dated at, and *Macroregion* is Spain or Non-Spain.
 The random effect *Text* has 37 levels for 37 documents.
 Henceforth, we shall call this the *Paper model*.
@@ -42,16 +42,21 @@ Obviously, we have managed to set up our model exactly as the authors did for th
 
 A very overt problem that *any* reviewer should have spotted is that in this section of the paper, p-values are given as *less than* (\<), wheras in the report of Study 1, they were given as *equal to* (=), see our Section \@ref(study1reported).
 Clearly, the values for both studies are rounded to two decimal points, but why this discrepancy?
-Also, brute-force NHST inference is used once again:
-less than 0.05 good, greater than 0.05 bad.
-In Study 2, the model is even less informative than in Study 1, as we will show presently.
+Also, the phrase *the orality effect discussed in section 4.3 may be at play in the bar charts* is extremely odd as the orality effect was at play in the language community (*if* it was), not in a plot in a paper from 2023.
+Also, *it is necessary to run a mixed-effects model to confirm any relationships across countries and centuries* is incorrect as such a necessity does not exist.
+There is never a theoretical necessity to use a random effect.
+see @Schaefer2020a for a brief introduction and @GelmanHill2006 [245–247] for a summary of the inconsistencies in such assumptions about when to use random effects.
+
+Most importantly, brute-force NHST inference is used once again:
+less than 0.05 leads to a positive inference, greater than 0.05 leads to a negative or no inference.
+In Study 2, the model is even less informative than in Study 1, however, as we will show presently.
 
 ### Alternative models
 
 Again, we begin our reanalysis by comparing the Paper model to a *Null model* (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
 `r SubjectNullReport$Report`
-The AIC of the Paper model is slightly lower.
+The AIC of the Paper model is lower.
 The marginal R² of the Null model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper model is minimally higher than that of the Null model.
 All in all, it does not appear even from this simple evaluation as if the orality score, the macroregion, and the date of the document explain much of the variance in the data, as clearly indicated by the R² measures and the prediction accuracy.
 
@@ -111,7 +116,7 @@ SubjectPaperPredictOne <- length(which(predict(SubjectPaperModel, type="response
 SubjectPaperBaseline <- as.numeric(predict(SubjectPaperModel, type="response")>0.5)
 ```
 
-As explained in the discussion of Study 1, we check the probability estimates that the Paper model makes on the data used to estimate its parameters.
+As explained in the discussion of Study 1, we check the probability estimates made by the Paper model for the data used to estimate its parameters.
 First, we examine the correct binary predictions using a 0.5 probability threshold.
 The model predicts a null subject in `r SubjectPaperPredictNull` cases and a pronominal subject in `r SubjectPaperPredictOne` cases.
 In other words, it predicts that there should never be an overt subject.
@@ -127,12 +132,12 @@ par(mfrow=c(1,1))
 ```
 
 Even for the cases with overt subjects in the observed data, the model estimates a maximum probability of under 0.25.
-Most strikingly, the Paper model appears to estimate almost exactly the same probabilities as the null model.
-In other words, orality, time, and country (or macroregion) are irrelevant.
+Most strikingly, at least judging from the distribution of the predictions the Paper model estimates almost exactly the same probabilities as the null model.
+In other words, orality, time, and country (or macroregion) are by and large irrelevant.
 Reaching the significance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
 Figure \@ref(fig:subjectpapercorrects) shows the percentage of correct binary predictions of the model at different thresholds.
-The percentage rises quickly until the point where 100% minus the base rate percentage has been reached, which is indicative of a model that does nothing but predict the base rate. 
+The percentage rises quickly until the point where 100% minus the base rate percentage has been reached, which is indicative of a model that does nothing but predict the modal category, reaching the base rate in the best case. 
 
 ```{r subjectpapercorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 
@@ -191,18 +196,18 @@ plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type
 )
 ```
 
-Finally, and most revealing perhaps, we plot the probabilities predicted by the Paper model against those predicted by the Null model in Figure \@ref(fig:subjectpapernullcompare).
-The plot show which probability the two models estimate for each of the 3,773 observed data points, each data point being plotted as a dot.
+Finally, and most revealing perhaps, we plot the probabilities predicted by the Paper model against those predicted by the Null model in Figure \@ref(fig:subjectpapernullcompare) in the style of a correlation plot.
+The plot shows which probability the two models estimate for each of the 3,773 observed data points, each data point being plotted as a dot.
 If the two models predicted exactly the same probabilities, the dots should be aligned along a straight line.
 Indeed, we see dots mostly aligned along a straight line with negligible deviations.
 The models contain virtually the same information, and the mean absolute difference between the predictions by the two models is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximal difference is `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
 
 Furthermore and most crucially, we see only 37 dots, not 3,773.
-This is because for all datapoints from the individual text, the model makes exactly the same predictions for each data point, and the dots are therefore printed on top of each other.
-The model shows that individual medieval English texts differ from each other, and nothing more.
+This is because the model makes exactly the same predictions for each data point from the individual texts, and the dots are therefore printed on top of each other.
+The model demonstrates (weakly) that individual medieval English texts differ from each other, nothing more.
 It does not at all "confirm any relationships across countries and centuries" (see above).
 These problems are not at all hard to pinpoint with full access to the data, and it is astonishing that the analysis went on to be submitted in paper form.
-We whole-heartedly support publishing negative findings, so the data themselves deserve publishing.
+We whole-heartedly support publishing negative findings, and hence the data themselves deserve publishing.
 However, negative findings should be clearly published as such, and not as corroborations of a massive and unclear network of hypotheses, especially given problems of underdetermination discussed in Section \@ref(findingout).
 
 Study 3 reported in @WalkdenEa2023 is highly preliminary, and we therefore do not discuss it.

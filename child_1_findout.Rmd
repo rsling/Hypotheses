@@ -81,7 +81,7 @@ Some potential auxiliary hypotheses come to mind:
 * L2 learners may exert a linguistic influence on L1 speaker of the same language.
 * Language contact can induce language change under certain---ideally fully spelled out---conditions.
 * The theory applies universally because it is based on general cognitive principles.
-* "Population-level patterns are not entirely random and […] individuals' usage can be non-categorical but still pattern meaningfully in probabilistic ways", a very specific and strong hypothesis directly from @WalkdenEa2023[549].
+* "*Population-level patterns are not entirely random and […] individuals' usage can be non-categorical but still pattern meaningfully in probabilistic ways*", a very specific and strong hypothesis directly from @WalkdenEa2023[549].
 * The loss of number inflection on pre-nominal elements is simplification.
 * The addition of pronominal subjects in a predominantly pro-drop language is simplification.
 * The move from synthetic case inflection to adpositional case marking is simplification.

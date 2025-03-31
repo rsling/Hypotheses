@@ -110,8 +110,9 @@ In the next section we report an alternative model of the data from @WalkdenEa20
 
 Luckily, the original unaggregated data are available in the data package.
 Now, even in the middle ages, the relevant linguistic event was the actual production of a single instance of a determiner or an adjective by a writer.
-Therefore, the best model in the case at hand is one that estimates the probability of speakers overtly marking plural agreement in a concrete sentence or not.^[As a minor inconsistency, the authors follow such a strategy in Study 2, see below.]
-We specified a model that comes close to the idea in the paper, but which avoids the problems with the unbalanced difference scores is the following one.
+Therefore, the best model in the case at hand is one that estimates the probability of speakers overtly marking plural agreement in a concrete sentence or not.^[Inconsistency, the authors follow such a strategy in Study 2, see our Section \@ref(study2).
+However, they use another incorrectly aggregated score as a regressor in that study.]
+We specified a model that comes close to the idea in the paper but which avoids the problems with the unbalanced difference scores is the following one.
 It models the probability of the realisation of agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
 We call it the *Paper model* even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
 See Table \@ref(tab:agreementpapertable) for a report of the coefficients and the associated p-values as found by the estimator.
@@ -126,7 +127,7 @@ The last point is in line with the claims in the paper.
 However, the West midlands even have the stronger tendency than the East Midlands to avoid agreement overall (including on determiners).
 This runs contrary to the claim in @WalkdenEa2023.
 
-However, if we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse.
+In all fairness, if we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse, which might indicate that the regressors do indeed have some influence on the response.
 We call it the *Null Model*, see Table \@ref(tab:agreementnulltable).
 
 ```{r agreementnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
@@ -138,7 +139,7 @@ kable(compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)]
 ```
 
 With all this, we should keep in mind that the plot in the previous section shows that there simply are not that many data from the North.
-The fact that DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North.
+The fact that DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North and that the effect itself is, at the same time, not verty large.
 Also, the plot shows that individual texts and their dialect group are all over the place in terms of ther difference score, and most texts have a difference score very close to 0 anyway.
 At the negative end, for example, there are merely five texts from the East Midlands that account for all the negative values.
 Hence, it seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
@@ -148,10 +149,11 @@ The resulting model is reported in Table \@ref(tab:agreementtexttable).
 kable(AgreementTextReport$Table, caption=AgreementTextReport$Report, align="llrrrc")
 ```
 
-We see immediately that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up, as measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Paper model.^[While R² measures have been criticised and cannot always be compared between different types of models, this difference is so considerable that denying it is futile.]
+Immediately, we see that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up considerably, as measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Paper model.^[While R² measures have been criticised and cannot always be compared between different types of models and types of R², this difference is so considerable that denying it is futile.]
 The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
 It should be kept in mind that this generalisation is based on `r length(which(AgreementData$Dialect=="North"))` data points from `r length(which(AgreementAggregateData$Dialect=="North"))` texts spanning a period of `r max(AgreementData$Year)-min(AgreementData$Year)` years.
 Regardless of nominal significance, a careful interpretation seems wise.
+While it is sometimes necessary to work with such tiny amounts of data in historical philology, it is questionable whether statistics are the right tool.
 We proceed to a further inspection of the models.
 
 ### Interpretation of the models
@@ -168,11 +170,11 @@ We proceed to a further inspection of the models.
                          ifelse(AgreementData$Agreement==0, "No Agreement", "Agreement"))
 ```
 
-A (Generalised) Linear (Mixed) Model can be used to make predictions and thus go beyond any testing framework, be it NHST or any more correct framework.
+A (Generalised) Linear (Mixed) Model can be used to make predictions and thus go beyond any testing framework, be it NHST or any more correct inferential framework.
 In the case of Binomial models, it can estimate the probability with which the event (in this case overt realisation of a subject pronoun) occurs.
-If it estimates a probability greater than 0.5 for some combination of regressors, it is the most successful (and customary) strategy to predict the occurrence of the event.^[The strategy is successful only if the model is approximately correct.]
-If it estimates a probability lower than 0.5, one should bet against the event and predict its non-occurrence.
-We now check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on.
+If it estimates a probability greater than 0.5 for some combination of regressors, it predicts the occurrence of the event, otherwise it predicts its non-occurrence.
+This probability threshold of 0.5 is successful if the model is approximately correct, but under some extreme conditions, it can be better to adapt it to another value between 0 and 1.
+We now check in tabular form what binary predictions the model makes on the 3,773 observations it was estimated on with a threshold of 0.5.
 Note that it should perform particularly well on those data.
 New data would always be harder to predict correctly for any statistical or machine-learning model.
 
@@ -209,12 +211,12 @@ The Text model fares much better in this respect, but only by acknowledging that
 ```
 -->
 
-However, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
+As mentioned above, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
 This is often the case in rare events regression [@KingZeng2001], which is used when the base base rate is even higher (for example, around 99%).
-Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper and the Text model.
-While it is not a model that differentiates very well, we see that the Text model is at least able to differentiate beyond a prediction of the base rate.
+Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper model (left panel) and the Text model (right panel).
+While it is not a model that differentiates very well, we see that the Text model is at least able to differentiate beyond the mere prediction of the modal category (and thuis landing at the base rate).
 The peak is close to 0.5, as expected for normal binomial models.
-The Paper model essentially predicts the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically.
+The Paper model essentially predicts at the level of the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically to 100 minus the base rate.
 
 ```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model and the Text model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
@@ -305,7 +307,7 @@ par(mfrow=c(1,1))
 What does all this mean?
 It means that the inferences in the paper are wrong, and that the data in Study 1 do not provide evidence in favour of the network of hypotheses explicitly or implicitly introduced (see Section \@ref(hypotheses)), even if the model is reformulated without the inadmissible aggregation in the form of the difference scores.
 The influences of the regressors on the choice between overtly marked and unmarked pre-nominal elements are so minor that only typical NHST misinterpretation of p-values could wrongly detect them as having a relevant influence.
-What is more, the dialectal region has minor and contradictory influences inasmuch as there is no clear North-East to South-West continuum.
+What is more, the dialectal region has minor and above all contradictory pseudo-influence inasmuch as there is no clear North-East to South-West continuum.
 If the individual text is added as a random effect, we see that the single influence with at least moderate explanatory power is the individual text (and thus likely a combination of style and register), not the dialectal region.
 It should be noticed that including the text as a random effect is not even an optional decision as *not* including it violates assumptions underlying the statistical model, in this case predominantly the *independence of events*.
 To summarise, the data from Study 1 corroborate an old wisdom from traditional philology, videlicet that texts differ and deserve careful individual examination in order to be decoded and understood properly.
