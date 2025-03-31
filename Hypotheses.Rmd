@@ -1,13 +1,13 @@
 ---
 title: "Hypotheses, underdetermination, and wrong models"
-author: "Roland Schäfer, Friedrich-Schiller-Universität Jena"
-date: "Daft 1 of 31 March 2025"
+author: "Roland Schäfer (Friedrich-Schiller-Universität Jena)"
+date: "Draft 1 of 31 March 2025"
 mainfont: Libertinus Serif
 sansfont: Libertinus Sans 
 monofont: Inconsolata
 mathfont: Libertinus Math
 fontsize: 12pt
-geometry: "left=3.5cm,right=3.5cm,top=3.5cm,bottom=3.5cm"
+geometry: "left=3cm,right=3cm,top=2.5cm,bottom=2.5cm"
 output:
   bookdown::pdf_document2: 
     latex_engine: xelatex
@@ -65,7 +65,8 @@ levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 ```{r, child=c('functions.Rmd')}
 ```
 
-> *Ah, but a man's grasp should exceed his reach. Or what's science for?*
+> *Ah, but a man's grasp should exceed his reach.   
+> Or what's science for?*   
 > (Anonymous)
 
 ```{r, child=c('child_1_findout.Rmd')}

@@ -2,11 +2,11 @@
 
 ```{r agreementpreparemodels, echo=FALSE, message=FALSE, warnings=FALSE}
 AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)
-AgreementNullReport <- ReportGLM(AgreementNullModel, AgreementData$Agreement, name="Null model", intercept.descriptor = "(Adjective)")
+AgreementNullReport <- ReportGLM(AgreementNullModel, AgreementData$Agreement, name="Null Model", intercept.descriptor = "(Adjective)")
 AgreementPaperModel <- glm(Agreement~POS*Dialect, data = AgreementData, family=binomial)
-AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Paper model", intercept.descriptor = "(Adjective, South, 0)")
+AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Paper Model", intercept.descriptor = "(Adjective, South, 0)")
 AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData, family=binomial)
-AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text model", intercept.descriptor = "(Adjective, South, 0)")
+AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text Model", intercept.descriptor = "(Adjective, South, 0)")
 ```
 
 ### What was reported {#study1reported}
@@ -114,11 +114,13 @@ Therefore, the best model in the case at hand is one that estimates the probabil
 However, they use another incorrectly aggregated score as a regressor in that study.]
 We specified a model that comes close to the idea in the paper but which avoids the problems with the unbalanced difference scores is the following one.
 It models the probability of the realisation of agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
-We call it the *Paper model* even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
+We call it the Paper Model even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
 See Table \@ref(tab:agreementpapertable) for a report of the coefficients and the associated p-values as found by the estimator.
 
 ```{r agreementpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(AgreementPaperReport$Table, caption=AgreementPaperReport$Report, align="llrrrc")
+  kable(AgreementPaperReport$Table, caption=AgreementPaperReport$Report, 
+        align="llrrrc", booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
 ```
 
 The parameter estimates indicate that (assuming a cavalier NHST significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p-values).
@@ -128,14 +130,20 @@ However, the West midlands even have the stronger tendency than the East Midland
 This runs contrary to the claim in @WalkdenEa2023.
 
 In all fairness, if we drop the influence of dialect from the model specification, we arrive at a model that---according to standard metrics like R²---is actually worse, which might indicate that the regressors do indeed have some influence on the response.
-We call it the *Null Model*, see Table \@ref(tab:agreementnulltable).
+We call it the Null Model, see Table \@ref(tab:agreementnulltable).
 
 ```{r agreementnulltable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(AgreementNullReport$Table, caption=AgreementNullReport$Report, align="llrrrc")
+kable(AgreementNullReport$Table, caption=AgreementNullReport$Report,
+      align="llrrrc", booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
 ```
 
 ```{r agreementnullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9,10)], caption="Model comparison for the Null model")
+kable(compare_performance(AgreementNullModel,
+                          AgreementPaperModel)[,c(1,3,9,10)],
+      caption="Model comparison for the Null Model",
+      booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
 ```
 
 With all this, we should keep in mind that the plot in the previous section shows that there simply are not that many data from the North.
@@ -146,17 +154,19 @@ Hence, it seems appropriate to model the variance at the document level as a ran
 The resulting model is reported in Table \@ref(tab:agreementtexttable).
 
 ```{r agreementtexttable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(AgreementTextReport$Table, caption=AgreementTextReport$Report, align="llrrrc")
+kable(AgreementTextReport$Table, caption=AgreementTextReport$Report, 
+      align="llrrrc", booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
 ```
 
-Immediately, we see that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up considerably, as measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Paper model.^[While R² measures have been criticised and cannot always be compared between different types of models and types of R², this difference is so considerable that denying it is futile.]
+Immediately, we see that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up considerably, as measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Paper Model.^[While R² measures have been criticised and cannot always be compared between different types of models and types of R², this difference is so considerable that denying it is futile.]
 The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
 It should be kept in mind that this generalisation is based on `r length(which(AgreementData$Dialect=="North"))` data points from `r length(which(AgreementAggregateData$Dialect=="North"))` texts spanning a period of `r max(AgreementData$Year)-min(AgreementData$Year)` years.
 Regardless of nominal significance, a careful interpretation seems wise.
 While it is sometimes necessary to work with such tiny amounts of data in historical philology, it is questionable whether statistics are the right tool.
 We proceed to a further inspection of the models.
 
-### Interpretation of the models
+### Inspection of the models
 
 ```{r agreementprepareconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 .confusionPaper <- table(ifelse(predict(AgreementPaperModel, type="response")<0.5,
@@ -178,47 +188,37 @@ We now check in tabular form what binary predictions the model makes on the 3,77
 Note that it should perform particularly well on those data.
 New data would always be harder to predict correctly for any statistical or machine-learning model.
 
-Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of the *Paper model* (which is the GLM that implements the idea from the paper in a mathematically more sound way).
+Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of the Paper Model (which is the GLM that implements the idea from the paper in a mathematically more sound way).
 The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
 The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)`%.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
 This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)`%.^[The base rate is relevant inasmuch as one can usually make above 50% correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
 
 ```{r agreementpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(.confusionPaper, caption="Correct and incorrect predictions of the Paper model")
+kable(.confusionPaper,
+      caption="Correct and incorrect predictions of the Paper Model",
+      booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
 ```
 
-The *Null model* (not shown in tabular form) with only part-of-speech as a predictor is considerably weaker inasmuch as it always predicts overt agreement and hence does not differentiate at all.
-However, the *Text model* (Table \@ref(tab:agreementtextvonfusion)), which is the one that incorporates a random effect for text, does much better than anything reported in the paper.
+The Null Model (not shown in tabular form) with only part-of-speech as a predictor is considerably weaker inasmuch as it always predicts overt agreement and hence does not differentiate at all.
+However, the Text Model (Table \@ref(tab:agreementtextvonfusion)), which is the one that incorporates a random effect for text, does much better than anything reported in the paper.
 Its predictions are correct in `r sum(diag(.confusionText))` cases and incorrect in `r sum(.confusionText)-sum(diag(.confusionText))` cases, i.e., `r round(sum(diag(.confusionText))/sum(.confusionText)*100,1)`%.
 
 ```{r agreementtextvonfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(.confusionText, caption="Correct and incorrect predictions of the Text model")
+kable(.confusionText,
+      caption="Correct and incorrect predictions of the Text Model",
+      booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
 ```
-
-<!--
-If we look at the numerical probabilities estimated by the Paper model and the Text model for the observed data, we see that the model that accounts for variance between texts (and thus, implicitly, authors), differentiates much better.
-In the violin plots, the left shape summarises the distribution of probabilities estimated by the model for cases where no overt agreement was observed in the data.
-The right shape summarises the distribution of probabilities for cases where agreement was overtly realised in the data.
-Obviously, the Paper model is not even a good model of the data used to estimate its parameters, which means that it is very likely that it does not generalise well to other data.
-Put differently, we see clear indication that the external validity of the model is low.
-The Text model fares much better in this respect, but only by acknowledging that the main influencing factor is the text (who wrote the text, under which circumstances, etc.).
-
-```{r agreementpapertextviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Probabilities estimated by the Paper model and the Text model; only for data used to estimate the model parameters and grouped by their actual outcome"}
-  par(mfrow=c(1,2))
-  vioplot(predict(AgreementPaperModel, type="response")~AgreementData$Agreement, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Paper model", ylab="Estimated probability", frame.plot = F, yaxt = "n")
-  vioplot(predict(AgreementTextModel, type="response")~AgreementData$Agreement, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Text model", ylab="", frame.plot = F, yaxt = "n")
-  par(mfrow=c(1,1))
-```
--->
 
 As mentioned above, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
 This is often the case in rare events regression [@KingZeng2001], which is used when the base base rate is even higher (for example, around 99%).
-Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper model (left panel) and the Text model (right panel).
-While it is not a model that differentiates very well, we see that the Text model is at least able to differentiate beyond the mere prediction of the modal category (and thuis landing at the base rate).
+Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper Model (left panel) and the Text Model (right panel).
+While it is not a model that differentiates very well, we see that the Text Model is at least able to differentiate beyond the mere prediction of the modal category (and thuis landing at the base rate).
 The peak is close to 0.5, as expected for normal binomial models.
-The Paper model essentially predicts at the level of the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically to 100 minus the base rate.
+The Paper Model essentially predicts at the level of the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically to 100 minus the base rate.
 
-```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Percent of binary predictions based on the Paper model and the Text model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
+```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Percent of binary predictions based on the Paper Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
 .d <- AgreementData$Agreement
 .ts <- seq(0, 1, 0.01)
@@ -233,7 +233,7 @@ The Paper model essentially predicts at the level of the base rate all the way u
 
 par(mfrow=c(1,2))
 plot(.AgreementPaperModelCorrects, type="l", lwd = the.lwd, bty="n",
-     main="Paper model",
+     main="Paper Model",
      xlab="Probability threshold for prediction",
      ylab="Percent of correct predictions"
      ,ylim=c(0,1)
@@ -243,7 +243,7 @@ abline(h=0.71, col="darkgray", lty = 3, lwd = the.lwd)
 axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 plot(.AgreementTextModelCorrects, type="l", lwd = the.lwd, bty="n",
-     main="Text model",
+     main="Text Model",
      xlab="Probability threshold for prediction",
      ylab="Percent of correct predictions"
      ,ylim=c(0,1)
@@ -261,9 +261,9 @@ In other words, it is the number of true positives divided by all positives (tru
 The *Recall*, on the other hand, is the proportion of correct predictions of the event occurring among all the cases in which the event actually occurred.
 Put differently, it is the number of true positives divided by the number of events that have occurred.
 These two scores, evaluated at different thresholds, can be used to assess the quality of the model and adjust the threshold.
-The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80% for the Paper model and around 90% for the Text model, which is another indicator that the Text model differentiates much better.
+The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80% for the Paper Model and around 90% for the Text Model, which is another indicator that the Text Model differentiates much better.
 
-```{r agreementpapertextprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', fig.cap="Precision and Recall for the Paper model and the Text model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
+```{r agreementpapertextprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Precision and Recall for the Paper Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
 .precrec <- function(t) PrecisionRecall(.p, .d, t)
 .AgreementPaperModelPR <- lapply(.ts, .precrec)
@@ -278,7 +278,7 @@ The balanced point (where Precision and Recall reach their highest values and th
 
 par(mfrow=c(1,2))
 plot(.PrecisionPaper, type="l", lwd = the.lwd, bty="n",
-     main="Paper model",
+     main="Paper Model",
      xlab="Probability threshold for prediction",
      ylab="Precision and Recall"
      ,ylim=c(0,1)
@@ -290,7 +290,7 @@ axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
 axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 legend("bottomleft", legend=c("Precision", "Recall"), col=c("darkred","darkgreen"), lty = c(1, 2), lwd = the.lwd, bty="n")
 plot(.PrecisionText, type="l", lwd = the.lwd, bty="n",
-     main="Text model",
+     main="Text Model",
      xlab="Probability threshold for prediction",
      ylab="Precision and Recall"
      ,ylim=c(0,1)

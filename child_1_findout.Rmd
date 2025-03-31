@@ -52,8 +52,9 @@ Any undergraduate-level introduction to the philosophy of science will tell you 
 The falsifiability of theories is a much more heatedly discussed topic than the falsifiability of concrete hypotheses.]
 However, we follow the broad rationalist tradition which maintains that scientific theories are models of some true reality that need to undergo continued serious testing in order to be established as adequate, a process in which we repeatedly get the chance of learning something from being wrong [@Mayo1996;@MayoEa2009].
 A general problem in this approach is that most empirical studies attempt to test some specific hypotheses in order to corroborate a theory, but the link between the particular hypothesis (to be tested) and the overall theory is mediated by a complex network of hypotheses of different nature and granularity.
-Without diving too deeply into philosophical discussions, we now point out some obvious differences between the granularity of hypotheses involved in work like @WalkdenEa2023.
-We do so by reconstructing an approximate network of hypotheses underlying the paper, then relating that network to philosophical problems of scientific underdetermination.
+We do not intend to dive too deeply into philosophical discussions and to pretending that we know enough about the philosophy of science to do so.
+Instead, we want to point out some obvious differences between the granularity of hypotheses involved in work like @WalkdenEa2023.
+We do so by reconstructing an approximate network of hypotheses underlying the paper, then relating that network to problems of scientific underdetermination.
 
 Already on the first page of the paper, the authors state that the overarching purpose of the paper is to test the high-level theory proposed in @Trudgill2011, at least if *assess* is to be read as *evaluate*.
 Hence, we assume they're on the same page with respect to the broad philosophical approach.
@@ -70,13 +71,13 @@ We assume that the theory to be evaluated collects **substantive hypotheses** (t
 * The social parameters of the contact situation influence the direction and pace of the change.
 * This leads to different temporal scales at which the contact-induced change takes place.
 
-If the axioms were refuted repeatedly by data, the theory would be abandoned.
+If these tenets were refuted repeatedly by data, the theory would be abandoned.
 However, refuting such broad hypotheses is quite difficult.
 They rest on a cushion of auxiliary hypotheses, which can always be blamed for apparent refutation.
 Also, they are almost never tested directly, but they have to be broken down into particular hypotheses (see below), which in turn are often  converted into statistical hypotheses.
 
-The substantive hypotheses often **auxiliary hypotheses** to be true, and it is not always clear whether these hypotheses belong to the tenets or are fundamental auxiliaries.
-Some potential auxiliary hypotheses come to mind:
+These **auxiliary hypotheses** also need to to be true, and it is not always clear what is a tenet and what is an auxiliary hypothesis.
+Some potential auxiliary hypotheses come to mind, some of which are undoubtedly correct in the eyes of any linguist:
 
 * L2 learners may exert a linguistic influence on L1 speaker of the same language.
 * Language contact can induce language change under certain---ideally fully spelled out---conditions.
@@ -89,14 +90,14 @@ Some potential auxiliary hypotheses come to mind:
 ### Particular hypotheses and their auxiliaries
 
 The authors move on to introduce the---hitherto neglected---*historical corpus-based approach*, which they claim is suitable to collect evidence for the theory.
-This introduces an additional tier of hypotheses, which the authors acknowledge themselves by stating that the theory makes **predictions**.
+This introduces an additional tier of fundamental and auxiliary hypotheses regarding the applicability of the proposed method.
+Also, as the authors acknowledge themselves by stating that the theory makes **predictions**, they derive **particular hypotheses**.
 The concrete predictions cannot be part of the core hypotheses, otherwise they would not be predictions but rather substantive hypotheses.
 The approach to these hypotheses is presented as *confirmatory* as the studies are intended to present *support*.
 
 > In **support of our approach**, we present three case studies of morphosyntactic phenomena for which the theory of sociolinguistic typology makes predictions, and assess them using historical corpus evidence.
 [The three case studies] taken together [illustrate] how historical corpus evidence can be brought to bear on questions of sociolinguistic typology. [@WalkdenEa2023,547]
 
-Typically, predictions take the form of **particular hypotheses**.
 Particular hypotheses should have at least some chance of being tested using data, while substantive hypotheses are often too abstract to be tested directly.
 Such particular hypotheses are---in the case at hand---related to the diachronic development of:
 
@@ -104,7 +105,7 @@ Such particular hypotheses are---in the case at hand---related to the diachronic
 * the rise of overtly expressed pronominal subjects in Latin American Spanish under contact with African slaves who had to learn Spanish rather quickly given the social parameters of the contact situation (Section \@ref(study2) below);
 * the reorganisation of the case and adposition systems of Slavic languages in the diffuse contact situation of the Balkan sprachbund.
 
-These hypotheses come with their own **auxiliary hypotheses** related to their measurement and operationalisation (in this case under the historical corpus-based approach), which are not derived from any other hypotheses but rather practical requirements for the measurement procedure to be appropriate:
+These hypotheses come with their own **auxiliary hypotheses** related to their measurement and operationalisation, which are not necessarily derived from any other hypotheses but rather practical requirements for the measurement procedure to be appropriate:
 
 * In Study 1, the L1 of the conquered English was influenced by the conquerors' L2 acquisition of English through the same mechanisms as the Spanish L1 of the slave-owners was influenced by their slaves' L2 acquisition of Spanish despite the difference in social parameters.
 This mechanism is the same as the one at work in the Balkan sprachbund where the joined influence of Albanian, Turkish, Romance, and other languages on Slavic led to the simplification of the case marking system under rather different and complex political as well as social constellations.
@@ -117,8 +118,8 @@ This mechanism is the same as the one at work in the Balkan sprachbund where the
 
 The connections between such families of hypotheses---especially taken as causal connections---are complex and delicate.
 In the case at hand, a test of particular hypotheses is attempted to deliver support for substantive hypotheses, for all practical purposes assuming that hypotheses in the auxiliary families are all correct.
-However, the auxiliary hypotheses are apparently not understood as being implicitly tested by the procedure, and any false hypothesis in those families has the potential to mar any inferences with respect to the particular and hence the substantive hypotheses.
-For example, the corpus method might be completely inadequate given the available resources to the effect that we get a completely random pseudo-confirmation from the data (for example because of the writers of the available texts were not sufficiently connected within the community of language users or any other of a million reasons).
+However, the auxiliary hypotheses are apparently not understood as being implicitly tested by the procedure, and any false hypothesis in those families has the potential to mar the inferences regarding the particular and hence the substantive hypotheses.
+For example, the corpus method might be completely inadequate given the available resources to the effect that we get a completely random pseudo-confirmation from the data (for example because of the writers of the available texts were not sufficiently connected within the community of language users or any other of a host of reasons).
 Alternatively, Trudgill's theory might be incorrect.
 At the same time, the loss of number inflection on pre-nominal elements might not even be simplification in a relevant sense.
 In short, the results from the corpus studies only have the advertised interpretation if all the auxiliary hypotheses are *true to a satisfying degree*.
@@ -157,7 +158,7 @@ All we seem to be able to expect from corpus studies like the ones we customaril
 (i) either the study does not contradict the logical conjunct of our hypotheses (which is *not* confirmation);
 (ii) or it is not compatible with that conjunct or our interpretation of any of the conjoined hypotheses (which is *not* refutation).
 Because of their loose-fit character and the holistic and contrastive underdetermination in linguistics, we can seek neither confirmation nor refutation for substantive linguistic hypotheses.
-This is an important point to keep in mind when we examine the role of statistics in testing hypotheses in the next section.
+This is a crucial point to keep in mind when we examine the role of statistics in testing hypotheses in the next section.
 
 ## Statistical hypotheses and severe testing {#testing}
 
@@ -177,7 +178,7 @@ If the event that actually occurred had (past tense!) a very low probability und
 Correct interpretations of such results are a delicate matter, especially for practitioners with suboptimal training in statistics.^[Our overall introduction to frequentist statistics can be verified using any sound text book on statistics.
 We recommend @VasishthBroe2011 for beginners, and we're also in the process of writing our own open-access textbook on the matter.]
 
-Mostly unnoticed in the linguistics community, such inferences have been under heavy debate in the past twenty years.^[There is, however, a debate about NHST in corpus linguistics independent of the mainstream discussion, for example in @Kilgarriff2005; @Koplenig2019.]
+Mostly unnoticed in the linguistics community, such inferences have been under heavy debate in the past twenty years.^[There is, however, a marginal but important debate about NHST in corpus linguistics [for example in @Kilgarriff2005; @Koplenig2019].]
 Routinely, inferences are made using Null-Hypothesis Significance Testing (NHST), a failed system of deciding which measured statistical results are *significant*, and which are not [for how and why it failed see @Gigerenzer2004; @Ioannidis2005; @Colquhoun2014; @Perezgonzalez2015; @GreenlandEa2016; @MunafoEa2017; @Mayo2018].
 NHST works like this:
 Significance is reached when the p-value is lower than some pre-set threshold (often 0.05), and this is taken as straightforward corroboration of $H_1$, which is more often than not incorrect.

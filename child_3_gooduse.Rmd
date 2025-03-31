@@ -55,23 +55,25 @@ As it stands, most journals will accept any submission that reports a GLM or any
 As authors, we find this nerve-wrecking, especially as some reviewers are not shy to demand the quality assurance that suits their personal taste, which makes preparing publications rather difficult.
 A journal that has no best-practice guidelines for statistical methods should reject any papers applying those methods (unless the paper specifically makes an original methodological contribution, for example by introducing a new method altogether).
 
-## Remedy 3: negative findings an pre-registration
+## Remedy 3: negative findings an preregistration
 
 Universities and funding agencies require researchers to publish as many results as possible, and postgraduate students are under immense pressure to make themselves known by publishing in a frenzy.
 At the same time, it is very difficult to publish negative results.
-It would be demanding to re-write @WalkdenEa2023 along the following lines and still make it sound interesting to reviewers:
+It would be a demanding task to re-write @WalkdenEa2023 along the following lines and still make it sound interesting to reviewers:
 "*We did not find evidence for Trudgill's theory in our data, but we'll keep looking.*"
 
-Pre-registration is an attempt to alleviate this problem.
-Researchers submit a paper describing the motivation for a study and the design of the study *without having executed the study* and thus without having spent the time and money.
+Preregistration is an attempt to alleviate this problem and many other problems [@Lakens2019].
+Under a preregistration policy, researchers submit a paper describing the motivation for a study and the design of the study *without having executed the study* and thus without having spent the time and money it costs to do empirical research.
 The paper is accepted or rejected based on the submission, and whatever the results, the paper is published if the study was executed as designed.
 This makes negative results publishable and should allow researchers to be more critical with their own data.
-However, while we would welcome journals offering pre-registration, we think it does not solve too many problems.
+However, while we would welcome journals offering preregistration, we think it does not solve too many problems per se.
 As negative results would not receive nearly as many citations as positive results, not much might be gained.
+There would still be incentives to either hack results or accept results that look good without further inspection of the data and the models.^[Indeed, recent research on the effectiveness of preregistration seems to indicate that it has to be done exactly right in order to be effective in avoiding the bad practices encouraged by the need to publish positive results [see, for example, @BrodeurEa2024].]
+In the case at hand, many errors are very basic, and reviewers could have easily spotted the problems with the aggregated unweighted scores, the missing random effects for variance at the text level, etc.
 
-In closing, we'd like to point out that philology used to be a field where careful close readings of texts were performed in order to gain insights about their linguistic and cultural relevance.
-It was not bound by the scientific method and had no interest in data analysis and statistics.
-A major reason used to be that there are just not enough textual data covering all relevant times and places in order to do reliable statistical analysis.
-In many cases, we wonder whether this has really changed considerably, and why many researchers appear fixated on quantitative analyses where traditional philological analyses might be in order.
-If, however, quantitative analyses are not performed with the required rigour, and if theories are not taken seriously as monstrous underdetermined networks of intertwined hypotheses, nothing will be gained in a quantitative turn.
+In closing, we'd like to posit the notion that philology used to be a field where careful close readings of texts were performed in order to gain insights about their linguistic and cultural relevance.
+It was---for good reason---not bound by the scientific method and had no interest in large-scale data analysis and statistics.
+One reason was that there are just not enough textual data covering all relevant times and places in order to do reliable statistical analysis.
+In many (although not all) cases, we wonder whether this has really changed considerably, and why many researchers appear fixated on quantitative analyses where traditional philological analyses might be in order.
+If quantitative analyses are not performed with the required rigour, and if theories are not taken seriously as monstrous underdetermined networks of intertwined hypotheses, nothing will be gained in a quantitative turn.
 
