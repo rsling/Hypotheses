@@ -44,6 +44,8 @@ Hence, readers only interested in the reanalysis of the data from @WalkdenEa2023
 
 ## Families of hypotheses and underdetermination in science {#hypotheses}
 
+### Testing theories
+
 Finding things out usually involves *hypotheses* about the world (in the broadest sense), possibly collected in coherent *theories* and either derived from observation (*induction*---if induction is possible at all) or postulated within or derived from theories and then tested against observation (*deduction*).
 (Or so the story goes.)
 Any undergraduate-level introduction to the philosophy of science will tell you that falsifiability is not a sufficient but most likely a necessary criterion for hypotheses to be taken as scientific.^[@Chalmers2013 is highly recommended as a first textbook on the philosophy of science. See @Popper1962; @Lakatos1970; @Laudan1983 for more in-depth discussions of falsifiability and the demarcation problem.
@@ -59,84 +61,89 @@ Highlighting was added by us.
 
 > This article is about how to **assess Trudgill’s theory** using the most powerful methodological tool that contemporary historical linguistics has at its disposal: the study of the historical record itself, in the form of textual corpora. [@WalkdenEa2023,546]
 
-We assume that the theory to be evaluated collects **substantive hypotheses** such as:
+### Substantive hypotheses and their auxiliaries
+
+We assume that the theory to be evaluated collects **substantive hypotheses** (the *tenets* of the theory) such as:
 
 * Adults learn second languages through a different mechanism than children.
 * The adult mechanism leads to simplification because of---ideally spelled-out---underlying cognitive principles.
 * The social parameters of the contact situation influence the direction and pace of the change.
 * This leads to different temporal scales at which the contact-induced change takes place.
 
-We call these the substantive hypotheses of the theory, the axioms.
 If the axioms were refuted repeatedly by data, the theory would be abandoned.
+However, refuting such broad hypotheses is quite difficult.
+They rest on a cushion of auxiliary hypotheses, which can always be blamed for apparent refutation.
+Also, they are almost never tested directly, but they have to be broken down into particular hypotheses (see below), which in turn are often  converted into statistical hypotheses.
 
-The substantive hypotheses apparently require **auxiliary hypotheses** to be true.
-Such hypotheses can be directly deduced from the axioms, or they are tacitly assumed preconditions of the theory, which could be called the **tenets**.
+The substantive hypotheses often **auxiliary hypotheses** to be true, and it is not always clear whether these hypotheses belong to the tenets or are fundamental auxiliaries.
 Some potential auxiliary hypotheses come to mind:
 
 * L2 learners may exert a linguistic influence on L1 speaker of the same language.
 * Language contact can induce language change under certain---ideally fully spelled out---conditions.
 * The theory applies universally because it is based on general cognitive principles.
 * "Population-level patterns are not entirely random and […] individuals' usage can be non-categorical but still pattern meaningfully in probabilistic ways", a very specific and strong hypothesis directly from @WalkdenEa2023[549].
+* The loss of number inflection on pre-nominal elements is simplification.
+* The addition of pronominal subjects in a predominantly pro-drop language is simplification.
+* The move from synthetic case inflection to adpositional case marking is simplification.
+
+### Particular hypotheses and their auxiliaries
 
 The authors move on to introduce the---hitherto neglected---*historical corpus-based approach*, which they claim is suitable to collect evidence for the theory.
 This introduces an additional tier of hypotheses, which the authors acknowledge themselves by stating that the theory makes **predictions**.
-The concrete predictions cannot be part of the core hypotheses, otherwise they would not be predictions but rather axioms or tenets.
+The concrete predictions cannot be part of the core hypotheses, otherwise they would not be predictions but rather substantive hypotheses.
 The approach to these hypotheses is presented as *confirmatory* as the studies are intended to present *support*.
 
 > In **support of our approach**, we present three case studies of morphosyntactic phenomena for which the theory of sociolinguistic typology makes predictions, and assess them using historical corpus evidence.
 [The three case studies] taken together [illustrate] how historical corpus evidence can be brought to bear on questions of sociolinguistic typology. [@WalkdenEa2023,547]
 
-Typically, predictions---in other words, hypotheses derived from the axioms---are introduced in the form of **particular hypotheses**.
-Particular hypotheses should have at least some chance of being tested using data, while axioms are often too abstract to be tested directly.
+Typically, predictions take the form of **particular hypotheses**.
+Particular hypotheses should have at least some chance of being tested using data, while substantive hypotheses are often too abstract to be tested directly.
 Such particular hypotheses are---in the case at hand---related to the diachronic development of:
 
 * the loss of number marking on pre-nominal elements in English under Norse contact (Section \@ref(study1) below);
 * the rise of overtly expressed pronominal subjects in Latin American Spanish under contact with African slaves who had to learn Spanish rather quickly given the social parameters of the contact situation (Section \@ref(study2) below);
 * the reorganisation of the case and adposition systems of Slavic languages in the diffuse contact situation of the Balkan sprachbund.
 
-The hypotheses come with their own **auxiliary hypotheses** related to their measurement under the historical corpus-based approach, which are not derived from any other hypotheses but rather practical requirements for the measurement procedure to be appropriate:
+These hypotheses come with their own **auxiliary hypotheses** related to their measurement and operationalisation (in this case under the historical corpus-based approach), which are not derived from any other hypotheses but rather practical requirements for the measurement procedure to be appropriate:
 
+* In Study 1, the L1 of the conquered English was influenced by the conquerors' L2 acquisition of English through the same mechanisms as the Spanish L1 of the slave-owners was influenced by their slaves' L2 acquisition of Spanish despite the difference in social parameters.
+This mechanism is the same as the one at work in the Balkan sprachbund where the joined influence of Albanian, Turkish, Romance, and other languages on Slavic led to the simplification of the case marking system under rather different and complex political as well as social constellations.
 * The mechanisms described by the substantive and auxiliary hypotheses are mirrored reliably and with negligible temporal delay in written sources.
 * The sources available are rich and reliable enough to mirror subtle diachronic developments.
 * The change in the observed cases is due to a large extent to language contact and not to overall tendencies/other mechanisms of change that happen to happen in certain areas and at a certain time.
 * The authors of the text were connected enough with the relevant language community (rather than being silent monks or ivory-tower intellectuals) to be good exponents of the change under examination.
 
-Finally, the individual studies rely on numerous other **auxiliary hypotheses**, which link between diverse other families of hypotheses.
-Many of them are enumerated in the paper with references to previous studies corroborating their adequacy, for example:
-
-* The loss of number inflection on pre-nominal elements is simplification.
-* The addition of pronominal subjects in a predominantly pro-drop language is simplification.
-* The move from synthetic case inflection to adpositional case marking is simplification.
-* In Study 1, the L1 of the conquered English was influenced by the conquerors' L2 acquisition of English through the same mechanisms as the Spanish L1 of the slave-owners was influenced by their slaves' L2 acquisition of Spanish despite the difference in social parameters.
-This mechanism is the same as the one at work in the Balkan sprachbund where the joined influence of Albanian, Turkish, Romance, and other languages on Slavic led to the simplification of the case marking system under rather different and complex political as well as social constellations.
+### Networks of hypotheses, error, and underdetermination
 
 The connections between such families of hypotheses---especially taken as causal connections---are complex and delicate.
 In the case at hand, a test of particular hypotheses is attempted to deliver support for substantive hypotheses, for all practical purposes assuming that hypotheses in the auxiliary families are all correct.
 However, the auxiliary hypotheses are apparently not understood as being implicitly tested by the procedure, and any false hypothesis in those families has the potential to mar any inferences with respect to the particular and hence the substantive hypotheses.
 For example, the corpus method might be completely inadequate given the available resources to the effect that we get a completely random pseudo-confirmation from the data (for example because of the writers of the available texts were not sufficiently connected within the community of language users or any other of a million reasons).
+Alternatively, Trudgill's theory might be incorrect.
 At the same time, the loss of number inflection on pre-nominal elements might not even be simplification in a relevant sense.
 In short, the results from the corpus studies only have the advertised interpretation if all the auxiliary hypotheses are *true to a satisfying degree*.
 It is clearly not enough if they are *plausible* since plausibility is only a measure of our belief in the hypothesis.
 For the inferences to be valid, our belief is not essential.
 Notice in general that a direct test of substantive hypotheses is almost certainly not within our grasp, and we have to consider what kind of evidence testing particular hypotheses is able to provide for them at all.
 
-The concrete examples given above and the exact delineation of the families of hypotheses might deserve some refinement, but our point is more general in that confirmation and severe testing are very hard to come by in the face of the underlying theoretical complexities of a corpus study.
+The concrete examples given above and the exact delineation of the families of hypotheses might deserve some refinement by researchers who are better versed in diachronic sociolinguistics, but our point is more general in that confirmation and severe testing are very hard to come by in the face of the underlying theoretical complexities of a corpus study.
 In epistemology, such problems have been discussed at great length, and the problem is known as the *underdetermination of science*.
 Pierre Duhem claimed that any disagreement with the hypotheses found in an experiment was the sign of a disagreement with a large logical conjunct of hypotheses rather than just the specific hypothesis of interest at hand [@Duhem1914].
-While he thought this was mostly valid for physics, Willard Van Orman Quine extended this skepticism towards our knowledge or rather our beliefs in general [@Quine1951;@Quine1955].
+While he made an argument exclusively about physics, Willard Van Orman Quine extended this skepticism towards our knowledge or rather our beliefs in general [@Quine1951;@Quine1955].
 This form of *holistic underdetermination* has led to far-reaching discussions about the validity of the scientific method.
 @Laudan1990 concludes that it was taken out of proportion inasmuch as we could in most cases establish reasonably well the actual cause of an experiment being in disagreement with the predictions.
 Arguably, however, this is not at all trivial with linguistic hypotheses and the ways we use to test them, as we are going to show in Section \@ref(walkden).
-This is because of their built-in underdetermination, which is magnified by imprecision.
-As our theories are often not formalised and consequently do not make neat predictions especially for corpus data (see Section \@ref(gooduse)), we interpret (weak) accordance with the expectations as corroboration.
-This invites back all problems of holistic underdetermination with a vengeance, as any of the families of imprecise and often implicit hypotheses (see above) might conspire to result in a very loose fit, which in the worst case is taken as confirmation.
+This is because of their built-in underdetermination, which largely due to their blatant imprecision and most linguists aversion to forming theories that make numerical predictions.
+Linguistic are often not formalised and consequently do not make neat predictions especially for corpus data (see Section \@ref(gooduse)), we interpret (weak) accordance with the expectations as corroboration.
+This invites back all problems of holistic underdetermination with a vengeance, as any of the families of imprecise and often implicit hypotheses (see above) might conspire to result in a very loose fit of the data to the theory, which in the worst case is taken as confirmation.
+Metaphorically speaking, a circle can be drawn around any geometric figure, as long as it is large enough.
 
 Another often discussed for of underdetermination is *contrastive underdetermination*.
 Contrastive underdetermination describes the fact that there might be or actually are potentially many alternative theories that could explain the same data.
 @LaudanLapplin1991 dismiss contrastive underdetermination based on---among other things---the fact that it is unlikely that two theories receive exactly the same amount of empirical support from some data despite both being compatible with the data.
 For linguistics, we consider this kind of underdetermination to be swamped by holistic underdetermination.
-Many of our theories are so imprecise and pre-formal that data (especially quantitatively measured data) cannot decide between two theories.^[Some rare exceptions might be model-theoretic semantics in the tradition of @Montague73, model-theoretic syntax in the tradition of @PollardSag1994, or proof-theoretic syntax with model-theoretic semantics as in @Carpenter1997.
-However, such truly formalised theories are not easy to support or refute empirically.]
+Many of our theories are so imprecise and pre-formal that data (especially quantitatively measured data) cannot decide between two theories.^[Some rare examples of precisely formalised theories are model-theoretic semantics in the tradition of @Montague73, model-theoretic syntax in the tradition of @PollardSag1994, or proof-theoretic syntax with model-theoretic semantics as in @Carpenter1997.
+However, such truly formalised theories are not easy to support or refute empirically either, among other things because they, too, do not make numerical predictions about human behaviour.]
 For example, the loss of plural marking on all elements but the head noun in an NP could also just accidentally coincide with the Viking contact situation.
 It could be a consequence of the obvious overall tendency of English to lose most of its inflectional markers from Old English to Early Modern English.
 If the change progresses from the North to the South during the time of the Danelaw, the sociolinguistic theory would receive somewhat better support than the theory of accidental coincidence, but the data would still be compatible with both theories.
@@ -144,17 +151,19 @@ If the change progresses from the North to the South during the time of the Dane
 As a consequence, linguistic theories are rarely refuted by data.
 While many linguistic theories went out of fashion, we ask readers to name one major linguistic theory from between 1990 and now that was made untenable because it was in clear and repeatedly demonstrated discord with data.
 Compare this to, for example, Newton's theory of gravity, which was ultimately refuted by anomalies in the precession of Mercury’s perihelion going back to observations by @Leverrier1859.
-We also ask the reader to imagine any obtainable set of data that would conclusively rule out all other (reasonable) explanations for the hypotheses put forward in @WalkdenEa2023.
+The numbers from the theory and the observations simply did not match up, and there was no way around that.
+We also challenge the reader to imagine any obtainable set of data that would conclusively rule out all other (reasonable) explanations for the hypotheses put forward in @WalkdenEa2023.
 All we seem to be able to expect from corpus studies like the ones we customarily conduct is:
 (i) either the study does not contradict the logical conjunct of our hypotheses (which is *not* confirmation);
 (ii) or it is not compatible with that conjunct or our interpretation of any of the conjoined hypotheses (which is *not* refutation).
-Because of their loose-fit character and the holistic and contrastive underdetermination of linguistics, we can seek neither confirmation nor refutation for substantive linguistic hypotheses.
+Because of their loose-fit character and the holistic and contrastive underdetermination in linguistics, we can seek neither confirmation nor refutation for substantive linguistic hypotheses.
 This is an important point to keep in mind when we examine the role of statistics in testing hypotheses in the next section.
 
 ## Statistical hypotheses and severe testing {#testing}
 
 For quantitative data-based studies, it is necessary to derive **statistical hypotheses** from particular hypotheses described in the previous section.
 A statistical hypothesis formulates the expectation of a numerical outcome in an operation of counting or measuring in a corpus study or an experiment, etc.
+Du to the aforementioned low degree of formalisation, a *numerical outcome* is usually something as imprecise as *n should be greater than m* or *n should be less than or equal to m*.
 For example, with regard to the loss of number marking on pre-nominal elements in English under Norse contact, we could derive the expectation that the number of occurrences of determiners and adjectives without overt number marking should be higher in Northern and Eastern English dialects compared to Western and Southern dialects during the period of the Danelaw because of the assumed underlying mechanisms of sociolinguistically induced language change.
 Let's abbreviate this hypothesis, drop some understood conditions, and call it $H_1$: *Occurrence counts of inflected pre-nominal elements are **lower** in the North and East compared to the South and West.*
 
@@ -165,25 +174,28 @@ Hence, one inverts the original hypothesis, generating a so-called *Null hypothe
 $H_0$: *Occurrence counts of inflected pre-nominal elements are **equal to or higher than** in the North and East compared to the South and West.*
 The theory of frequentist statistics then allows us to calculate the (pre-experiment) probability of obtaining a sample that diverges as extremely as or more extremely than the one actually obtained if the Null were true: the p-value.
 If the event that actually occurred had (past tense!) a very low probability under the Null before the experiment was conducted (and the p-value is thus low), one usually proceeds to a positive inference regarding $H_1$.
-Correct interpretations of such results are delicate.^[Our overall exposition to frequentist statistics can be verified using any sound text book on statistics.
-We recommend @VasishthBroe2011 for beginners, and we're also in the process of writing our own textbook on the matter.]
+Correct interpretations of such results are a delicate matter, especially for practitioners with suboptimal training in statistics.^[Our overall introduction to frequentist statistics can be verified using any sound text book on statistics.
+We recommend @VasishthBroe2011 for beginners, and we're also in the process of writing our own open-access textbook on the matter.]
 
-Mostly unnoticed in the linguistics community, such inferences have been under heavy debate in the past twenty years.
-Routinely, inferences are made using Null-Hypothesis Significance Testing (NHST), a failed system of deciding which measured statistical results are *significant* and which are not [for how and why it failed see @Gigerenzer2004; @Ioannidis2005; @Colquhoun2014; @Perezgonzalez2015; @GreenlandEa2016; @MunafoEa2017; @Mayo2018].
+Mostly unnoticed in the linguistics community, such inferences have been under heavy debate in the past twenty years.^[There is, however, a debate about NHST in corpus linguistics independent of the mainstream discussion, for example in @Kilgarriff2005; @Koplenig2019.]
+Routinely, inferences are made using Null-Hypothesis Significance Testing (NHST), a failed system of deciding which measured statistical results are *significant*, and which are not [for how and why it failed see @Gigerenzer2004; @Ioannidis2005; @Colquhoun2014; @Perezgonzalez2015; @GreenlandEa2016; @MunafoEa2017; @Mayo2018].
 NHST works like this:
 Significance is reached when the p-value is lower than some pre-set threshold (often 0.05), and this is taken as straightforward corroboration of $H_1$, which is more often than not incorrect.
 NHST is usually understood as a distorted hybrid of the philosophies of inference by Ronald Aylmer Fisher [@Fisher1935;@Fisher1959] on the one hand and Jerzy Neyman and Egon Sharpe Pearson [@NeymanPearson1933;@Neyman1937;@Neyman1957] on the other hand.^[An erudite comparison of the two including biographical details is @Lehmann2011.]
 Under the *Severity* approach from @Mayo1996; @MayoSpanos2004; @Mayo2018, NHST does not meet the requirements of a *severe test* of a hypothesis.
-The *Severity Principle* is defined as (in its weak form and adapted for readability):
-*Some data do not provide good evidence for a hypothesis if they result from a test procedure with a very low probability or capacity of having uncovered the falsity of the hypothesis, even if it is incorrect.* [@MayoSpanos2004,162].
+The *Severity Principle* is defined as (in its weak form and adapted by for readability):
+*Some data do not provide good evidence for a hypothesis if they result from a test procedure with a very low probability or capacity of having uncovered the falsity of the hypothesis, even if it is incorrect.* [paraphrased from @MayoSpanos2004,162].
+We would like to posit the banality that a theory can only be called *confirmed* or even just *corroborated* must have survived at least a few severe tests.
 If a test is interpreted as straightforward corroboration of a complex network of hypotheses (see Section \@ref(hypotheses)) simply because some minor divergences from a single derived Null hypothesis were detected in a (possibly quite large) sample, it should be considered a blatant violation of the Severity Principle.
 Such tests have an amazingly weak capability of detecting any error in substantive or even in particular hypotheses.
 
 The most important point of critique for our purposes is indeed that even minor divergences (even if they're actually there) make the Null false, which is easily detected in NHST in the form of a low p-value.
+This is not a flaw in the foundations of frequentist inference but in its application.
 Think about it:
-Even if the effects postulated in @WalkdenEa2023 only accounted for the behaviour of 0.001\% of all speakers, the Null would technically be false, but it would not matter much for our understanding of the changes in the English language under the Danelaw.
-Consequently, NHST is able to detect this, and we could take this erroneously as a corroboration of Trudgill's theory.
-We clearly shouldn't take it as corroboration as we did not perform a severe test of the theory.
+Even if the effects postulated in @WalkdenEa2023 only accounted for the behaviour of 0.001\% (one ten-thousandth) of all speakers, the Null hypothesis would technically be false.
+Still, the Null being false by such a small numerical margin would not matter much for our understanding of the changes in the English language under the Danelaw.
+Despite its theoretical relevance, NHST is perfectly able to detect this minor discrepancy if the sample is large enough, and we could take this erroneously as a corroboration of Trudgill's theory.
+However, we clearly should *not* take it as corroboration as we did not perform a severe test of the theory.
 
 We see many of the deficiencies in @WalkdenEa2023 to be detailed below as stemming from an adherence to NHST.
 While proposed solutions to the NHST crisis have been everything from radical to technically demanding, we will suggest in Section \@ref(gooduse) that some very straightforward principles might have avoided these fallacies of NHST in the paper:
@@ -194,13 +206,14 @@ Reviewers and editors must be competent to spot errors in the application of sta
 (iii) The burden of reporting only positive findings in the most optimistic tone must be lifted from researchers, above all through pre-registration.
 Otherwise, the whole field of corpus-oriented linguistics and philology is prone to the detrimental effects of data mining and data dredging.
 While we do not accuse the authors under discussion of either data dredging or even negligence, the whole field will suffer if publications like @WalkdenEa2023 get published without any substantial methodological critique.
+On the contrary, we are perfectly certain that the authors acted in good faith, as we have not only observed similar confusions in other researchers over and over again, but also in our former selves.
 
 ## Statistical models in corpus linguistics {#models}
 
 As the final prerequisite for our discussion of the errors in @WalkdenEa2023, we now turn to the specific statistical tools used in the paper.
 The authors utilise statistical models of a certain kind, and a few words on these models are in order, above all connecting them to the previous discussion about hypotheses and hypothesis testing.
 Maybe no other advanced statistical method has been popularised more in the past twenty years than *Generalised Linear Models* (GLMs).
-A highly influential paper in the popularisation of GLMs was @BresnanEa2007, quickly followed by @Baayen2008, which provided an accessible introduction to GLMs for linguists, @Gries2013 being another text book that included GLMs.
+A highly influential paper in the popularisation of GLMs was @BresnanEa2007, quickly followed by @Baayen2008, which provided an accessible introduction to GLMs for linguists in a textbook, @Gries2013 being another textbook that included GLMs.
 A few years later, @Gries2015 still called Generalised Linear *Mixed* Models (GLMMs)---an extension of GLMs to be discussed presently---underused, but it is fair to say that diverse variants of GLMs now (ten years later) belong to the repertoire of statistics for corpus linguists.
 GLMs and their variants are related to regression, and they have a very simple purpose:
 they estimate how the variance in a set of variables (the *regressors*, *predictors*, *explanatory variables*, or *independent variables*) is linked to the variance in another variable (the *response*, *outcome*, or *dependent variable*) and *explains* the variance in this response variable.
@@ -217,8 +230,8 @@ Estimators for GLMs, GLMMs, etc. provide such numbers.
 
 While LMs (*Linear Models*) are used if the response variable is measured on a numerical scale, and it depends linearly on the regressors, a Generalised Linear Model (GLM) uses more indirect maths to model many kinds of relationships between regressors and response variables.
 In linguistics, it often quantifies the influence of the regressors on a binary choice, in which case the model predicts the *probability* of one variant being chosen over the other.
-GLMMs (*Generalised Linear Mixed Models*) add so-called random effects.
-They capture variation in the response variable at the group level, for example if there are multiple measurements of the same speaker, from the same text, containing the same verbs, etc. [see @Schaefer2020a for an overview].
+GLMMs (*Generalised Linear Mixed Models*) include so-called random effects.
+These capture variation in the response variable at the group level, for example if there are multiple measurements from the same speaker, from the same text, containing the same verbs, etc. [see @Schaefer2020a for an overview].
 The estimator uses different maths for random effects, but it is often possible to include an effect either as a normal regressor (*fixed effect*) or a random effect [@GelmanHill2006,245–247].
 
 There is a huge number of possible evaluations of the quality of the model fit.

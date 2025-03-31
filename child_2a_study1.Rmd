@@ -89,25 +89,27 @@ Using such aggregated data to estimate the parameters of a linear model is detri
 The unweighted model treats each text as contributing the same amount of information, which simply and obviously is not the case.
 The established purpose of such models in empirical sciences is to model the distribution of data points, not their aggregations [see @GelmanHill2006 if in doubt].^[There are models for proportion data and other aggregated data. However, they are much more difficult to handle and---above all---interpret [@ZuurEa2009]. Most crucially, however, the authors report a plain linear model and *not* a weighted binomial model on proportion data.]
 Thus, the model from the paper makes the assumption that a text with `r .grandtotals[.mini][1]` data points (the observed mininum) and a text with `r .grandtotals[.maxi]` data points (the observed maximum) can be treated as contributing the same amount of evidence.
-This is ill-advised for all types of models, even much simpler ones like the ungrouped mean of a population, which is a standard example:
-Assume we had the task of calculating the average length of a rare kind of newts.
-Furthermore, assume their true population average length is 10 cm.
-Because our newts are so rare and difficult to find, instead of going out and measuring a random sample of those rare newts, we look for existing data, finding a report where field researchers measured two newts they found in a pond averaging 7 cm in length and another report from a larger lake where researchers measured the average length of a population of 40 newts to be 10.5 cm.
-Since the original raw data tables (individual measurements) are not included in the old reports, we take the mean of the two means, correctly finding that (7+10.5)/2 is `r (7+10.5)/2`.
-While mathematically correct, this is certainly not a good estimator of the average length of the newts.
-It is severly skewed because of the unequal sizes of the samples, and the two newts from the pond receive much too high a weight.
-Similarly, if *Innocendium* and *Horses* were texts as long as (or sample from texts as large as) *Purvey* and *Ayenbyte*, all generalisations about the Southern dialect group would disappear.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view. It has been downloaded 1,440 times as of 29 March 2025.]
+This is ill-advised for all types of models, even much simpler ones, as a fictitious example shows.
+Assume we had the task of calculating the average length of a newly discovered Italic language, Faloscan.
+There are two Faloscan inscriptions found, one containing two short sentences averaging 3.5 words per sentence because it contains two sentences, one 3 words long, the other one 4 words long.
+The other one is a longer legal text comprising 25 sentences with an average length of 8.3 words per sentence.
+A phylogeneticist includes Faloscan in their database of average sentence lengths, calculating an average length of $(3.5+8.3)\div 2=`r round((8.3+3.5)/2, 2)`$ words per sentence.
+Almost anyone would criticise this as being incorrect, as the shorter text should receive a much lower weight in the calculation of the average.^[The correct calculation of the weighted mean in this case is $(0.075\cdot 3.5)+(0.925\cdot 8.3)=`r round((0.075*3.5)+(0.925*8.3), 2)`$ words per sentence.]
 
-When we specify a model we assume that all kinds of sources influence the variance in the data points, which are assumed to be atomic measurements.
+However, @WalkdenEa2023 do not calculate a simple average, they estimate parameters of a much more complex model based on even more extremely unbalanced aggregated metrics.
+For example, if *Innocendium* and *Horses* were texts as long as (or sample from texts as large as) *Purvey* and *Ayenbyte*, all generalisations about the Southern dialect group would disappear.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view. It has been downloaded 1,440 times as of 29 March 2025.]
+This is so elementary, that at least one of the authors, the reviewers, or the editors should have noticed it.
+
+When we specify a model, we assume all kinds of sources of influence on variance in the regressor **per data point**, which are the actual measurements.
 The model is specified to relate the systematic (explained) influences (variance in the explanatory variables) to the variance in the response variable, leaving the unexplained variance as residuals.
-However, in this case the difference score is itself an estimate based on wildly varying sample sizes and wildly varying balance between the numbers of adjectives and determiners, which means that it comes with a kind of variance---or plainly: inaccuracy---that the simple linear model and its interpretation are not made for (in the mathematical sense).
+However, in the case at hand the difference score is itself an estimate based on wildly varying sample sizes and wildly varying balance between the numbers of adjectives and determiners, which means that it comes with a kind of variance---or, plainly, inaccuracy---that the simple linear model and its interpretation are not made for (in the mathematical sense).
 This also means that actual significance levels very likely do not correspond to nominal significance levels, and at least using a more conservative significance level than 0.05 would be recommended.
 In the next section we report an alternative model of the data from @WalkdenEa2023, and we show what remains of the results advertised in the paper under more accurate modelling.
 
 ### Alternative models
 
 Luckily, the original unaggregated data are available in the data package.
-Even in the middle ages, the relevant linguistic event was the actual production of a single instance of a determiner or an adjective by a writer.
+Now, even in the middle ages, the relevant linguistic event was the actual production of a single instance of a determiner or an adjective by a writer.
 Therefore, the best model in the case at hand is one that estimates the probability of speakers overtly marking plural agreement in a concrete sentence or not.^[As a minor inconsistency, the authors follow such a strategy in Study 2, see below.]
 We specified a model that comes close to the idea in the paper, but which avoids the problems with the unbalanced difference scores is the following one.
 It models the probability of the realisation of agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.

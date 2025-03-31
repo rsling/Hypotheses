@@ -162,7 +162,7 @@ ReportGLM <- function(model, data = NULL,
     "Report"   = paste0(.name, "is a ", .type, family(model)$family, " model with a ",
                         family(model)$link, " link. N=", nobs(model),
                         ", AIC=", round(AIC(model), aic.round),
-                        ", ", .r2r, ".", .accuracyr, .randomr)
+                        ", ", gsub('Marginal', 'marginal', gsub('Conditional', 'conditional', .r2r)), ".", .accuracyr, .randomr)
     )
 }
 
