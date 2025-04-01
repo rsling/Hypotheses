@@ -4,7 +4,7 @@
 SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
 SubjectPaperReport <- ReportGLM(SubjectPaperModel, SubjectData$Subject, name="Paper Model", intercept.descriptor = "(0, 0, Spain)")
 SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
-SubjectNullReport <- ReportGLM(SubjectNullModel, SubjectData$Subject, name="Null Model", intercept.descriptor = "(1)")
+SubjectNullReport <- ReportGLM(SubjectNullModel, SubjectData$Subject, name="Text-Only Model", intercept.descriptor = "(1)")
 SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
 SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, SubjectData$Subject, name="Country-Genre Model", intercept.descriptor = "(Spain, Nonliterary)")
 SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
@@ -61,11 +61,11 @@ This discussion is obsolete, however, as in Study 2, the model is even less info
 
 ### Alternative models {#study2alt}
 
-Again, we begin our reanalysis by comparing the Paper Model to a Null Model (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
+We begin our reanalysis by comparing the Paper Model to a Text-Only Model (not reported in tabular form), which is a model that only has a fixed intercept and a random intercept for the text.
 In other words, we allow the intercept to vary between groups of data points defined by the texts they occur in, and no other explanatory variables are included.
 `r SubjectNullReport$Report`
 The AIC of the Paper Model is lower.
-The marginal R² of the Null Model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper Model is minimally higher than that of the Null Model.
+The marginal R² of the Text-Only Model is of course 0, as there are no first-level fixed effects, but even the conditional R² of the Paper Model is minimally higher than that of the Text-Only Model.
 All in all, it does not appear even from this simple evaluation as if the orality score, the macroregion, and the date of the document explain much of the variance in the data, as clearly indicated by the R² measures and the prediction accuracy.
 
 A second alternative model we would like to entertain is the Country-Genre Model, see Table \@ref(tab:subjectcountrygenretable).
@@ -149,17 +149,17 @@ The Model predicts a null subject in `r SubjectPaperPredictNull` cases and a pro
 In other words, it predicts that there should never be an overt subject.
 This is due to the obviously uninformative regressors and the high base rate.
 The base rate (no overt subject) is at `r round(mean(SubjectPaperBaseline==SubjectData$Subject)*100,2)`%.
-To see whether the Paper Model could make better binary predictions with a lower probability threshold for binary decisions, we plot the predictions of the Paper Model and the Null Model next to each other as violin plots in Figure \@ref(fig:subjectpaperviolins).
+To see whether the Paper Model could make better binary predictions with a lower probability threshold for binary decisions, we plot the predictions of the Paper Model and the Text-Only Model next to each other as violin plots in Figure \@ref(fig:subjectpaperviolins).
 
-```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Probabilities estimated by the Paper Model and the Null Model; only for data used to estimate the model parameters and grouped by their actual outcome"}
+```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Probabilities estimated by the Paper Model and the Text-Only Model; only for data used to estimate the model parameters and grouped by their actual outcome"}
 par(mfrow=c(1,2))
 vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Paper Model", ylab="Estimated probability", frame.plot = F, ylim = c(0, 0.275))
-vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Null Model", ylab="", frame.plot = F, ylim = c(0, 0.275))
+vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Text-Only Model", ylab="", frame.plot = F, ylim = c(0, 0.275))
 par(mfrow=c(1,1))
 ```
 
 Even for the cases with overt subjects in the observed data, the model estimates a maximum probability of under 0.25.
-Most strikingly, at least judging from the distribution of the predictions the Paper Model estimates almost exactly the same probabilities as the null model.
+Most strikingly, at least judging from the distribution of the predictions the Paper Model estimates almost exactly the same probabilities as the Text-Only Model.
 In other words, orality, time, and country (or macroregion) are by and large irrelevant.
 Reaching the significance level is almost exclusively an effect of the relatively simple model structure, minute differences correlated with the regressors, and the relatively large sample size.
 Alls points of criticism against NHST apply.
@@ -213,17 +213,17 @@ axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
 legend("topright", legend=c("Precision", "Recall"), col=c("darkred", "darkgreen"), lty = c(1, 2), lwd = the.lwd, bty="n")
 ```
 
-```{r subjectpapernullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Comparing the predictions of the Paper Model and the Null Model"}
+```{r subjectpapernullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Comparing the predictions of the Paper Model and the Text-Only Model"}
 plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type="response"),
      pch=20, bty ="n",
      xlim = c(0,0.3), ylim = c(0,0.3),
      col = "black",
-     xlab = "Probabilities estimated under the Null Model",
+     xlab = "Probabilities estimated under the Text-Only Model",
      ylab = "Probabilities estimated under the Paper Model"
 )
 ```
 
-Finally, and most revealing perhaps, we plot the probabilities predicted by the Paper Model against those predicted by the Null Model in Figure \@ref(fig:subjectpapernullcompare) in the style of a correlation plot.
+Finally, and most revealing perhaps, we plot the probabilities predicted by the Paper Model against those predicted by the Text-Only Model in Figure \@ref(fig:subjectpapernullcompare) in the style of a correlation plot.
 The plot shows which probability the two models estimate for each of the 3,773 observed data points, each data point being plotted as a dot.
 If the two models predicted exactly the same probabilities, the dots should be aligned along a straight line.
 Indeed, we see dots mostly aligned along a straight line with negligible deviations.

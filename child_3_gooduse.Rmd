@@ -15,12 +15,12 @@ From a rejection of these hypotheses using discredited NHST logic, positive infe
 
 It should be obvious that this is a risky approach.
 Not only are two major positive inferences attempted, but the whole problem of underdetermination is completely ignored.
-Also, the amount of evidence (measured in the number of linguistic examples used in the statistical is minute compared to the complexity of the network of hypotheses.
-Unfortunately, the mechanical application of NHST and some incorrect analyses of the data (in th form of unweighted aggregations) invalidate the rejection of the weak Null hypotheses, and hence there is no inference to be made at all, neither a modest one nor an exceptional one.
+Also, the amount of evidence (measured in the number of linguistic examples used in the statistical analysis is minute compared to the complexity of the network of hypotheses.
+Unfortunately, the mechanical application of NHST and some incorrect analyses of the data (in the form of unweighted aggregations) invalidate the rejection of the weak Null hypotheses, and hence there is no inference to be made at all, neither a modest one nor an exceptional one.
 We can only speculate why the errors were not detected by the authors, the main author, the editors, and the reviewers.
-Instead of ending on such an uncomfortable note, we'd like to suggest three remedies to avoid such results to be published in the future.
+Instead of ending on such an uncomfortable note, we'd like to suggest three remedies to avoid such results being published in the future.
 None of these is original in the sense that we did not come up with them.
-Other areas have similar problems, and many researchers have had very good ideas to remedy these problems.
+Other areas have similar problems, and many researchers have had very good ideas about how to remedy them.
 
 ## Remedy 1: disciplined inference and better theories
 
