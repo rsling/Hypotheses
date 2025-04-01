@@ -112,7 +112,7 @@ Luckily, the original unaggregated data are available in the data package.
 Now, even in the middle ages, the relevant linguistic event was the actual production of a single instance of a determiner or an adjective by a writer.
 Therefore, the best model in the case at hand is one that estimates the probability of speakers overtly marking plural agreement in a concrete sentence or not.^[Inconsistency, the authors follow such a strategy in Study 2, see our Section \@ref(study2).
 However, they use another incorrectly aggregated score as a regressor in that study.]
-We specified a model that comes close to the idea in the paper but which avoids the problems with the unbalanced difference scores is the following one.
+We specified a model that comes close to the idea in the paper but which avoids the problems with the unbalanced difference scores is the one summarised in Table \@ref(tab:agreementpapertable).
 It models the probability of the realisation of agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
 We call it the Paper Model even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
 See Table \@ref(tab:agreementpapertable) for a report of the coefficients and the associated p-values as found by the estimator.
