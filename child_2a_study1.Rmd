@@ -310,4 +310,4 @@ The influences of the regressors on the choice between overtly marked and unmark
 What is more, the dialectal region has minor and above all contradictory pseudo-influence inasmuch as there is no clear North-East to South-West continuum.
 If the individual text is added as a random effect, we see that the single influence with at least moderate explanatory power is the individual text (and thus likely a combination of style and register), not the dialectal region.
 It should be noticed that including the text as a random effect is not even an optional decision as *not* including it violates assumptions underlying the statistical model, in this case predominantly the *independence of events*.
-To summarise, the data from Study 1 corroborate an old wisdom from traditional philology, videlicet that texts differ and deserve careful individual examination in order to be decoded and understood properly.
+To summarise, the data from Study 1 corroborate an old wisdom from traditional philology, videlicet that individual texts differ and deserve careful individual examination in order to be decoded and understood properly.
