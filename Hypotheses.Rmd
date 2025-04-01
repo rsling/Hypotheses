@@ -1,7 +1,7 @@
 ---
 title: "Hypotheses, underdetermination, and wrong models"
 author: "Roland Schäfer (Friedrich-Schiller-Universität Jena)"
-date: "Draft 1 of 31 March 2025"
+date: "Draft 2 of 1 April 2025"
 mainfont: Libertinus Serif
 sansfont: Libertinus Sans 
 monofont: Inconsolata
