@@ -60,14 +60,22 @@ Consequently, the numbers should be inspected for a full picture.
 *`r .agr[.cbmin,"Text"]`* contributes `r .agr[.cbmin,"AdjectiveCount"]` adjectives and `r .agr[.cbmin,"DeterminerCount"]` determiners, which means it has `r round(.agr[.cbmin,"DeterminerCount"]/.agr[.cbmin,"AdjectiveCount"],2)` times more determiners than adjectives.
 On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"AdjectiveCount"]` adjectives and `r .agr[.cbmax,"DeterminerCount"]` determiners, which means it has `r round(.agr[.cbmax,"DeterminerCount"]/.agr[.cbmax,"AdjectiveCount"],2)` times more adjectives than determiners.
 
-```{r agreementdifferencescores, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="100%", fig.cap="Difference score for the texts in the sample; sizes of the dots correspond to the number of observations contributed by the text; vertical bars indicate the overrepresentation of determiners"}
+```{r agreementdifferencescores, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="100%", fig.cap="Difference scores for the texts in the sample; sizes of the dots correspond to the number of observations contributed by the text; vertical bars indicate the overrepresentation of determiners"}
+
+  par(mar = c(4, 2.5, 1, 0))
+
   plot(NULL, xlim=c(0,48), ylim=c(-0.6,1.3), bty="n", ylab="Difference score", xlab="", xaxt="n")
 
   # Plot visual helper lines.
   for (i in 1:nrow(.agr)) {
-    lines(c(i,i), c(-0.65, 1.0), col="lightgray", lty = 2)
+    lines(c(i,i), c(-0.65, 1.0), col="lightgray", lty = 1, lwd = 1)
   }
   
+  # Plot 0-line.
+  lines(x = c(1, nrow(.agr)), rep( 0.1, 2), lwd = 2, col="lightgray")
+  lines(x = c(1, nrow(.agr)), rep( 0  , 2), lwd = 2, col="gray")
+  lines(x = c(1, nrow(.agr)), rep(-0.1, 2), lwd = 2, col="lightgray")
+
   for (i in 1:nrow(.agr)) {
      # This scales the determiner bias so it fits within the plot.
     .biascoord <- .agr[i, 8]+(1/.countbiasR[i])/10
@@ -82,7 +90,7 @@ On the other hand, *`r .agr[.cbmax,"Text"]`* contributes `r .agr[.cbmax,"Adjecti
     points(i, .agr[i, 8], pch=.cols[i]+14, cex=4*.grandtotals[i]/.max, col=.cols[i])
   }
   axis(1, 1:nrow(.agr), labels=.agr$Text, las=2, cex=0.5, tick = F, cex.axis=0.5, mgp=c(0,0,0))
-  legend("bottomright", col=1:4, legend = levels(.agr$Dialect), pch=15:18, box.col="white", box.lwd=0, pt.cex=1.5, bg="white")
+  legend(0.5, 1.2, col=1:4, legend = levels(.agr$Dialect), pch=15:18, box.col="white", box.lwd=0, pt.cex=1, bg="white")
 ```
 
 Using such aggregated data to estimate the parameters of a linear model is detrimental.
@@ -97,7 +105,7 @@ A phylogeneticist includes Faloscan in their database of average sentence length
 Almost anyone would criticise this as being incorrect, as the shorter text should receive a much lower weight in the calculation of the average.^[The correct calculation of the weighted mean in this case is $(0.075\cdot 3.5)+(0.925\cdot 8.3)=`r round((0.075*3.5)+(0.925*8.3), 2)`$ words per sentence.]
 
 However, @WalkdenEa2023 do not merely calculate a simple average, they estimate parameters of a much more complex model based on an even more extremely unbalanced aggregated metric.
-For example, if *Innocendium* and *Horses* were texts as long as (or samples from texts as large as) *Purvey* and *Ayenbyte*, all generalisations about the Southern dialect group would disappear.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view. It has been downloaded 1,440 times as of 29 March 2025.]
+For example, if *Innocendium* and *Horses* were texts as long as (or samples from texts as large as) *Purvey* and *Ayenbyte*, the generalisations about the Southern dialect group would be weakened considerably.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view. It has been downloaded 1,440 times as of 29 March 2025.]
 This is so elementary, that at least one of the authors, the reviewers, or the editors should have noticed it.
 
 When we specify a model, we assume all kinds of sources of influence on variance in the regressor **per data point**, which are the actual measurements.
@@ -106,14 +114,16 @@ However, in the case at hand the difference score is itself an estimate based on
 This also means that actual significance levels very likely do not correspond to nominal significance levels, and at least using a more conservative significance level than 0.05 would be recommended.
 In the next section we report an alternative model of the data from @WalkdenEa2023, and we show what remains of the results advertised in the paper under more accurate modelling.
 
+
 ### Alternative models
 
 Luckily, the original unaggregated data are available in the data package.
 Now, even in the middle ages, the relevant linguistic event was the actual production of a single instance of a determiner or an adjective by a writer.
 Therefore, the best model in the case at hand is one that estimates the probability of speakers overtly marking plural agreement in a concrete sentence or not.^[Inconsistency, the authors follow such a strategy in Study 2, see our Section \@ref(study2).
 However, they use another incorrectly aggregated score as a regressor in that study.]
-We specified a model that comes close to the idea in the paper but which avoids the problems with the unbalanced difference scores is the one summarised in Table \@ref(tab:agreementpapertable).
-It models the probability of the realisation of agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
+We specified a model that implements the idea from the paper but which avoids the problems with the unbalanced difference scores.
+It is summarised in Table \@ref(tab:agreementpapertable).
+The response is the probability of the realisation of overt agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
 We call it the Paper Model even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
 See Table \@ref(tab:agreementpapertable) for a report of the coefficients and the associated p-values as found by the estimator.
 
@@ -304,10 +314,58 @@ legend("bottomleft", legend=c("Precision", "Recall"), col=c("darkred","darkgreen
 par(mfrow=c(1,1))
 ```
 
+### Final remarks
+
 What does all this mean?
-It means that the inferences in the paper are wrong, and that the data in Study 1 do not provide evidence in favour of the network of hypotheses explicitly or implicitly introduced (see Section \@ref(hypotheses)), even if the model is reformulated without the inadmissible aggregation in the form of the difference scores.
+It means that the inferences in the paper are unwarranted, and that the data in Study 1 do not provide evidence in favour of the network of hypotheses explicitly or implicitly introduced (see Section \@ref(hypotheses)), especially if the model is reformulated without the inadmissible aggregation in the form of the difference scores.
 The influences of the regressors on the choice between overtly marked and unmarked pre-nominal elements are so minor that only typical NHST misinterpretation of p-values could wrongly detect them as having a relevant influence.
 What is more, the dialectal region has minor and above all contradictory pseudo-influence inasmuch as there is no clear North-East to South-West continuum.
 If the individual text is added as a random effect, we see that the single influence with at least moderate explanatory power is the individual text (and thus likely a combination of style and register), not the dialectal region.
 It should be noticed that including the text as a random effect is not even an optional decision as *not* including it violates assumptions underlying the statistical model, in this case predominantly the *independence of events*.
 To summarise, the data from Study 1 corroborate an old wisdom from traditional philology, videlicet that individual texts differ and deserve careful individual examination in order to be decoded and understood properly.
+
+```{r agreementinspectdata, echo=FALSE, message=FALSE, warnings=FALSE}
+
+  tbl.agrdial <- table(AgreementData$Agreement, AgreementData$Dialect)
+  tbl.agrpos  <- table(AgreementData$Agreement, AgreementData$POS)
+  tbl.posdial <- table(AgreementData$POS, AgreementData$Dialect)
+
+  ptbl.agrdial <- round(prop.table(table(AgreementData$Agreement, AgreementData$Dialect), margin = 2), 2)
+  ptbl.agrpos  <- round(prop.table(table(AgreementData$Agreement, AgreementData$POS), margin = 2), 2)
+  ptbl.posdial <- round(prop.table(table(AgreementData$POS, AgreementData$Dialect), margin = 2), 2)
+
+  .data <- AgreementData[which(AgreementData$Dialect == "North"), ]
+  n.tbl.agrpos  <- table(.data$Agreement, .data$POS)
+  n.ptbl.agrpos <- round(prop.table(table(.data$Agreement, .data$POS), margin = 2), 2)
+  
+  .data <- AgreementData[which(AgreementData$Dialect == "South"), ]
+  s.tbl.agrpos  <- table(.data$Agreement, .data$POS)
+  s.ptbl.agrpos <- round(prop.table(table(.data$Agreement, .data$POS), margin = 2), 2)
+  
+  ptbl.diadist <- round(prop.table(table(AgreementData$Dialect))*100, 2)
+  tbl.diadist  <- table(AgreementData$Dialect)
+  diadist.n    <- nrow(AgreementData)
+
+  .ddata <- AgreementData[-which(AgreementData$Text == "Richard-rolle"),]
+  ptbl.diadist.richeroll <- round(prop.table(table(.ddata$Dialect))*100, 2)
+  tbl.diadist.richeroll  <- table(.ddata$Dialect)
+  diadist.richeroll.n    <- nrow(.ddata)
+
+```
+
+A final word regarding the difference between exploratory data analysis and inferential statistics is in order.
+We acknowledge that a look at the data might suggest that in the North there is a more pronounced loss of prenominal agreement markers within the NP than in the other regions, and that determiners show proportionally even less agreement markers than adjectives in the North.
+It looks promising.
+So, why do we ruin the party and insist on a proper model specification and model evaluation instead of celebrating the fact that the authors found the differences they were looking for?
+That is because we consider it vital to maintain the difference between (i) descriptive observations in samples and (ii) inferences about the whole population and especially (iii) inferences about complex networks of hypotheses about what causes the observed differences.
+This is exactly why we have got inferential statistics in the first place: not any observed difference allows us to make far-reaching inferences.
+Whether an inference is admissible depends on the amount of data and the magnitude of the observed difference.
+
+In the case at hand, the reason why the observable differences in the sample do not hold up under correct modelling and do not allow any meaningful inferences is the amount of available data.
+There are $n=`r diadist.n`$ data points.
+Of these data points, only `r tbl.diadist["North"]` are from the North, which is roughly `r ptbl.diadist["North"]`% of the entire sample.
+The West Midlands (where the per-text difference scores are all over the place) contribute the largest amount of data by far (`r tbl.diadist["WestMidlands"]` data points or `r ptbl.diadist["WestMidlands"]`%).
+If we remove the one dominant text from the North (*Richard-rolle*), there are only `r tbl.diadist.richeroll["North"]` in four texts from the North left, which corresponds to `r  ptbl.diadist.richeroll["North"]`% of the reduced data set ($n=`r diadist.richeroll.n`$).
+In essence, we are basing a huge part our inference (all statements about "*the North*") about a period spanning several centuries on one text and `r tbl.diadist.richeroll["North"]` additional occurrences of prenominal elements.
+Hence, while the results might be called *encouraging*, they are not sufficient to base any heavy inferences on.
+What makes it worse is that the aggregation (the difference score) reported in the paper makes things look much more promising than they are by reducing $`r diadist.n`$ data points to $`r nrow(AgreementAggregateData)`$ aggregated data points, treating all texts as contributing the same amount of evidence.
