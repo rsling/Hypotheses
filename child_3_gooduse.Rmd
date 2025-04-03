@@ -55,7 +55,7 @@ As it stands, most journals will accept any submission that reports a GLM or any
 As authors, we find this nerve-wrecking, especially as some reviewers are not shy to demand the quality assurance that suits their personal taste, which makes preparing publications rather difficult.
 A journal that has no best-practice guidelines for statistical methods should reject any papers applying those methods (unless the paper specifically makes an original methodological contribution, for example by introducing a new method altogether).
 
-## Remedy 3: negative findings an preregistration
+## Remedy 3: negative findings and preregistration
 
 Universities and funding agencies require researchers to publish as many results as possible, and postgraduate students are under immense pressure to make themselves known by publishing in a frenzy.
 At the same time, it is very difficult to publish negative results.

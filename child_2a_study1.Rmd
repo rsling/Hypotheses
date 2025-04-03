@@ -149,11 +149,14 @@ kable(AgreementNullReport$Table, caption=AgreementNullReport$Report,
 ```
 
 ```{r agreementnullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-kable(compare_performance(AgreementNullModel,
-                          AgreementPaperModel)[,c(1,3,9,10)],
-      caption="Model comparison for the Null Model",
-      booktabs = T, linesep = "",) %>%
-  row_spec(0, bold=TRUE)
+  .t <- compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9)]
+  colnames(.t) <- c("Model", "AIC", "Tjur's R²")
+  .t[,1] <- c("Null Model", "Paper Model")
+  .t[,c(2,3)] <- round(.t[,c(2,3)], 3)
+  .t %>%
+    kable(caption="Model comparison for the Null Model and the Paper Model",
+          booktabs = T, linesep = "") %>%
+    row_spec(0, bold=TRUE)
 ```
 
 With all this, we should keep in mind that the plot in the previous section shows that there simply are not that many data from the North.
@@ -202,6 +205,9 @@ Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of t
 The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
 The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)`%.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
 This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)`%.^[The base rate is relevant inasmuch as one can usually make above 50% correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
+However, it should be noted that the model predicts only `r .p <- predict(AgreementPaperModel, type="response"); length(table(.p))` numerically different predictions for the `r length(predict(AgreementPaperModel, type="response"))` data points.
+In other words, the model puts all data points in one of `r length(table(.p))` bins.
+That is not a sign of a model that differentiates well.
 
 ```{r agreementpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(.confusionPaper,
@@ -223,10 +229,12 @@ kable(.confusionText,
 
 As mentioned above, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
 This is often the case in rare events regression [@KingZeng2001], which is used when the base base rate is even higher (for example, around 99%).
+We can only expect `r length(table(.p))` steps in this curve as the model only predicts so many different probabilities.
 Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper Model (left panel) and the Text Model (right panel).
-While it is not a model that differentiates very well, we see that the Text Model is at least able to differentiate beyond the mere prediction of the modal category (and thuis landing at the base rate).
-The peak is close to 0.5, as expected for normal binomial models.
+While it is also not a model that differentiates extremely well, we see that the Text Model is at least able to differentiate beyond the mere prediction of the modal category (thus always landing at the base rate).
+The peak is close to 0.5, as expected for regular binomial models.
 The Paper Model essentially predicts at the level of the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically to 100 minus the base rate.
+The curve has `r length(table(.p))` steps as expected.
 
 ```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Percent of binary predictions based on the Paper Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
@@ -365,7 +373,7 @@ In the case at hand, the reason why the observable differences in the sample do 
 There are $n=`r diadist.n`$ data points.
 Of these data points, only `r tbl.diadist["North"]` are from the North, which is roughly `r ptbl.diadist["North"]`% of the entire sample.
 The West Midlands (where the per-text difference scores are all over the place) contribute the largest amount of data by far (`r tbl.diadist["WestMidlands"]` data points or `r ptbl.diadist["WestMidlands"]`%).
-If we remove the one dominant text from the North (*Richard-rolle*), there are only `r tbl.diadist.richeroll["North"]` in four texts from the North left, which corresponds to `r  ptbl.diadist.richeroll["North"]`% of the reduced data set ($n=`r diadist.richeroll.n`$).
-In essence, we are basing a huge part our inference (all statements about "*the North*") about a period spanning several centuries on one text and `r tbl.diadist.richeroll["North"]` additional occurrences of prenominal elements.
+If we remove the one dominant text from the North (*Richard-rolle*), there are only `r tbl.diadist.richeroll["North"]` data points from the North coming from four texts left, which corresponds to `r  ptbl.diadist.richeroll["North"]`% of the reduced data set ($n=`r diadist.richeroll.n`$).
+In essence, the authors are basing a huge part our inference (all statements about *the North*) about a period spanning several centuries on one text and `r tbl.diadist.richeroll["North"]` additional occurrences of prenominal elements.
 Hence, while the results might be called *encouraging*, they are not sufficient to base any heavy inferences on.
 What makes it worse is that the aggregation (the difference score) reported in the paper makes things look much more promising than they are by reducing $`r diadist.n`$ data points to $`r nrow(AgreementAggregateData)`$ aggregated data points, treating all texts as contributing the same amount of evidence.

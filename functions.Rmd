@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 ```{r, echo=F}
 
 # Calculate precision and recall at a certain threshold t.
@@ -26,9 +31,9 @@ ReportGLM <- function(model, data = NULL,
                       stars = c(0.05, 0.01, 0.001),
                       coeff.round = 2,
                       sigma.round = 2,
-                      p.round = 4,
-                      aic.round = 2,
-                      r2.round = 4,
+                      p.round = 3,
+                      aic.round = 3,
+                      r2.round = 3,
                       acc.round = 2) {
   
   require(lme4)
