@@ -2,7 +2,7 @@
 
 ## Failure mode
 
-We hope to have convinced readers that the data presented in @WalkdenEa2023 does provide strong evidence in favour of the claims put forward by the authors.
+We hope to have convinced readers that the data presented in @WalkdenEa2023 does not provide strong evidence in favour of the claims put forward by the authors.
 However, the authors clearly think they do.
 How did this happen?
 As we showed in Section \@ref(findingout), the authors are looking for support of the Trudgill's theory of language change.

@@ -243,7 +243,7 @@ The models contain virtually the same information, and the mean absolute differe
 
 Furthermore and most crucially, we see only 37 dots, not 3,773.
 This is because the model makes exactly the same predictions for each data point from the individual texts, and the dots are therefore printed on top of each other.
-The model demonstrates (weakly) that individual medieval English texts differ from each other, nothing more.
+The model demonstrates (weakly) that individual medieval Spanish texts differ from each other, nothing more.
 It does not at all "confirm any relationships across countries and centuries" (see above).
 These problems are not at all hard to pinpoint with full access to the data, and it is astonishing that the analysis went on to be submitted in paper form.
 We whole-heartedly support publishing negative findings, and hence the data themselves deserve publishing.
