@@ -139,8 +139,8 @@ Linguistic theories are often not formalised and consequently do not make neat p
 This invites back all problems of holistic underdetermination with a vengeance, as any of the families of imprecise and often implicit hypotheses (see above) might conspire to result in a very loose fit of the data and the theory, which in the worst case is taken as confirmation.
 Metaphorically speaking, a circle can be drawn around any geometric figure, as long as it is large enough.
 
-Another often discussed for of underdetermination is *contrastive underdetermination*.
-Contrastive underdetermination describes the fact that there might be or actually are potentially many alternative theories that could explain the same data.
+Another often discussed form of underdetermination is *contrastive underdetermination*.
+Contrastive underdetermination describes the fact that there might be (or actually are) potentially many alternative theories that could explain the same data.
 @LaudanLapplin1991 dismiss contrastive underdetermination based on---among other things---the fact that it is unlikely that two theories receive exactly the same amount of empirical support from some data despite both being compatible with the data.
 For linguistics, we consider this kind of underdetermination to be swamped by holistic underdetermination.
 Many of our theories are so imprecise and pre-formal that data (especially quantitatively measured data) cannot decide between two theories.^[Some rare examples of precisely formalised theories are model-theoretic semantics in the tradition of @Montague73, model-theoretic syntax in the tradition of @PollardSag1994, or proof-theoretic syntax with model-theoretic semantics as in @Carpenter1997.
@@ -164,7 +164,7 @@ This is a crucial point to keep in mind when we examine the role of statistics i
 
 For quantitative data-based studies, it is necessary to derive **statistical hypotheses** from particular hypotheses described in the previous section.
 A statistical hypothesis formulates the expectation of a numerical outcome in an operation of counting or measuring in a corpus study or an experiment, etc.
-Du to the aforementioned low degree of formalisation, the *numerical outcome* is usually something as imprecise as "*n should be greater than m*" or "*n should be less than or equal to m*".
+Due to the aforementioned low degree of formalisation, the *numerical outcome* is usually something as imprecise as "*n should be greater than m*" or "*n should be less than or equal to m*".
 For example, with regard to the loss of number marking on pre-nominal elements in English under Norse contact, we could derive the expectation that the number of occurrences of determiners and adjectives without overt number marking should be higher in Northern and Eastern English dialects compared to Western and Southern dialects during the period of the Danelaw because of the assumed underlying mechanisms of sociolinguistically induced language change.
 Let's abbreviate this hypothesis, drop some understood conditions, and call it $H_1$: "*Occurrence counts of inflected pre-nominal elements are **lower** in the North and East compared to the South and West.*"
 

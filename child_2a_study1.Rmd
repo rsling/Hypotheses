@@ -4,7 +4,7 @@
 AgreementNullModel <- glm(Agreement~POS, data = AgreementData, family=binomial)
 AgreementNullReport <- ReportGLM(AgreementNullModel, AgreementData$Agreement, name="Null Model", intercept.descriptor = "(Adjective)")
 AgreementPaperModel <- glm(Agreement~POS*Dialect, data = AgreementData, family=binomial)
-AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Paper Model", intercept.descriptor = "(Adjective, South, 0)")
+AgreementPaperReport <- ReportGLM(AgreementPaperModel, AgreementData$Agreement, name="Quasi-Reported Model", intercept.descriptor = "(Adjective, South, 0)")
 AgreementTextModel <- glmer(Agreement~POS*Dialect+(1|Text), data = AgreementData, family=binomial)
 AgreementTextReport <- ReportGLM(AgreementTextModel, AgreementData$Agreement, name="Text Model", intercept.descriptor = "(Adjective, South, 0)")
 ```
@@ -98,7 +98,7 @@ The unweighted model treats each text as contributing the same amount of informa
 The established purpose of such models in empirical sciences is to model the distribution of data points, not their aggregations [see @GelmanHill2006 if in doubt].^[There are models for proportion data and other aggregated data. However, they are much more difficult to handle and---above all---interpret [@ZuurEa2009]. Most crucially, however, the authors report a plain linear model and *not* a weighted binomial model on proportion data.]
 Thus, the model from the paper makes the assumption that a text with `r .grandtotals[.mini][1]` data points (the observed mininum) and a text with `r .grandtotals[.maxi]` data points (the observed maximum) can be treated as contributing the same amount of evidence.
 This is ill-advised for all types of models, even much simpler ones, as a fictitious example shows.
-Assume we had the task of calculating the average length of a newly discovered Italic language, Faloscan.
+Assume we had the task of calculating the average sentence length of a newly discovered Italic language, Faloscan.
 There are two Faloscan inscriptions found, one containing two short sentences averaging 3.5 words per sentence because it contains two sentences, one 3 words long, the other one 4 words long.
 The other one is a longer legal text comprising 25 sentences with an average length of 8.3 words per sentence.
 A phylogeneticist includes Faloscan in their database of average sentence lengths, calculating an average length of $(3.5+8.3)\div 2=`r round((8.3+3.5)/2, 2)`$ words per sentence.
@@ -106,7 +106,7 @@ Almost anyone would criticise this as being incorrect, as the shorter text shoul
 
 However, @WalkdenEa2023 do not merely calculate a simple average, they estimate parameters of a much more complex model based on an even more extremely unbalanced aggregated metric.
 For example, if *Innocendium* and *Horses* were texts as long as (or samples from texts as large as) *Purvey* and *Ayenbyte*, the generalisations about the Southern dialect group would be weakened considerably.^[We would like to stress that it is irrelevant whether more data has been annotated in the meantime and whether the picture has become clearer, changed, etc. @WalkdenEa2023 is published research that has undergone peer review, and it is this specific paper we are looking at from a methodological point of view. It has been downloaded 1,440 times as of 29 March 2025.]
-This is so elementary, that at least one of the authors, the reviewers, or the editors should have noticed it.
+This is so elementary that at least one of the authors, the reviewers, or the editors should have noticed it.
 
 When we specify a model, we assume all kinds of sources of influence on variance in the regressor **per data point**, which are the actual measurements.
 The model is specified to relate the systematic (explained) influences (variance in the explanatory variables) to the variance in the response variable, leaving the unexplained variance as residuals.
@@ -123,8 +123,8 @@ Therefore, the best model in the case at hand is one that estimates the probabil
 However, they use another incorrectly aggregated score as a regressor in that study.]
 We specified a model that implements the idea from the paper but which avoids the problems with the unbalanced difference scores.
 It is summarised in Table \@ref(tab:agreementpapertable).
-The response is the probability of the realisation of overt agreement on a word as a function of is part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
-We call it the Paper Model even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
+The response is the probability of the realisation of overt agreement on a word as a function of its part-of-speech (adjective or determiner), the dialect group, and an interaction between the two.
+We call it the Quasi-Reported Model even if it is not what *was* reported in the paper but what *should have been* reported in the paper.
 See Table \@ref(tab:agreementpapertable) for a report of the coefficients and the associated p-values as found by the estimator.
 
 ```{r agreementpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
@@ -133,7 +133,7 @@ See Table \@ref(tab:agreementpapertable) for a report of the coefficients and th
   row_spec(0, bold=TRUE)
 ```
 
-The parameter estimates indicate that (assuming a cavalier NHST significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writer from the North do not (see the negative coefficients and the low p-values).
+The parameter estimates indicate that (assuming a cavalier NHST significance level of 0.05 for the sake of the argument) that writers from the Midlands (East and West) have a stronger tendency to drop agreement in general, but that writers from the North do not (see the negative coefficients and the low p-values).
 However, writers from the Northern dialect seem to have a relatively strong tendency to avoid agreement specifically on determiners (see the interaction between POSDeterminer and DialectNorth).
 The last point is in line with the claims in the paper.
 However, the West midlands even have the stronger tendency than the East Midlands to avoid agreement overall (including on determiners).
@@ -151,16 +151,16 @@ kable(AgreementNullReport$Table, caption=AgreementNullReport$Report,
 ```{r agreementnullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
   .t <- compare_performance(AgreementNullModel, AgreementPaperModel)[,c(1,3,9)]
   colnames(.t) <- c("Model", "AIC", "Tjur's R²")
-  .t[,1] <- c("Null Model", "Paper Model")
+  .t[,1] <- c("Null Model", "Quasi-Reported Model")
   .t[,c(2,3)] <- round(.t[,c(2,3)], 3)
   .t %>%
-    kable(caption="Model comparison for the Null Model and the Paper Model",
+    kable(caption="Model comparison for the Null Model and the Quasi-Reported Model",
           booktabs = T, linesep = "") %>%
     row_spec(0, bold=TRUE)
 ```
 
 With all this, we should keep in mind that the plot in the previous section shows that there simply are not that many data from the North.
-The fact that DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North and that the effect itself is, at the same time, not verty large.
+The fact that DialectNorth by itself does not reach the nominal significance level in the GLMs could also be due to the fact that there simply are not enough data points from the North and that the effect itself is, at the same time, not very large.
 Also, the plot shows that individual texts and their dialect group are all over the place in terms of ther difference score, and most texts have a difference score very close to 0 anyway.
 At the negative end, for example, there are merely five texts from the East Midlands that account for all the negative values.
 Hence, it seems appropriate to model the variance at the document level as a random effect, accounting for the different circumstances under which the documents were written, register differences, differences in individual styles, etc.
@@ -172,7 +172,7 @@ kable(AgreementTextReport$Table, caption=AgreementTextReport$Report,
   row_spec(0, bold=TRUE)
 ```
 
-Immediately, we see that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up considerably, as measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Paper Model.^[While R² measures have been criticised and cannot always be compared between different types of models and types of R², this difference is so considerable that denying it is futile.]
+Immediately, we see that the variation between the texts swamps all other explanatory factors while the overall explanatory power of the model goes up considerably, as measured in the conditional R²=`r round(unname(r2(AgreementTextModel)[["R2_conditional"]]),3)` compared to Tjur's R²=`r round(unname(r2(AgreementPaperModel)[[1]]),3)` from the Quasi-Reported Model.^[While R² measures have been criticised and cannot always be compared between different types of models and types of R², this difference is so considerable that denying it is futile.]
 The only relevant generalisation that survives at the nominal significance level is the interaction between POSDeterminer and DialectNorth, i.e., writers from the North avoid agreement on determiners more strongly than on adjectives.
 It should be kept in mind that this generalisation is based on `r length(which(AgreementData$Dialect=="North"))` data points from `r length(which(AgreementAggregateData$Dialect=="North"))` texts spanning a period of `r max(AgreementData$Year)-min(AgreementData$Year)` years.
 Regardless of nominal significance, a careful interpretation seems wise.
@@ -201,7 +201,7 @@ We now check in tabular form what binary predictions the model makes on the 3,77
 Note that it should perform particularly well on those data.
 New data would always be harder to predict correctly for any statistical or machine-learning model.
 
-Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of the Paper Model (which is the GLM that implements the idea from the paper in a mathematically more sound way).
+Table \@ref(tab:agreementpaperconfusion) summarises the predictive accuracy of the Quasi-Reported Model (which is the GLM that implements the idea from the paper in a mathematically more sound way).
 The columns correspond to the actual cases of overt an non-overt agreement in the data, the rows tabulate the decisions based on the model estimates against those.
 The predictions are correct in `r sum(diag(.confusionPaper))` cases and incorrect in `r sum(.confusionPaper)-sum(diag(.confusionPaper))` cases, i.e., `r round(sum(diag(.confusionPaper))/sum(.confusionPaper)*100,1)`%.^[R² coefficients correspond with the prediction accuracy, and the two convey a similar notion of the adequacy of the model given the data.]
 This is slightly better than the base rate (proportion of the modal category, i.e., the percentage of cases in which agreement is overtly realised) of `r round(length(which(AgreementData$Agreement==1))/nrow(AgreementData)*100,1)`%.^[The base rate is relevant inasmuch as one can usually make above 50% correct predictions simply by always guessing the modal---most frequent---outcome. In the long run, the correct guesses then equal the base rate.]
@@ -211,7 +211,7 @@ That is not a sign of a model that differentiates well.
 
 ```{r agreementpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(.confusionPaper,
-      caption="Correct and incorrect predictions of the Paper Model",
+      caption="Correct and incorrect predictions of the Quasi-Reported Model",
       booktabs = T, linesep = "",) %>%
   row_spec(0, bold=TRUE)
 ```
@@ -229,14 +229,14 @@ kable(.confusionText,
 
 As mentioned above, sometimes models make biased probability estimates, and an adapted threshold (for example, lower than 0.5) for binary decisions leads to better results.
 This is often the case in rare events regression [@KingZeng2001], which is used when the base base rate is even higher (for example, around 99%).
-Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Paper Model (left panel) and the Text Model (right panel).
+Adjusting the threshold at which we make the binary decision incrementally from 0 to 1, we arrive at Figure \@ref(fig:agreementpapertextcorrects) for the Quasi-Reported Model (left panel) and the Text Model (right panel).
 We can only expect `r length(table(.p))` steps in this curve as the model only predicts so many different probabilities.
 While it is also not a model that differentiates extremely well, we see that the Text Model is at least able to differentiate beyond the mere prediction of the modal category (thus always landing at the base rate).
 The peak is close to 0.5, as expected for regular binomial models.
-The Paper Model essentially predicts at the level of the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically to 100 minus the base rate.
+The Quasi-Reported Model essentially predicts at the level of the base rate all the way until a threshold of roughly 0.8 is reached, at which point the prediction accuracy drops dramatically to 100 minus the base rate.
 The curve has `r length(table(.p))` steps as expected.
 
-```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Percent of binary predictions based on the Paper Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
+```{r agreementpapertextcorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Percent of binary predictions based on the Quasi-Reported Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
 .d <- AgreementData$Agreement
 .ts <- seq(0, 1, 0.01)
@@ -251,7 +251,7 @@ The curve has `r length(table(.p))` steps as expected.
 
 par(mfrow=c(1,2))
 plot(.AgreementPaperModelCorrects, type="l", lwd = the.lwd, bty="n",
-     main="Paper Model",
+     main="Quasi-Reported Model",
      xlab="Probability threshold for prediction",
      ylab="Percent of correct predictions"
      ,ylim=c(0,1)
@@ -274,14 +274,14 @@ par(mfrow=c(1,1))
 ```
 
 Finally, we can approach the accuracy of the model from two other perspectives.
-The *Precision* is the proportion of correct predictions of the event occurring (here, the subject being overtly realised) among all predictions of this event.
+The *Precision* is the proportion of correct predictions of the event occurring among all predictions of this event.
 In other words, it is the number of true positives divided by all positives (true or false).
 The *Recall*, on the other hand, is the proportion of correct predictions of the event occurring among all the cases in which the event actually occurred.
 Put differently, it is the number of true positives divided by the number of events that have occurred.
 These two scores, evaluated at different thresholds, can be used to assess the quality of the model and adjust the threshold.
-The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80% for the Paper Model and around 90% for the Text Model, which is another indicator that the Text Model differentiates much better.
+The balanced point (where Precision and Recall reach their highest values and the curves cross) is around 80% for the Quasi-Reported Model and around 90% for the Text Model, which is another indicator that the Text Model differentiates much better.
 
-```{r agreementpapertextprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Precision and Recall for the Paper Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
+```{r agreementpapertextprecrec, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Precision and Recall for the Quasi-Reported Model and the Text Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
 .p <- predict(AgreementPaperModel, type="response")
 .precrec <- function(t) PrecisionRecall(.p, .d, t)
 .AgreementPaperModelPR <- lapply(.ts, .precrec)
@@ -296,7 +296,7 @@ The balanced point (where Precision and Recall reach their highest values and th
 
 par(mfrow=c(1,2))
 plot(.PrecisionPaper, type="l", lwd = the.lwd, bty="n",
-     main="Paper Model",
+     main="Quasi-Reported Model",
      xlab="Probability threshold for prediction",
      ylab="Precision and Recall"
      ,ylim=c(0,1)
