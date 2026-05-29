@@ -1,3 +1,13 @@
 **/.Rhistory
 **/.RData
 .Rproj.user
+
+# Untracked working files
+Hypotheses.Rproj
+Hypotheses.aux
+Hypotheses.html
+Hypotheses_files/
+Literatur/
+Trash/
+Walkden/
+fragment1.Rmd
