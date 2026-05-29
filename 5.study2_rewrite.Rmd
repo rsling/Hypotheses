@@ -1,0 +1,190 @@
+## Study 2: Null subjects in Spanish {#study2}
+
+```{r subjectpreparemodels, echo=FALSE, message=FALSE, warnings=FALSE}
+SubjectPaperModel <- glmer(Subject~ORScoreZ*YearZ+Macroregion+(1|Text), data = SubjectData, family="binomial")
+SubjectPaperReport <- ReportGLM(SubjectPaperModel, SubjectData$Subject, name="Reported Model", intercept.descriptor = "(0, 0, Spain)")
+SubjectNullModel <- glmer(Subject~1+(1|Text), data = SubjectData, family="binomial")
+SubjectNullReport <- ReportGLM(SubjectNullModel, SubjectData$Subject, name="Text-Only Model", intercept.descriptor = "(1)")
+SubjectCountryGenreModel <- glmer(Subject~Country+Genre+(1|Text), data = SubjectData, family="binomial")
+SubjectCountryGenreReport <- ReportGLM(SubjectCountryGenreModel, SubjectData$Subject, name="Country-Genre Model", intercept.descriptor = "(Spain, Nonliterary)")
+SubjectFullCountryModel <- glmer(Subject~ORScoreZ*YearZ+Country+Genre+(1|Text), data = SubjectData, family="binomial")
+SubjectFullCountryReport <- ReportGLM(SubjectFullCountryModel, SubjectData$Subject, name="Full-Country Model", intercept.descriptor = "(0, 0, Spain, DOC)")
+SubjectFullNoGenreModel <- glmer(Subject~ORScoreZ*YearZ+Country+(1|Text), data = SubjectData, family="binomial")
+SubjectFullNoGenreReport <- ReportGLM(SubjectFullNoGenreModel, SubjectData$Subject, name="Full-No-Genre Model", intercept.descriptor = "(0, 0, Spain)")
+```
+
+### What was reported
+
+Study 2 models the influence of orality, time, and region (Spain versus the Latin American countries) on the use of overt subjects in Spanish, against the language's strong overall preference for subject drop. Orality enters as the ORScore, an aggregate relative frequency of certain grammatical features in each text --- a derived construct, not a direct observation. It is, in other words, the aggregated score we were promised back in Study 1 (Section \@ref(study1)), now doing duty as a *regressor* rather than a response. The original sin of Section \@ref(models) is committed here too, simply on the other side of the equation. Table \@ref(tab:subjectpapertable) gives the reported fit, where *Subject* is 1 for an overt subject, *ORScoreZ* the z-scored orality score, *YearZ* the z-scored document date, and *Macroregion* either Spain or Non-Spain. The random effect *Text* has 37 levels for 37 documents. We call this the Reported Model.
+
+```{r subjectpapertable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectPaperReport$Table, caption=SubjectPaperReport$Report, 
+      align="llrrrc", booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
+```
+
+That our reconstruction matches the paper can be checked against the authors' own report [@WalkdenEa2023, 558] (Footnote 14 omitted); the numbers line up, so we have specified the same model they did (highlighting ours).^[After double- and triple-checking, we take the $p<0.03$ reported for ORScoreZ:YearZ to be a minor lapse.]
+
+> However, this trend also holds for Spain, which contradicts our sociolinguistic predictions.
+> Since the orality effect discussed in section 4.3 may be at play in the bar charts, it is necessary to run a mixed-effects model to confirm any relationships across countries and centuries.
+> A mixed model using glmer from the lme4 package (Bates et al. 2015) in R (R Core Team 2021) was run to find any such underlying patterns.
+> The model had pronoun realisation (**3,773 total tokens**) as the binary-dependent variable; macroregion (Spain vs. Non-Spain), orality and year (both z-scored) as fixed effects; and document ID as a random effect.
+> Country was originally included as a fixed effect but had too many levels and was replaced with macroregion. The interaction between year and orality was significant (**β=−0.44**, SE=0,21, **p\<0.03**), where the negative coefficient means that for every year that passes, the effect of orality on overtness is lessened.
+> Thus, there is an underlying diachronic effect, but as we can see from Figure 3, it is a small effect.
+> Macro-region was also found to be just significant (**β=0.63**, SE=0.32, **p\<0.05**), favouring overtness in every country but Spain.
+> This result explains the apparent rise we saw for Spain in Figure 3 as just a product of orality: the later Spanish texts score higher in ORSCORE.
+
+Two smaller things first, then the substantive one. The p-values here are reported as inequalities (\<), whereas Study 1 reported them as equalities (=), see Section \@ref(study1reported); both are rounded to two places, so the switch is puzzling. And the claim that it is "necessary to run a mixed-effects model to confirm any relationships" overstates the case: there is no theoretical necessity to include a random effect [see @Schaefer2020a; @GelmanHill2006, 245–247]. The inference throughout is the NHST reflex of Section \@ref(testing) --- below 0.05, infer the effect; above, do not --- applied here to a Macroregion coefficient that clears the line by the barest margin (`r SubjectPaperReport$Table[4,5]`) and is then read as *just significant*.
+
+The substantive problem is in the authors' own gloss. They explain (p. 558) that the macroregion result "explains the apparent rise we saw for Spain in Figure 3 as just a product of orality: the later Spanish texts score higher in ORSCORE." That is an admission that the model is misspecified. If Macroregion and ORScore covary, and the authors know they do --- they say so --- then leaving that covariation unmodelled is precisely the error: the two predictors are competing to explain the same variance, and the coefficients cannot be read as the paper reads them. An interaction, or some comparable move within the mixed-model framework, was called for. It is also unexplained why Macroregion was used in place of Country (see Section \@ref(study2alt)). But the point is moot, because the Study 2 model turns out to be even less informative than the Study 1 model, as we now show.
+
+### Alternative models {#study2alt}
+
+We start by setting the Reported Model against a Text-Only Model (not tabulated): a fixed intercept plus a random intercept for text, and nothing else. It lets the baseline rate vary from text to text while admitting no explanatory variables at all.
+`r SubjectNullReport$Report`
+The marginal R² of the Text-Only Model is necessarily 0, since it has no fixed effects, yet the conditional R² of the Reported Model is only minimally higher. Even on this simple comparison, orality, macroregion, and date account for very little of the variance, as the R² measures and the prediction accuracy both show.
+
+A second alternative is the Country-Genre Model (Table \@ref(tab:subjectcountrygenretable)). It drops the supposed main regressor (orality) and the secondary one (year), putting country and genre in their place. Contrary to the paper, the standard maximum-likelihood estimator converges with no special handling, and the Country regressor does not have too many levels.^[Even if it had, a random effect nesting document ID could and should have been used [@GelmanHill2006; @Schaefer2020a].]
+
+```{r subjectcountrygenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectCountryGenreReport$Table, caption=SubjectCountryGenreReport$Report,
+      align="llrrrc", booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
+```
+
+```{r subjectcountrygenrecompare, warning=F, echo=F}
+  .t <- compare_performance(SubjectCountryGenreModel, 
+                          SubjectPaperModel)[,c(1,3,9,10)]
+  colnames(.t) <- c("Model", "AIC", "Conditional R²", "Marginal R²")
+  .t[,1] <- c("Country-Genre Model", "Reported Model")
+  .t[,c(2,3,4)] <- round(.t[,c(2,3,4)], 3)
+  .t %>%
+    kable(caption="Model comparison for the Null Model and the Reported Model",
+          booktabs = T, linesep = "") %>%
+    row_spec(0, bold=TRUE)
+```
+
+Table \@ref(tab:subjectcountrygenrecompare) shows the Country-Genre Model to be marginally worse than the Reported Model. Why the authors thought the country regressor could not be added for technical reasons remains unclear: the estimator has no difficulty with the coefficients --- they simply fail to reach 0.05.
+
+Next, a more complex specification. The Full-Country Model (Table \@ref(tab:subjectfullcountrytable)) is the Reported Model with orality and year retained, but country in place of macroregion and genre added.
+
+```{r subjectfullcountrytable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectFullCountryReport$Table, 
+      caption=SubjectFullCountryReport$Report, align="llrrrc",
+      booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
+```
+
+```{r subjectfullcountrycompare, warning=F, echo=F}
+  .t <- compare_performance(SubjectFullCountryModel, 
+                          SubjectPaperModel)[,c(1,3,9,10)]
+  colnames(.t) <- c("Model", "AIC", "Conditional R²", "Marginal R²")
+  .t[,1] <- c("Full-Country Model", "Reported Model")
+  .t[,c(2,3,4)] <- round(.t[,c(2,3,4)], 3)
+  .t %>%
+    kable(caption="Model comparison for the Full-Country Model and the Reported Model",
+          booktabs = T, linesep = "") %>%
+    row_spec(0, bold=TRUE)
+```
+
+On R², the Full-Country Model edges ahead of the Reported Model (Table \@ref(tab:subjectfullcountrycompare)) --- but the small shifts in conditional R² are just artefacts of the shifting marginal R². More tellingly, country has exactly one level (Bolivia) far enough from the intercept (Spain) to reach significance. The paper's conclusion that overtness is "favoured in every country but Spain" is therefore unwarranted even on NHST's own terms. Drop genre, and the picture shifts again --- the Full-No-Genre Model, Tables \@ref(tab:subjectfullnogenretable) and \@ref(tab:subjectfullnogenrecompare).
+
+```{r subjectfullnogenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+kable(SubjectFullNoGenreReport$Table, caption=SubjectFullNoGenreReport$Report,
+      align="llrrrc", booktabs = T, linesep = "",) %>%
+  row_spec(0, bold=TRUE)
+```
+
+```{r subjectfullnogenrecompare, warning=F, echo=F}
+  .t <- compare_performance(SubjectFullNoGenreModel, 
+                          SubjectPaperModel)[,c(1,3,9,10)]
+  colnames(.t) <- c("Model", "AIC", "Conditional R²", "Marginal R²")
+  .t[,1] <- c("Full-No-Genre Model", "Reported Model")
+  .t[,c(2,3,4)] <- round(.t[,c(2,3,4)], 3)
+  .t %>%
+    kable(caption="Model comparison for the Full-No-Genre Model and the Reported Model",
+          booktabs = T, linesep = "") %>%
+    row_spec(0, bold=TRUE)
+```
+
+Model specification, evidently, is not an exact art. Dropping genre pushes Columbia over the significance line as well, so the NHST verdict is now Spain, the Dominican Republic, and Panamá against Bolivia and Columbia. The R², meanwhile, barely moves across all these specifications: it makes essentially no difference which regressors we include, the results stay middling at almost exactly the same level. The next section shows why, taking the Reported Model as one specimen of the many equally meaningless models the data admit.
+
+### Inspection of the models
+
+```{r subjectpaperconfusion, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+SubjectPaperPredictNull <- length(which(predict(SubjectPaperModel, type="response")<=0.5))
+SubjectPaperPredictOne <- length(which(predict(SubjectPaperModel, type="response")>=0.5))
+SubjectPaperBaseline <- as.numeric(predict(SubjectPaperModel, type="response")>0.5)
+```
+
+As in Study 1, we check the Reported Model's probability estimates on the data it was fitted on. At a 0.5 threshold it predicts a null subject in `r SubjectPaperPredictNull` cases and a pronominal subject in `r SubjectPaperPredictOne` --- that is, it never predicts an overt subject at all. This follows from the uninformative regressors and the high base rate of `r round(mean(SubjectPaperBaseline==SubjectData$Subject)*100,2)`% (no overt subject). To see whether a lower threshold would help, Figure \@ref(fig:subjectpaperviolins) sets the Reported Model's predictions beside the Text-Only Model's as violin plots.
+
+```{r subjectpaperviolins, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Probabilities estimated by the Reported Model and the Text-Only Model; only for data used to estimate the model parameters and grouped by their actual outcome"}
+par(mfrow=c(1,2))
+vioplot(predict(SubjectPaperModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Reported Model", ylab="Estimated probability", frame.plot = F, ylim = c(0, 0.275))
+vioplot(predict(SubjectNullModel, type="response")~SubjectData$Subject, col = "lemonchiffon", colMed = "white", colMed2 = "grey 75", xlab = "Text-Only Model", ylab="", frame.plot = F, ylim = c(0, 0.275))
+par(mfrow=c(1,1))
+```
+
+Even for the genuinely overt cases, the model's estimated probability never exceeds 0.25. More striking still, the Reported Model's distribution of predictions is all but identical to the Text-Only Model's: orality, time, and country (or macroregion) are, by and large, irrelevant. Reaching significance is almost entirely a product of the simple model structure, minute regressor-correlated differences, and the fairly large sample --- exactly the conditions under which the Section \@ref(testing) critique of NHST bites. The left panel of Figure \@ref(fig:subjectpapercorrects) plots correct binary predictions across thresholds; accuracy climbs quickly to 100% minus the base rate and stops, the signature of a model that does nothing but predict the modal category. The right panel gives precision and recall. Since the model never predicts a probability above `r round(max(.p), 2)`, both fall to 0 beyond that threshold.
+
+```{r subjectpapercorrects, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Left: Percent of binary predictions based on the Reported Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome; Right: Precision and Recall for the Reported Model at varying theresholds; only for data used to estimate the model parameters and grouped by their actual outcome"}
+
+par(mfrow = c(1,2))
+
+.p <- predict(SubjectPaperModel, type="response")
+.d <- SubjectData$Subject
+.ts <- seq(0, 1, 0.01)
+
+# Contect capture.
+.correct <- function(t) Correct(.p, .d, t)
+
+.SubjectPaperModelCorrects <- unlist(lapply(.ts, .correct))
+
+plot(.SubjectPaperModelCorrects, type="l", lwd = the.lwd, bty="n",
+     xlab="Probability threshold for prediction",
+     ylab="Percent of correct predictions"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     )
+abline(h = 0.89, lwd = the.lwd, lty = 3, col = "darkgray")
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+
+# PrecRec
+
+# Context capture.
+.precrec <- function(t) PrecisionRecall(.p, .d, t)
+  
+.SubjectPaperModelPR <- lapply(.ts, .precrec)
+.Precision <- unlist(.SubjectPaperModelPR)[seq(1,201,2)]
+.Recall <- unlist(.SubjectPaperModelPR)[seq(2,202,2)]
+
+plot(.Precision, type="l", lwd = the.lwd, bty="n",
+     xlab="Probability threshold for prediction",
+     ylab="Precision and Recall"
+     ,ylim=c(0,1)
+     ,xaxt="n", yaxt="n"
+     ,col="darkred"
+     )
+lines(.Recall, col="darkgreen", lwd = the.lwd, lty = 2)
+axis(1, at=seq(0,100,10),labels=seq(0,1,0.1))
+axis(2, at=seq(0,1,0.1), labels=seq(0,100,10))
+legend("topright", legend=c("Precision", "Recall"), col=c("darkred", "darkgreen"), lty = c(1, 2), lwd = the.lwd, bty="n")
+```
+
+```{r subjectpapernullcompare, echo=FALSE, message=FALSE, warnings=FALSE, results='asis', out.width="80%", fig.cap="Comparing the predictions of the Reported Model and the Text-Only Model"}
+plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type="response"),
+     pch=20, bty ="n",
+     xlim = c(0,0.3), ylim = c(0,0.3),
+     col = "black",
+     xlab = "Probabilities estimated under the Text-Only Model",
+     ylab = "Probabilities estimated under the Reported Model"
+)
+```
+
+The clearest evidence comes last. Figure \@ref(fig:subjectpapernullcompare) plots the Reported Model's predicted probabilities against the Text-Only Model's, one dot per observed data point, correlation-plot style. Were the two models predicting identically, the dots would fall on a straight line --- and that is essentially what we see, a straight line with negligible scatter. The two models carry virtually the same information: the mean absolute difference between their predictions is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximum `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
+
+And here is the heart of it: there are only 37 dots, not 3,773. The model returns the same prediction for every data point within a given text, so the points stack on top of one another. All the Reported Model establishes is that individual Spanish texts differ from one another --- nothing more. It does not "confirm any relationships across countries and centuries." With full access to the data these problems are not hard to find, which makes it the more regrettable that the analysis reached publication in this form. Negative findings are well worth publishing, and so are these data --- but as negative findings, not as corroboration of a large and loosely specified network of hypotheses, all the more so given the underdetermination of Section \@ref(findingout).
+
+We set Study 3 aside deliberately. It rests on generalised additive models, a distinct modelling apparatus that raises its own separate questions and would need a treatment of its own to do it justice --- one this paper, focused on the GLM machinery of Studies 1 and 2, is not the place for. The closing section turns to what all of this means for the substantive hypotheses of @WalkdenEa2023 and for the field.

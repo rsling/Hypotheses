@@ -1,0 +1,59 @@
+## Families of hypotheses and underdetermination in science {#hypotheses}
+
+### Testing theories
+
+Finding things out involves testing hypotheses, but the hypothesis a study can actually measure is rarely the one it cares about. We follow the broad rationalist view that theories are models of some reality that must survive serious testing to count as adequate, and that we learn most from the ways they turn out to be wrong [@Mayo1996; @MayoEa2009]. The difficulty is that a test never confronts a single hypothesis. It confronts a network: the substantive claim of interest, the particular prediction derived from it, and a cushion of auxiliary assumptions that must hold for the derivation and the measurement to go through. When a prediction fails, any link in that network can be blamed; when it succeeds, the success is shared out among all of them. The remainder of this section reconstructs that network for @WalkdenEa2023 and then asks what kind of support a corpus test of a particular hypothesis can really transmit to the substantive theory above it.
+
+The authors are explicit that the substantive target is Trudgill's theory (emphasis ours):
+
+> This article is about how to **assess Trudgill's theory** using the most powerful methodological tool that contemporary historical linguistics has at its disposal: the study of the historical record itself, in the form of textual corpora. [@WalkdenEa2023, 546]
+
+### Substantive hypotheses and their auxiliaries
+
+The theory to be evaluated collects **substantive hypotheses**, its tenets, such as:
+
+* Adults learn second languages through a different mechanism than children.
+* The adult mechanism leads to simplification, ideally because of spelled-out cognitive principles.
+* The social parameters of the contact situation influence the direction and pace of change.
+* This yields different temporal scales at which contact-induced change takes place.
+
+Refuting hypotheses this broad is hard. They rest on a cushion of **auxiliary hypotheses** that can always absorb an apparent refutation, and they are almost never tested directly: they have to be broken down into particular hypotheses, which are in turn converted into statistical ones. The boundary between tenet and auxiliary is itself not always sharp. Some auxiliaries any linguist would grant; others are substantive in their own right:
+
+* L2 learners may exert linguistic influence on L1 speakers of the same language.
+* Language contact can induce change under certain (ideally fully specified) conditions.
+* The theory applies universally because it rests on general cognitive principles.
+* "*Population-level patterns are not entirely random and [...] individuals' usage can be non-categorical but still pattern meaningfully in probabilistic ways*" [@WalkdenEa2023, 549] --- a strong and very specific assumption.
+* The loss of number inflection on pre-nominal elements is simplification.
+* The addition of pronominal subjects in a predominantly pro-drop language is simplification.
+* The move from synthetic case inflection to adpositional marking is simplification.
+
+### Particular hypotheses and their auxiliaries
+
+The authors then introduce the historical corpus-based approach as suited to collecting evidence for the theory, which adds a further tier of assumptions about the method's applicability. Because the theory makes **predictions**, they derive **particular hypotheses**; these cannot themselves be tenets, or they would not be predictions. The approach is avowedly confirmatory --- the studies are offered as *support*:
+
+> In **support of our approach**, we present three case studies of morphosyntactic phenomena for which the theory of sociolinguistic typology makes predictions, and assess them using historical corpus evidence. [The three case studies] taken together [illustrate] how historical corpus evidence can be brought to bear on questions of sociolinguistic typology. [@WalkdenEa2023, 547]
+
+The particular hypotheses concern the diachronic development of:
+
+* the loss of number marking on pre-nominal elements in English under Norse contact (Section \@ref(study1));
+* the rise of overtly expressed pronominal subjects in Latin American Spanish under contact with enslaved Africans who acquired Spanish as adults (Section \@ref(study2));
+* the reorganisation of case and adposition systems in the diffuse contact situation of the Balkan sprachbund.
+
+Each carries its own **auxiliary hypotheses** of measurement and operationalisation --- not derived from the theory but required for the procedure to mean anything:
+
+* The mechanisms posited by the theory are mirrored reliably, and with negligible delay, in the written record.
+* The surviving sources are rich and faithful enough to register subtle diachronic change.
+* The change observed is due largely to contact, and not to general tendencies of change that happen to fall in the same place and time.
+* The authors of the texts were connected enough to the speech community to be good exponents of the change, rather than silent monks or ivory-tower writers.
+
+### Underdetermination, and why it bites harder here
+
+A successful corpus test is supposed to transmit support upward, from the particular hypothesis to the substantive theory, by treating every auxiliary as true. But the auxiliaries are not innocent. Any false one can manufacture a pseudo-confirmation: the method may be inadequate to the surviving sources; the loss of pre-nominal inflection may not be "simplification" in any relevant sense; Trudgill's theory may simply be wrong. The advertised reading holds only if the auxiliaries are *true to a satisfying degree* --- not merely *plausible*, since plausibility measures our belief, and the validity of the inference does not turn on what we believe.
+
+This is the classical problem of the **underdetermination** of theory by data, and it comes in two forms that matter very differently here. The *holistic* form is the familiar Duhem--Quine point that a refutation falls on the whole conjunction of hypotheses, not the one under test [@Duhem1914; @Quine1951]. @Laudan1990 argued that this was overstated: in mature sciences we can usually localise the blame and repair the network. That reply is fair --- *where theories make precise predictions.* It is exactly there that linguistics, and the present case, part company with the examples Laudan had in mind.
+
+The form that does the damage here is *contrastive* underdetermination: the data are compatible with more than one theory, and nothing in the data breaks the tie. @LaudanLapplin1991 dismissed this on the grounds that two genuine rivals will seldom draw *exactly* equal support from the same evidence. Their argument, though, presupposes that the rivals make claims precise enough for "more" and "less" support to be measured. Linguistic theories of this kind do not. They are largely informal and pre-numerical, so the evidence cannot be apportioned between rivals in the first place. Consider Study 1: the loss of plural marking on every NP element but the head noun is compatible with Norse contact *and* with the well-known general drift of English away from inflection from Old to Early Modern English. A North-to-South progression during the Danelaw would tip the balance toward the contact account --- but only somewhat, and the data remain compatible with both. The tie is not broken because there is no numerical prediction sharp enough to break it.
+
+This is what we mean by the *loose fit* of informal theory to data, and it lets holistic and contrastive underdetermination reinforce each other: imprecise, partly implicit hypotheses can conspire to fit almost any result, and the fit is then read as confirmation. A circle can be drawn around any figure, if it is large enough. The practical consequence is that, for substantive linguistic hypotheses, we can secure neither confirmation nor refutation. The most a corpus study like the ones we routinely run can deliver is that the data either fail to contradict the conjunction of our hypotheses (which is not confirmation) or fail to be compatible with it (which, given the loose fit, is not clean refutation either).
+
+The asymmetry with the mature sciences is stark. We invite the reader to name one major linguistic theory of the last thirty-odd years that was abandoned because it stood in clear, repeated, demonstrated conflict with data. Theories have gone out of fashion; that is not the same thing. Compare Newton's gravitation, ultimately broken by the anomalous precession of Mercury's perihelion [@Leverrier1859]: the numbers from the theory and the numbers from observation did not match, and there was no way around it. Linguistics rarely affords numbers that unforgiving. Keeping this in view is essential for the next section, where we turn to what statistics can and cannot add to the testing of such hypotheses.
