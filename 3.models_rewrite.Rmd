@@ -1,0 +1,47 @@
+## Statistical models in corpus linguistics {#models}
+
+The studies in @WalkdenEa2023 rest on statistical models of a particular kind, and the errors we will document are not arcane: any reader can learn to see them. This section builds the necessary intuitions from the ground up. We make one promise: by the end, the reader will be able to look at the central result of the first case study and judge for themselves whether it supports anything at all.
+
+### What a model is, and what it is for
+
+Start with the thing being explained. In a corpus, a speaker faces the same choice again and again: in English, whether to mark plural on a pre-nominal element or leave it bare; in Spanish, whether to express a pronominal subject overtly or drop it. Each instance is a yes-or-no. We want to know what *pushes* that choice one way or the other --- the animacy of a noun, the dialect region, the century --- and how strongly. A statistical **model** is a disciplined guess at that relationship: a statement that the rate of "yes" depends on these factors in some specified way.
+
+The classic linguistic example is the English dative alternation --- *give the box to her* versus *give her the box*. The outcome is binary (shifted or not); candidate predictors include the animacy and length of the object [@BresnanFord2010; @WolkEa2013]. A model lets us ask how much animacy shifts the odds toward one variant, expressed as a number. That number, the **coefficient**, is usually what we are really after: not predicting the next sentence a speaker will produce, but quantifying *what influences the choice, and by how much*. Estimating it is not a matter of belief or eyeballing; a piece of mathematics --- the **estimator**, implemented in software --- finds the coefficient values that best fit the observed data [thorough introductions in @GelmanHill2006; @FahrmeirEa2013].
+
+A terminological point that turns out to matter: one does not "run a model" [@WalkdenEa2023, 558]. The researcher *specifies* a model --- a hypothesis about what controls the variation --- and the estimator then *fits* it to the data. The distinction is not pedantry. It is the difference between a causal claim one is putting at risk and a number a program happened to print, and we will see the two conflated.
+
+### The original sin: aggregation
+
+Here is where the first case study goes wrong, before any model is fitted at all. The outcome is binary --- each pre-nominal element either carries plural inflection or does not. But @WalkdenEa2023 do not model those individual choices. They first **aggregate**: they collapse all the instances in a text (or region, or period) into a single derived number, a difference-score, and then model *that*.
+
+Watch what this does to a tiny sample. Suppose one text contains five relevant pre-nominal elements, of which three are inflected, and a second text contains two, of which none are:
+
+| Text | Element | Inflected? |
+|------|---------|:----------:|
+| A | 1 | yes |
+| A | 2 | yes |
+| A | 3 | no |
+| A | 4 | yes |
+| A | 5 | no |
+| B | 1 | no |
+| B | 2 | no |
+
+Modelled directly, this is seven observations, each a genuine yes-or-no that a predictor can be tested against. Aggregated, Text A becomes the single number 0.6 and Text B becomes 0.0 --- **two dots instead of seven outcomes**. And the two dots now lie about the data. Text B's dot, resting on two elements, carries exactly the same weight in the subsequent model as a dot resting on five hundred. The within-text variation --- the very signal we are trying to explain --- has been erased. The real study does this at scale: thousands of individual outcomes are pre-digested into a few dozen dots before modelling begins. The information destroyed in that step cannot be recovered by any sophistication downstream.
+
+### Modelling the outcome as it actually is
+
+Keep the data binary instead, and the right tool follows naturally. We cannot use ordinary linear regression, whose predictions run off to plus and minus infinity, to model a quantity that must stay between 0 and 1 (a probability). A **Generalised Linear Model** (GLM) solves this by passing the linear combination of predictors through a *link function* that keeps predictions in range; for binary outcomes this is logistic regression, and the coefficient $\beta$ for a predictor reads as how much that predictor shifts the log-odds of "yes" [@Baayen2008; @Gries2013]. The crucial gain over aggregation is that every single instance enters the model on its own terms, weighted by its own existence rather than dissolved into a group average.
+
+One complication remains, and it is the one aggregation was, in effect, a botched attempt to handle. The instances are not independent: ten elements from the same text, or the same scribe, share influences we have not measured. Treating them as seven hundred independent data points fakes a precision we have not earned. A **Generalised Linear Mixed Model** (GLMM) addresses this honestly by adding *random effects* --- in essence, letting each text or speaker have its own baseline rate around the overall trend, so that clustered data are not mistaken for independent evidence [@Schaefer2020a]. This is the standard, well-understood remedy. Aggregating the clusters away is not.
+
+### How would we know which model is better?
+
+Suppose we have two fitted models. How do we judge them? The field reaches for single-number summaries, and this is where uncritical trust does the most damage --- because no single number certifies a model as good.
+
+Take $R^2$, advertised as the proportion of variance the model explains. A high $R^2$ does not guarantee a good model, and --- the point that matters here --- aggregation inflates it artificially: smoothing thousands of noisy binary outcomes into a few tidy averages removes exactly the variation a model is supposed to struggle with, so the model looks far more explanatory than it is. The number went up because the data were made easier, not because anything was understood.
+
+**Prediction accuracy** --- the proportion of choices the model calls correctly --- is even more seductive and must always be read against the **base rate**, the accuracy reachable by blindly always guessing the commonest outcome. If 95% of pre-nominal elements are uninflected, a model that simply predicts "uninflected" every time scores 95% while having learned nothing whatsoever. Quoted without its base rate, an accuracy figure is not evidence; it is decoration. (A model that *reaches* the same 95% by actually discriminating between the cases is a different animal --- but then the discrimination, not the headline number, is the achievement.)
+
+### What does a result like this mean?
+
+We now have what we need. The first case study reports, for the coefficient of its key predictor, $\beta = 0.63$ with $p = 0.0495$ (Table \@ref(tab:subjectpapertable)) --- a result that cleared the conventional 0.05 threshold by one part in a thousand, computed on a model whose per-coefficient p-values are trustworthy only if the rest of the model is approximately right, and built on the aggregated dots we have just watched lie about the data. The reader is now equipped to ask the only question that matters: was this the output of a test with a real chance of failing, or a number a program happened to print? The next section answers it.
