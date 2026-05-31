@@ -166,7 +166,7 @@ ReportGLM <- function(model, data = NULL,
     "Baserate" = round(.baserate, acc.round),
     "Report"   = paste0(.name, "is a ", .type, family(model)$family, " model with a ",
                         family(model)$link, " link. N=", nobs(model),
-                        ", AIC=", round(AIC(model), aic.round),
+                        # ", AIC=", round(AIC(model), aic.round),
                         ", ", gsub('Marginal', 'marginal', gsub('Conditional', 'conditional', .r2r)), ".", .accuracyr, .randomr)
     )
 }

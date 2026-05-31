@@ -1,25 +1,26 @@
 ---
 title: "Hypotheses, underdetermination, and wrong models"
 author: "Roland Schäfer (Friedrich-Schiller-Universität Jena)"
-date: "Draft 6 of 25 April 2025"
+date: "Draft 8 of 31 May 2026"
 mainfont: Libertinus Serif
 sansfont: Libertinus Sans 
 monofont: Inconsolata
 mathfont: Libertinus Math
 fontsize: 12pt
 geometry: "left=3cm,right=3cm,top=2.5cm,bottom=2.5cm"
+csl: unified-style-sheet-for-linguistics.csl
 output:
-  bookdown::html_document2: 
-    number_sections: true
-    self_contained: false
-  bookdown::word_document2:
-    number_sections: true
   bookdown::pdf_document2: 
     latex_engine: xelatex
     number_sections: true
     keep_tex: yes
     toc: false
     extra_dependencies: ["float"]
+  bookdown::word_document2:
+    number_sections: true
+  bookdown::html_document2: 
+    number_sections: true
+    self_contained: false
 bibliography: 
   - Hypotheses.bib
   - rs.bib
@@ -68,22 +69,28 @@ levels(SubjectData$Genre) <- c("Nonliterary", "Literary", "Supplemental")
 ```{r, child=c('functions.Rmd')}
 ```
 
-> *Ah, but a man's grasp should exceed his reach.   
-> Or what's science for?*   
-> (Anonymous)
+> *Abstract* We reanalyse the corpus data of @WalkdenEa2023, which uses three historical corpus studies to assess Trudgill's theory of sociolinguistic typology, according to which short-term adult-driven language contact leads to simplification effects in language. We argue, on methodological and epistemological grounds, that Studies 1 and 2 provide no evidence for the hypotheses they are taken to support. The problem is twofold. At the level of inference, the paper reads low p-values from Null-Hypothesis Significance Testing as corroboration of a large, loosely specified network of hypotheses, when such a test has almost no capacity to expose those hypotheses as false if they were indeed false. At the level of the data, both studies mishandle aggregation: Study 1 collapses thousands of binary outcomes into a few dozen equally weighted per-text difference scores, and Study 2 uses an analogous aggregate as a regressor. Refitting without these errors, we find that little survives. In Study 1, once texts enter as a random effect, between-text variation swamps dialect, and the one generalisation that holds rests essentially on a single text. In Study 2, the reported model is all but indistinguishable from a model with only a random effect for individual texts and no other explanatory variables at all. We close with three suggested remedies: (i) disciplined, severity-aware inference paired with more numerically committed theories, (ii) open data as a routine part of peer review, and (iii) support for publishing negative findings. More broadly, historical-corpus data of this kind might rarely support a confirmatory framework, and the deeper error is forcing exploratory-grade data through a confirmatory machinery they were never meant to pass through.
 
-```{r, child=c('child_1_findout.Rmd')}
+```{r, child=c('1.philsci_rewrite.Rmd')}
+```
+
+```{r, child=c('3.models_rewrite.Rmd')}
 ```
 
 # Data and inferences in @WalkdenEa2023 {#walkden}
 
-```{r, child=c('child_2a_study1.Rmd')}
+```{r, child=c('4.study1_rewrite.Rmd')}
 ```
 
-```{r, child=c('child_2b_study2.Rmd')}
+```{r, child=c('5.study2_rewrite.Rmd')}
 ```
 
-```{r, child=c('child_3_gooduse.Rmd')}
+```{r, child=c('6.gooduse_rewrite.Rmd')}
 ```
+
+# Acknowledgments
+
+I thank Felix Bildhauer (Leibniz-IDS Mannheim), Felix Golcher (Humboldt-Universität zu Berlin), Gert Webelhuth (Goethe-Universität Frankfurt) and the participants of a colloquium talk held at Goethe-Universität Frankfurt for their feedback and advice.
+Remaining errors are exclusively my own responsibility.
 
 # References
