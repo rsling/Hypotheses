@@ -1,4 +1,4 @@
-# Hypotheses, underdetermination, and wrong models
+# Underdetermination and statistical modelling in diachronic corpus linguistics: a reanalysis of Walkden et al. (2023)
 ## Roland Schäfer (Friedrich-Schiller-Universität Jena)
 
 ## Draft
