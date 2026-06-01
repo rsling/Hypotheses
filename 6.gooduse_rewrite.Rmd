@@ -22,7 +22,7 @@ We should treat applied statistics as a core skill of the discipline, taught pro
 
 ## Remedy 2: open data as part of the review process
 
-Reviewers and editors can only catch what they can see. A look at the underlying data should be a standard part of review, and reviewers should be equipped to make use of it. The clues in @WalkdenEa2023 as published are real but partial. The actual problems surface only on reanalysis, once one actually engages with the data set. In my experience also as authors, reviewers even at empirically minded journals rarely catch design or analysis errors, whether for want of the data or for want of the time to look.
+Reviewers and editors can only catch what they can see. A look at the underlying data should be a standard part of review, and reviewers should be equipped to make use of it. The clues in @WalkdenEa2023 as published are real but partial. The actual problems surface only on reanalysis, once one actually engages with the data set. In my experience also as an author, reviewers even at empirically minded journals rarely catch design or analysis errors, whether for want of the data or for want of the time to look.
 Behind this sits a missing standard. Most journals might still accept anything that reports a GLM (in the spirit of the diverse empirical and quantitative turns) without having established clear standards for the reporting of such statistical methods.
 Authors and reviewers can then impose whatever checks suit their taste. A journal with no best-practice guidelines for statistical methods arguably should not be publishing papers that lean on them at all, unless the paper's own contribution is purely methodological and the paper is instrumental in establishing such guidelines.
 
