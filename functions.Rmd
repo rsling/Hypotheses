@@ -145,6 +145,7 @@ ReportGLM <- function(model, data = NULL,
   
   # Process R2 for report.
   .r2r <- unlist(lapply(.r2, function(r) {paste0(names(r), "=", round(unname(r), r2.round))}))
+  .r2n <- .r2r
   .r2r <- gsub('R2', 'R²', paste(unlist(.r2r), collapse=", "))
   
   # Miscellaneous fragments for the report.

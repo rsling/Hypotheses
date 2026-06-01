@@ -73,7 +73,8 @@ kable(SubjectCountryGenreReport$Table, caption=SubjectCountryGenreReport$Report,
     row_spec(0, bold=TRUE)
 ```
 
-Next, a more complex specification. The Full-Country Model (Table \@ref(tab:subjectfullcountrytable)) is the Reported Model with orality and year retained, but country in place of macroregion and genre added.
+Next, I turn to a more complex specification. The Full-Country Model (Table \@ref(tab:subjectfullcountrytable)) is the Reported Model with orality and year retained, but country in place of macroregion and genre added.
+On R², the Full-Country Model edges ahead of the Reported Model (Table \@ref(tab:subjectfullcountrycompare)). However, the small shifts in conditional R² are just artefacts of the shifting marginal R². More tellingly, country has exactly one level (Bolivia) far enough from the intercept (Spain) to reach significance. The paper's conclusion that overtness is "favoured in every country but Spain" is therefore unwarranted even on NHST's own terms. Drop genre, and the picture shifts again as in the Full-No-Genre Model, Tables \@ref(tab:subjectfullnogenretable) and \@ref(tab:subjectfullnogenrecompare).
 
 ```{r subjectfullcountrytable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(SubjectFullCountryReport$Table, 
@@ -93,8 +94,6 @@ kable(SubjectFullCountryReport$Table,
           booktabs = T, linesep = "") %>%
     row_spec(0, bold=TRUE)
 ```
-
-On R², the Full-Country Model edges ahead of the Reported Model (Table \@ref(tab:subjectfullcountrycompare)). However, the small shifts in conditional R² are just artefacts of the shifting marginal R². More tellingly, country has exactly one level (Bolivia) far enough from the intercept (Spain) to reach significance. The paper's conclusion that overtness is "favoured in every country but Spain" is therefore unwarranted even on NHST's own terms. Drop genre, and the picture shifts again as in the Full-No-Genre Model, Tables \@ref(tab:subjectfullnogenretable) and \@ref(tab:subjectfullnogenrecompare).
 
 ```{r subjectfullnogenretable, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 kable(SubjectFullNoGenreReport$Table, caption=SubjectFullNoGenreReport$Report,
@@ -195,11 +194,11 @@ plot(predict(SubjectNullModel, type="response"), predict(SubjectPaperModel, type
 
 The clearest evidence comes last. Figure \@ref(fig:subjectpapernullcompare) plots the Reported Model's predicted probabilities against the Text-Only Model's, one dot per observed data point, correlation-plot style. Were the two models predicting identically, the dots would fall on a straight line --- and that is essentially what we see, a straight line with negligible scatter. The two models carry virtually the same information: the mean absolute difference between their predictions is `r round(mean(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`, the maximum `r round(max(abs(predict(SubjectNullModel, type="response")-predict(SubjectPaperModel, type="response"))),4)`.
 I would like to point out that the 3773 data points collapse into 37 dots as the only effects in the model are the text random effect and --- in the Reported Model --- the additional fixed effects.
-Each regressor variable has --- intrinsically given the data structure and the model structure --- exactly one level/value per document.
+Each fixed effect variable has --- intrinsically given the data structure and the model structure --- precisely one level (value) per document.
 Hence, the model can only predict 37 different probabilities, no matter how many data points are contained in the texts.
 This is not per se a sign of an incorrectly specified model, it just defines a hard ceiling of informativity the model cannot exceed.
 Informative regressors would pull the 37 dots in Figure \@ref(fig:subjectpapernullcompare) away from the diagonal in some interpretable pattern, however.
 
-In closing, I conclude that the data establish that individual Spanish texts differ from one another, and nothing more. They do not "confirm any relationships across countries and centuries." With full access to the data these problems are not hard to find, which makes it the more regrettable that the analysis reached publication in this form. Negative findings are well worth publishing, and so are these data. But as negative findings resulting from an exploratory data analysis, not as corroboration of a large and loosely specified network of hypotheses, all the more so given the underdetermination described in Section \@ref(hypotheses).
+In closing, I conclude that the data establish that individual Spanish texts differ from one another, and nothing more. They do not "confirm any relationships across countries and centuries." With full access to the data these problems are not hard to find, which makes it the more regrettable that the analysis reached publication in this form. Negative findings are well worth publishing, and so are these data. But they should have been published as negative or weak findings resulting from an exploratory data analysis, not as corroboration of a large and loosely specified network of hypotheses, all the more so given the underdetermination described in Section \@ref(hypotheses).
 
 I set Study 3 aside deliberately. It rests on generalised additive models, a distinct modelling apparatus that raises its own separate questions and would need a treatment of its own to do it justice, one this paper, focused on the GLM machinery of Studies 1 and 2, is not the place for. The closing section turns to what all of this means for the substantive hypotheses of @WalkdenEa2023 and for the field.
